@@ -1,0 +1,149 @@
+.map-search-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+}
+
+.map-search-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.back-btn {
+  background: #f0f0f0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.back-btn:hover {
+  background: #e0e0e0;
+  transform: translateX(-2px);
+}
+
+.map-search-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+}
+
+.map-search-content {
+  flex: 1;
+  display: flex;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.search-results-top {
+  background: #f9f9f9;
+  border-bottom: 1px solid #eee;
+  padding: 20px;
+  border-top: 1px solid #eee;
+}
+
+.search-results-top h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
+  margin: 0 0 8px 0;
+}
+
+.search-results-top p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.search-results {
+  flex: 0 0 300px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #eee;
+  overflow-y: auto;
+}
+
+.search-results h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
+  margin: 0 0 10px 0;
+}
+
+.search-results p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.map-section {
+  flex: 1;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+@media (max-width: 1024px) {
+  .map-search-header {
+    flex-wrap: wrap;
+  }
+
+  .map-search-header h1 {
+    font-size: 22px;
+  }
+
+  .map-search-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .search-results {
+    flex: 0 1 250px;
+    max-height: 300px;
+  }
+
+  .map-section {
+    flex: 1;
+    min-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .map-search-header {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .map-search-header h1 {
+    font-size: 18px;
+  }
+
+  .map-search-content {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .search-results {
+    flex: 0 1 200px;
+    padding: 15px;
+  }
+
+  .map-section {
+    min-height: 300px;
+  }
+}
