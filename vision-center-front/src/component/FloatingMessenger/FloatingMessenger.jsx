@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./FloatingMessenger.css";
-import geminiService from "../../services/gemini.service";
+import { sendMessage } from "../../services/huggingface.service";
 
 const FloatingMessenger = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,13 +8,12 @@ const FloatingMessenger = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Bonjour ! Je suis votre assistant IA pour Vision Center Madagascar. Je peux vous aider concernant les activités religieuses et culturelles, les inscriptions, et les événements à venir. Comment puis-je vous aider ?",
+      text: "Bonjour ! Je suis votre assistant IA powered by HuggingFace pour Vision Center Madagascar. Je peux vous aider concernant les activités religieuses et culturelles, les inscriptions, et les événements à venir. Comment puis-je vous aider ?",
       sender: "ai",
       timestamp: new Date()
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
-  const [conversationHistory, setConversationHistory] = useState([]);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -43,24 +42,19 @@ const FloatingMessenger = () => {
       setIsLoading(true);
 
       try {
-        const response = await geminiService.sendMessage(messageInput, conversationHistory);
+        const response = await sendMessage(messageInput);
         
         if (response.success) {
           const aiMessage = {
             id: Date.now() + 1,
-            text: response.response,
+            text: response.message,
             sender: "ai",
             timestamp: new Date()
           };
           
           setMessages(prev => [...prev, aiMessage]);
           
-          // Update conversation history
-          setConversationHistory(prev => [
-            ...prev,
-            { role: "user", content: messageInput },
-            { role: "assistant", content: response.response }
-          ]);
+          // Message sent successfully
         } else {
           const errorMessage = {
             id: Date.now() + 1,
@@ -75,7 +69,7 @@ const FloatingMessenger = () => {
       } catch (error) {
         const errorMessage = {
           id: Date.now() + 1,
-          text: "Désolé, je ne peux pas répondre pour le moment. Veuillez réessayer plus tard.",
+          text: "Désolé, impossible de contacter le service IA HuggingFace. Veuillez réessayer plus tard.",
           sender: "ai",
           timestamp: new Date(),
           isError: true
