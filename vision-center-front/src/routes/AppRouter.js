@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "../pages/auth/Login";
 import Home from "../pages/public/Home";
 import MapSearch from "../pages/public/MapSearch";
+import ActiviteDetails from "../pages/public/ActiviteDetails";
 
 import AuthLayout from "../layouts/AuthLayout";
 import MainLayout from "../layouts/MainLayout";
@@ -33,6 +34,13 @@ const AppRouter = () => {
         <Route path="/map" element={
           <ProtectedRoute>
             <MapSearch />
+          </ProtectedRoute>
+        } />
+
+        {/* ACTIVITY DETAILS PAGE */}
+        <Route path="/activite/:id" element={
+          <ProtectedRoute>
+            <ActiviteDetails />
           </ProtectedRoute>
         } />
       </Routes>

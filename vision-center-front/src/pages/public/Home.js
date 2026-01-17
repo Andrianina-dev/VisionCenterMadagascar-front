@@ -1,12 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import MadagascarMap from "../../component/map/MadagascarMap";
+import activiteService from "../../services/activite.service";
 
 const Home = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [showMap, setShowMap] = useState(false);
+  const [activitesOuvertes, setActivitesOuvertes] = useState([]);
+  const [activitesPopulaires, setActivitesPopulaires] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Image améliorée pour Vision Center Madagascar
+  const improvedImageBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+";
+
+  // Charger les activités depuis l'API
+  useEffect(() => {
+    const loadActivites = async () => {
+      try {
+        setLoading(true);
+        
+        // Charger les activités ouvertes
+        const ouvertesResponse = await activiteService.getActivitesOuvertes();
+        if (ouvertesResponse.success) {
+          setActivitesOuvertes(ouvertesResponse.data);
+        }
+
+        // Charger les activités populaires
+        const populairesResponse = await activiteService.getActivitesPopulaires();
+        if (populairesResponse.success) {
+          setActivitesPopulaires(populairesResponse.data);
+        }
+
+        setError(null);
+      } catch (err) {
+        console.error('Erreur lors du chargement des activités:', err);
+        setError('Impossible de charger les activités. Veuillez réessayer plus tard.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadActivites();
+  }, []);
 
   const destinations = [
     { id: 1, name: "Menabe", image: "🌴" },
@@ -15,27 +53,70 @@ const Home = () => {
     { id: 4, name: "Amoroni Mania", image: "🐵" }
   ];
 
-  const packages = [
-    { id: 1, name: "(Hypothème Mazitsaini)", price: "$348", rating: "⭐⭐⭐⭐⭐", reviews: "67", discount: "20%" },
-    { id: 2, name: "(Hypothème Mazitsaini)", price: "$348", rating: "⭐⭐⭐⭐⭐", reviews: "67", discount: "30%" },
-    { id: 3, name: "(Hypothème Mazitsaini)", price: "$348", rating: "⭐⭐⭐⭐⭐", reviews: "67", discount: "15%" },
-    { id: 4, name: "(Hypothème Mazitsaini)", price: "$348", rating: "⭐⭐⭐⭐⭐", reviews: "67", discount: "25%" }
-  ];
+  // Utiliser les vraies activités populaires au lieu des packages simulés
+  const packages = activitesPopulaires.slice(0, 4).map((activite, index) => ({
+    id: activite.id_activite,
+    name: activite.titre_activite,
+    price: activite.capacite ? `${activite.nb_participants}/${activite.capacite} places` : "Illimité",
+    rating: "⭐⭐⭐⭐⭐",
+    reviews: activite.nb_participants.toString(),
+    discount: activite.est_complete ? "Complet" : "Disponible",
+    image: activite.image_url || improvedImageBase64,
+    date: activite.date_heure_activite,
+    lieu: activite.lieu_activite,
+    isBase64: activite.is_base64 || true // Toujours true car on utilise base64
+  }));
 
-  const newPackages = [
-    { id: 1, price: "$348", image: "🏖️" },
-    { id: 2, price: "$348", image: "☀️" },
-    { id: 3, price: "$348", image: "🌳" },
-    { id: 4, price: "$348", image: "🧘" }
-  ];
+  // Utiliser les vraies activités ouvertes pour les nouveaux packages
+  const newPackages = activitesOuvertes.slice(0, 4).map((activite, index) => ({
+    id: activite.id_activite,
+    price: activite.capacite ? `${activite.nb_participants}/${activite.capacite}` : "Illimité",
+    image: activite.image_url || improvedImageBase64,
+    titre: activite.titre_activite,
+    date: activite.date_heure_activite,
+    isBase64: activite.is_base64 || true // Toujours true car on utilise base64
+  }));
 
   const infoGuide = [
-    { icon: "💰", title: "Refund Policy Information" },
-    { icon: "✈️", title: "Travel Regulations" },
-    { icon: "🎫", title: "International Flight Information" },
-    { icon: "ℹ️", title: "Tour Assistance Information" },
-    { icon: "📱", title: "Refund..." }
+    { icon: "💰", title: "Inscription Gratuite" },
+    { icon: "✈️", "title": "Activités Variées" },
+    { icon: "🎫", title: "Événements Réguliers" },
+    { icon: "ℹ️", title: "Assistance Permanente" },
+    { icon: "📱", title: "Contact Facile" }
   ];
+
+  // Gérer le clic sur une activité
+  const handleActiviteClick = (activiteId) => {
+    navigate(`/activite/${activiteId}`);
+  };
+
+  // Gérer le clic sur "Voir tout"
+  const handleSeeAllActivites = () => {
+    navigate('/activites');
+  };
+
+  if (loading) {
+    return (
+      <div className="home-container">
+        <div className="loading-container">
+          <div className="loading-spinner">Chargement des activités...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="home-container">
+        <div className="error-container">
+          <div className="error-message">{error}</div>
+          <button onClick={() => window.location.reload()} className="retry-btn">
+            Réessayer
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="home-container">
@@ -83,27 +164,48 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Packages Section */}
+      {/* Packages Section - Activités Populaires */}
       <section className="packages-section">
         <div className="section-header">
-          <h2>Package that end seems</h2>
-          <a href="#" className="see-all">See All</a>
+          <h2>Activités Populaires</h2>
+          <a href="#" className="see-all" onClick={(e) => { e.preventDefault(); handleSeeAllActivites(); }}>Voir tout</a>
         </div>
 
         <div className="packages-grid">
-          {packages.map(pkg => (
-            <div key={pkg.id} className="package-card">
-              <div className="package-discount">{pkg.discount}</div>
-              <div className="package-image">🏨</div>
-              <h3>{pkg.name}</h3>
-              <p className="package-price">{pkg.price}</p>
-              <div className="package-rating">
-                <span>{pkg.rating}</span>
-                <span>({pkg.reviews} reviews)</span>
+          {packages.length > 0 ? (
+            packages.map(pkg => (
+              <div key={pkg.id} className="package-card" onClick={() => handleActiviteClick(pkg.id)}>
+                <div className={`package-discount ${pkg.discount === 'Complet' ? 'complete' : 'available'}`}>
+                  {pkg.discount}
+                </div>
+                <div className="package-image">
+                  {pkg.image ? (
+                    pkg.isBase64 ? (
+                      <img src={pkg.image} alt={pkg.name} className="activity-image" />
+                    ) : (
+                      <img src={activiteService.getImageUrl(pkg.image)} alt={pkg.name} className="activity-image" />
+                    )
+                  ) : (
+                    "🏨"
+                  )}
+                </div>
+                <h3>{pkg.name}</h3>
+                <p className="package-price">{pkg.price}</p>
+                <p className="package-location">📍 {pkg.lieu}</p>
+                <div className="package-rating">
+                  <span>{pkg.rating}</span>
+                  <span>({pkg.reviews} participants)</span>
+                </div>
+                <a href="#" className="learn-more" onClick={(e) => { e.preventDefault(); handleActiviteClick(pkg.id); }}>
+                  Voir détails
+                </a>
               </div>
-              <a href="#" className="learn-more">Learn more</a>
+            ))
+          ) : (
+            <div className="no-activities">
+              <p>Aucune activité populaire disponible pour le moment.</p>
             </div>
-          ))}
+          )}
         </div>
       </section>
 
@@ -117,8 +219,22 @@ const Home = () => {
         <div className="new-packages-grid">
           {newPackages.map(pkg => (
             <div key={pkg.id} className="new-package-card">
-              <div className="new-package-image">{pkg.image}</div>
+              <div className="new-package-image">
+                {pkg.image ? (
+                  pkg.isBase64 ? (
+                    <img src={pkg.image} alt={pkg.titre} className="activity-image-small" />
+                  ) : (
+                    <img src={activiteService.getImageUrl(pkg.image)} alt={pkg.titre} className="activity-image-small" />
+                  )
+                ) : (
+                  pkg.image || "🎯"
+                )}
+              </div>
               <p className="new-package-price">{pkg.price}</p>
+              <p className="new-package-title">{pkg.titre}</p>
+              <p className="new-package-date">
+                📅 {activiteService.formatDateShort(pkg.date)}
+              </p>
             </div>
           ))}
         </div>
