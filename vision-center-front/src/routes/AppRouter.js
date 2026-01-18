@@ -5,6 +5,8 @@ import Login from "../pages/auth/Login";
 import Home from "../pages/public/Home";
 import MapSearch from "../pages/public/MapSearch";
 import ActiviteDetails from "../pages/public/ActiviteDetails";
+import Profile from "../pages/public/Profile";
+import AccountProfile from "../pages/public/AccountProfile";
 
 import AuthLayout from "../layouts/AuthLayout";
 import MainLayout from "../layouts/MainLayout";
@@ -41,6 +43,20 @@ const AppRouter = () => {
         <Route path="/activite/:id" element={
           <ProtectedRoute>
             <ActiviteDetails />
+          </ProtectedRoute>
+        } />
+
+        {/* PROFILE PAGE */}
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } />
+
+        {/* ACCOUNT PROFILE PAGE */}
+        <Route path="/account" element={
+          <ProtectedRoute>
+            <AccountProfile />
           </ProtectedRoute>
         } />
       </Routes>

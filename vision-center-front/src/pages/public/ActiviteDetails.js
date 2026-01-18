@@ -297,6 +297,13 @@ const ActiviteDetails = () => {
             >
               Retour à l'accueil
             </button>
+
+            <button 
+              onClick={() => navigate('/map')} 
+              className="btn btn-map btn-large"
+            >
+              🗺️ Voir sur la carte
+            </button>
           </div>
         </div>
       </div>

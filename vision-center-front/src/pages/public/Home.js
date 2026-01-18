@@ -90,6 +90,14 @@ const Home = () => {
     navigate(`/activite/${activiteId}`);
   };
 
+  const handleSeeOnMap = (activity) => {
+    // setSelectedActivity(activity);
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
+
   // Gérer le clic sur "Voir tout"
   const handleSeeAllActivites = () => {
     navigate('/activites');
@@ -120,6 +128,35 @@ const Home = () => {
 
   return (
     <div className="home-container">
+      {/* Header Simple */}
+      <header className="simple-header">
+        <div className="header-content">
+          <div className="header-left">
+            <div className="header-logo">
+              <h2>Vision Center Madagascar</h2>
+            </div>
+            <nav className="header-nav">
+              <button className="nav-btn" onClick={() => navigate("/")}>Accueil</button>
+              <button className="nav-btn" onClick={() => navigate("/map")}>Carte</button>
+              <button className="nav-btn" onClick={() => navigate("/activites")}>Activités</button>
+              <button className="nav-btn" onClick={() => navigate("/contact")}>Contact</button>
+            </nav>
+          </div>
+          <div className="header-profile">
+            <div className="profile-info">
+              <span className="profile-name">Rakotomalala M.</span>
+              <span className="profile-status">En ligne</span>
+            </div>
+            <div className="profile-avatar">
+              <div className="avatar-wrapper" onClick={handleProfileClick}>
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face&auto=format" alt="Profile" className="profile-img" />
+                <div className="status-indicator"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
@@ -196,9 +233,17 @@ const Home = () => {
                   <span>{pkg.rating}</span>
                   <span>({pkg.reviews} participants)</span>
                 </div>
-                <a href="#" className="learn-more" onClick={(e) => { e.preventDefault(); handleActiviteClick(pkg.id); }}>
-                  Voir détails
-                </a>
+                <div className="package-actions">
+                  <a href="#" className="learn-more" onClick={(e) => { e.preventDefault(); handleActiviteClick(pkg.id); }}>
+                    Voir détails
+                  </a>
+                  <button 
+                    className="see-map-btn" 
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
+                  >
+                    🗺️ Voir sur la carte
+                  </button>
+                </div>
               </div>
             ))
           ) : (
@@ -235,6 +280,20 @@ const Home = () => {
               <p className="new-package-date">
                 📅 {activiteService.formatDateShort(pkg.date)}
               </p>
+              <div className="new-package-actions">
+                <button 
+                  className="learn-more-btn" 
+                  onClick={() => handleActiviteClick(pkg.id)}
+                >
+                  Voir détails
+                </button>
+                <button 
+                  className="see-map-btn-small" 
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
+                >
+                  🗺️ Voir sur la carte
+                </button>
+              </div>
             </div>
           ))}
         </div>
