@@ -67,15 +67,56 @@ const FloatingMessenger = () => {
           setMessages(prev => [...prev, errorMessage]);
         }
       } catch (error) {
-        const errorMessage = {
+        let errorMessage = "Désolé, une erreur technique est survenue. ";
+        
+        if (error.message.includes('429')) {
+          errorMessage = "Le service IA est temporairement surchargé. Veuillez réessayer dans quelques instants.";
+        } else if (error.message.includes('temps à répondre')) {
+          errorMessage = "Le service IA met trop de temps à répondre. Veuillez réessayer avec un message plus court.";
+        } else if (error.message.includes('CORS') || error.message.includes('Cross-Origin')) {
+          errorMessage = "🔒 Erreur CORS: Le serveur IA n'autorise pas les requêtes depuis ce domaine. Solution: Le backend doit configurer Access-Control-Allow-Origin.";
+        } else if (error.message.includes('Failed to fetch')) {
+          errorMessage = "Impossible de contacter le service IA. Veuillez vérifier votre connexion internet et que le backend tourne sur localhost:8000.";
+        } else if (error.message.includes('NetworkError')) {
+          errorMessage = "Problème de connexion détecté. Veuillez vérifier votre réseau et que le serveur backend est accessible.";
+        } else {
+          errorMessage += error.message || "Veuillez réessayer plus tard.";
+        }
+        
+        const errorResponse = {
           id: Date.now() + 1,
-          text: "Désolé, impossible de contacter le service IA HuggingFace. Veuillez réessayer plus tard.",
+          text: errorMessage,
           sender: "ai",
           timestamp: new Date(),
           isError: true
         };
         
-        setMessages(prev => [...prev, errorMessage]);
+        setMessages(prev => [...prev, errorResponse]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleRetry = async (messageToRetry) => {
+    if (!isLoading) {
+      setIsLoading(true);
+      
+      try {
+        const response = await sendMessage(messageToRetry);
+        
+        if (response.success) {
+          const aiMessage = {
+            id: Date.now() + 1,
+            text: response.message,
+            sender: "ai",
+            timestamp: new Date()
+          };
+          
+          setMessages(prev => [...prev.filter(msg => msg.id !== messageToRetry.id), aiMessage]);
+        }
+      } catch (error) {
+        // L'erreur de retry est gérée par le même système
       } finally {
         setIsLoading(false);
       }
@@ -137,6 +178,16 @@ const FloatingMessenger = () => {
                 <div className="message-content">
                   <div className={`message-bubble ${message.isError ? "error" : ""}`}>
                     <p className="message-text">{message.text}</p>
+                    {message.isError && (
+                      <button 
+                        className="retry-btn" 
+                        onClick={() => handleRetry(message)}
+                        disabled={isLoading}
+                        title="Réessayer"
+                      >
+                        🔄 Réessayer
+                      </button>
+                    )}
                   </div>
                 </div>
                 {message.sender === "user" && <div className="avatar-message">You</div>}

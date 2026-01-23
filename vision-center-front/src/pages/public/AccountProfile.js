@@ -1,21 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar';
+import AuthService from '../../services/auth.service';
 import './AccountProfile.css';
 
 const AccountProfile = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('personal');
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    // Récupérer les informations de l'utilisateur connecté
+    const member = AuthService.getCurrentMember();
+    if (member) {
+      setCurrentUser(member);
+    }
+  }, []);
 
   const handleBack = () => {
     navigate('/bookings');
   };
 
+  const displayName = currentUser ? `${currentUser.prenom} ${currentUser.nom}` : 'Utilisateur';
+  const displayEmail = currentUser ? currentUser.email : 'email@example.com';
+
   return (
     <div className="account-page">
-      {/* Sidebar Component */}
-      <Sidebar activeNav="account" />
-
       {/* Main Content */}
       <main className="account-main">
         <div className="account-container">
@@ -35,8 +45,8 @@ const AccountProfile = () => {
                 </button>
               </div>
               <div className="profile-info">
-                <h2>Nasrullah Fath</h2>
-                <p className="profile-email">nasrullah.fath@example.com</p>
+                <h2>{displayName}</h2>
+                <p className="profile-email">{displayEmail}</p>
               </div>
             </div>
           </section>
@@ -70,15 +80,15 @@ const AccountProfile = () => {
                 <div className="info-grid">
                   <div className="info-group">
                     <label>First Name</label>
-                    <input type="text" defaultValue="Nasrullah" />
+                    <input type="text" defaultValue={currentUser ? currentUser.prenom : ''} />
                   </div>
                   <div className="info-group">
                     <label>Last Name</label>
-                    <input type="text" defaultValue="Fath" />
+                    <input type="text" defaultValue={currentUser ? currentUser.nom : ''} />
                   </div>
                   <div className="info-group">
                     <label>Email</label>
-                    <input type="email" defaultValue="nasrullah.fath@example.com" />
+                    <input type="email" defaultValue={currentUser ? currentUser.email : ''} />
                   </div>
                   <div className="info-group">
                     <label>Phone Number</label>

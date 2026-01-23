@@ -1,0 +1,238 @@
+/* Services Section - Site Vitrine */
+.services-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  position: relative;
+}
+
+.services-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #7ffef4, transparent);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.service-card {
+  background: white;
+  border-radius: 20px;
+  padding: 35px 30px;
+  box-shadow: 0 10px 30px rgba(0, 77, 64, 0.1);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #7ffef4, #4dd0e1);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-10px);
+  border-color: #7ffef4;
+  box-shadow: 0 20px 40px rgba(0, 77, 64, 0.15);
+}
+
+.service-card:hover::before {
+  transform: scaleX(1);
+}
+
+.service-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #7ffef4, #4dd0e1);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+  font-size: 36px;
+  box-shadow: 0 8px 20px rgba(127, 254, 244, 0.3);
+}
+
+.service-content h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #004d40;
+  margin-bottom: 15px;
+  line-height: 1.3;
+}
+
+.service-content p {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.service-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.service-features li {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.4;
+}
+
+.service-features li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #7ffef4;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.services-cta {
+  text-align: center;
+  background: linear-gradient(135deg, #004d40, #00695c);
+  color: white;
+  padding: 50px 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 77, 64, 0.2);
+}
+
+.services-cta h3 {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.services-cta p {
+  font-size: 18px;
+  margin-bottom: 30px;
+  opacity: 0.9;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-consultation {
+  background: white;
+  color: #004d40;
+  border: none;
+  padding: 18px 40px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-consultation:hover {
+  background: #7ffef4;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(127, 254, 244, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    margin-bottom: 40px;
+  }
+
+  .service-card {
+    padding: 30px 25px;
+  }
+
+  .service-icon {
+    width: 70px;
+    height: 70px;
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  .service-content h3 {
+    font-size: 20px;
+  }
+
+  .service-content p {
+    font-size: 15px;
+  }
+
+  .services-cta {
+    padding: 40px 25px;
+  }
+
+  .services-cta h3 {
+    font-size: 28px;
+  }
+
+  .services-cta p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-grid {
+    gap: 20px;
+  }
+
+  .service-card {
+    padding: 25px 20px;
+  }
+
+  .service-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+  }
+
+  .service-content h3 {
+    font-size: 18px;
+  }
+
+  .service-content p {
+    font-size: 14px;
+  }
+
+  .service-features li {
+    font-size: 13px;
+  }
+
+  .services-cta {
+    padding: 30px 20px;
+  }
+
+  .services-cta h3 {
+    font-size: 24px;
+  }
+
+  .services-cta p {
+    font-size: 15px;
+    margin-bottom: 25px;
+  }
+
+  .btn-consultation {
+    padding: 15px 30px;
+    font-size: 15px;
+  }
+}

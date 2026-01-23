@@ -15,7 +15,7 @@ class ActiviteService {
     // Obtenir les activités ouvertes avec images pour l'accueil
     async getActivitesOuvertes() {
         try {
-            const response = await this.api.get('/participant/activites/ouvertes');
+            const response = await this.api.get('/public/activites/ouvertes');
             return response.data;
         } catch (error) {
             console.error('Erreur lors de la récupération des activités ouvertes:', error);
@@ -26,7 +26,7 @@ class ActiviteService {
     // Obtenir les activités populaires pour l'accueil
     async getActivitesPopulaires() {
         try {
-            const response = await this.api.get('/participant/activites/populaires');
+            const response = await this.api.get('/public/activites/ouvertes');
             return response.data;
         } catch (error) {
             console.error('Erreur lors de la récupération des activités populaires:', error);
@@ -37,7 +37,7 @@ class ActiviteService {
     // Obtenir les détails d'une activité spécifique
     async getActiviteDetails(id) {
         try {
-            const response = await this.api.get(`/participant/activites/${id}`);
+            const response = await this.api.get(`/public/activites/${id}`);
             return response.data;
         } catch (error) {
             console.error('Erreur lors de la récupération des détails de l\'activité:', error);

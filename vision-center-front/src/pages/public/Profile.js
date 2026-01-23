@@ -41,9 +41,6 @@ const Profile = () => {
 
   return (
     <div className="booking-page">
-      {/* Sidebar Component */}
-      <Sidebar activeNav={activeNav} />
-
       {/* Main Content */}
       <main className="main-content">
         <div className="booking-container">

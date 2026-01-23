@@ -34,7 +34,7 @@ const MapController = ({ activityCoords, zoomLevel }) => {
   const map = useMap();
   
   useEffect(() => {
-    if (activityCoords && map) {
+    if (activityCoords && activityCoords.length === 2 && map) {
       map.setView(activityCoords, zoomLevel);
     }
   }, [activityCoords, zoomLevel, map]);
@@ -72,81 +72,73 @@ const MadagascarMap = () => {
         // Charger UNIQUEMENT les activités ouvertes depuis l'API
         const ouvertesResponse = await activiteService.getActivitesOuvertes();
         
-        if (ouvertesResponse.success) {
-          console.log("Réponse API activités ouvertes:", ouvertesResponse.data);
+        console.log("Réponse API activités ouvertes:", ouvertesResponse);
+        
+        // Toutes les activités ouvertes pour la liste
+        const allOpenActivities = ouvertesResponse.map(activite => ({
+          id: activite.id_activite,
+          name: activite.titre_activite,
+          region: activite.lieu_activite || "Madagascar",
+          price: activite.capacite ? `0/${activite.capacite} places` : "Illimité",
+          rating: "⭐⭐⭐⭐",
+          reviews: "0",
+          image: "📍",
+          description: activite.description || "Découvrez cette activité passionnante",
+          date: activite.date_heure_activite,
+          lieu: activite.lieu_activite,
+          statut: activiteService.getActivityStatus(activite),
+          places_restantes: activite.capacite ? activite.capacite : "Illimité",
+          // Garder les coordonnées originales pour debug
+          latitude_origine: activite.latitude_activite,
+          longitude_origine: activite.longitude_activite,
+          hasCoords: !!(activite.latitude_activite && activite.longitude_activite)
+        }));
+        
+        // Filtrer les activités qui ont des coordonnées pour la carte
+        const activitiesWithCoords = ouvertesResponse.filter(activite => {
+          const hasCoords = activite.latitude_activite && activite.longitude_activite;
+          console.log(`Activité: ${activite.titre_activite}`);
+          console.log(`  - Statut: ${activite.statut}`);
+          console.log(`  - Latitude: ${activite.latitude_activite}`);
+          console.log(`  - Longitude: ${activite.longitude_activite}`);
+          console.log(`  - A des coordonnées: ${hasCoords}`);
+          return hasCoords;
+        });
+        
+        console.log(`Activités ouvertes avec coordonnées: ${activitiesWithCoords.length}/${ouvertesResponse.length}`);
+        
+        // Transformer les données pour la carte
+        const mapActivitiesData = activitiesWithCoords.map(activite => {
+          // Utiliser UNIQUEMENT les coordonnées de la base de données
+          const coords = [parseFloat(activite.latitude_activite), parseFloat(activite.longitude_activite)];
           
-          // Toutes les activités ouvertes pour la liste
-          const allOpenActivities = ouvertesResponse.data.map(activite => ({
+          console.log(`Activité ouverte ${activite.titre_activite} - Coordonnées BDD:`, coords);
+          
+          return {
             id: activite.id_activite,
             name: activite.titre_activite,
             region: activite.lieu_activite || "Madagascar",
-            price: activite.capacite ? `${activite.nb_participants}/${activite.capacite} places` : "Illimité",
+            price: activite.capacite ? `0/${activite.capacite} places` : "Illimité",
             rating: "⭐⭐⭐⭐",
-            reviews: activite.nb_participants.toString(),
-            image: activite.is_base64 ? 
-              <img src={activite.image_url} alt={activite.titre_activite} style={{width: '40px', height: '40px', borderRadius: '8px'}} /> : 
-              activite.image_url ? "📍" : "📍",
+            reviews: "0",
+            image: "📍",
             description: activite.description || "Découvrez cette activité passionnante",
             date: activite.date_heure_activite,
+            coords: coords,
             lieu: activite.lieu_activite,
             statut: activiteService.getActivityStatus(activite),
-            places_restantes: activite.capacite ? activite.capacite - activite.nb_participants : "Illimité",
+            places_restantes: activite.capacite ? activite.capacite : "Illimité",
             // Garder les coordonnées originales pour debug
             latitude_origine: activite.latitude_activite,
-            longitude_origine: activite.longitude_activite,
-            hasCoords: !!(activite.latitude_activite && activite.longitude_activite)
-          }));
-          
-          // Filtrer les activités qui ont des coordonnées pour la carte
-          const activitiesWithCoords = ouvertesResponse.data.filter(activite => {
-            const hasCoords = activite.latitude_activite && activite.longitude_activite;
-            console.log(`Activité: ${activite.titre_activite}`);
-            console.log(`  - Statut: ${activite.statut}`);
-            console.log(`  - Latitude: ${activite.latitude_activite}`);
-            console.log(`  - Longitude: ${activite.longitude_activite}`);
-            console.log(`  - A des coordonnées: ${hasCoords}`);
-            return hasCoords;
-          });
-          
-          console.log(`Activités ouvertes avec coordonnées: ${activitiesWithCoords.length}/${ouvertesResponse.data.length}`);
-          
-          // Transformer les données pour la carte
-          const mapActivitiesData = activitiesWithCoords.map(activite => {
-            // Utiliser UNIQUEMENT les coordonnées de la base de données
-            const coords = [parseFloat(activite.latitude_activite), parseFloat(activite.longitude_activite)];
-            
-            console.log(`Activité ouverte ${activite.titre_activite} - Coordonnées BDD:`, coords);
-            
-            return {
-              id: activite.id_activite,
-              name: activite.titre_activite,
-              region: activite.lieu_activite || "Madagascar",
-              price: activite.capacite ? `${activite.nb_participants}/${activite.capacite} places` : "Illimité",
-              rating: "⭐⭐⭐⭐",
-              reviews: activite.nb_participants.toString(),
-              image: activite.is_base64 ? 
-                <img src={activite.image_url} alt={activite.titre_activite} style={{width: '40px', height: '40px', borderRadius: '8px'}} /> : 
-                activite.image_url ? "📍" : "📍",
-              description: activite.description || "Découvrez cette activité passionnante",
-              date: activite.date_heure_activite,
-              coords: coords,
-              lieu: activite.lieu_activite,
-              statut: activiteService.getActivityStatus(activite),
-              places_restantes: activite.capacite ? activite.capacite - activite.nb_participants : "Illimité",
-              // Garder les coordonnées originales pour debug
-              latitude_origine: activite.latitude_activite,
-              longitude_origine: activite.longitude_activite
-            };
-          });
-          
-          console.log("Toutes les activités ouvertes pour la liste:", allOpenActivities);
-          console.log("Activités transformées pour la carte:", mapActivitiesData);
-          
-          setActivities(allOpenActivities);
-          setMapActivities(mapActivitiesData);
-        } else {
-          setError("Erreur lors du chargement des activités ouvertes");
-        }
+            longitude_origine: activite.longitude_activite
+          };
+        });
+        
+        console.log("Toutes les activités ouvertes pour la liste:", allOpenActivities);
+        console.log("Activités transformées pour la carte:", mapActivitiesData);
+        
+        setActivities(allOpenActivities);
+        setMapActivities(mapActivitiesData);
       } catch (err) {
         setError("Impossible de charger les activités ouvertes");
         console.error("Erreur:", err);
@@ -217,11 +209,11 @@ const MadagascarMap = () => {
               </div>
               <div className="coords-item">
                 <span className="coords-label">Latitude:</span>
-                <span className="coords-value">{selectedActivity.coords[0].toFixed(6)}</span>
+                <span className="coords-value">{selectedActivity.coords && selectedActivity.coords[0] ? selectedActivity.coords[0].toFixed(6) : 'N/A'}</span>
               </div>
               <div className="coords-item">
                 <span className="coords-label">Longitude:</span>
-                <span className="coords-value">{selectedActivity.coords[1].toFixed(6)}</span>
+                <span className="coords-value">{selectedActivity.coords && selectedActivity.coords[1] ? selectedActivity.coords[1].toFixed(6) : 'N/A'}</span>
               </div>
               {/* Debug: afficher les coordonnées originales si elles existent */}
               {selectedActivity.latitude_origine && selectedActivity.longitude_origine && (
@@ -308,7 +300,7 @@ const MadagascarMap = () => {
           className="map-container"
         >
           <MapController 
-            activityCoords={selectedActivity?.coords} 
+            activityCoords={selectedActivity?.coords || null} 
             zoomLevel={12} 
           />
           <TileLayer
@@ -322,7 +314,7 @@ const MadagascarMap = () => {
             return (
               <Marker 
                 key={activity.id} 
-                position={activity.coords}
+                position={activity.coords || [0, 0]}
                 icon={isSelected ? createSelectedIcon() : createDefaultIcon()}
               >
                 <Popup>

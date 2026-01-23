@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import MadagascarMap from "../../component/map/MadagascarMap";
 import activiteService from "../../services/activite.service";
+import AuthService from "../../services/auth.service";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -12,6 +13,23 @@ const Home = () => {
   const [activitesPopulaires, setActivitesPopulaires] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Récupérer les informations de l'utilisateur connecté
+  useEffect(() => {
+    const member = AuthService.getCurrentMember();
+    if (member) {
+      setCurrentUser(member);
+    }
+  }, []);
+
+  // Créer le nom d'affichage
+  const getDisplayName = () => {
+    if (currentUser) {
+      return `${currentUser.prenom} ${currentUser.nom.charAt(0)}.`;
+    }
+    return "Visiteur";
+  };
 
   // Image améliorée pour Vision Center Madagascar
   const improvedImageBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+";
@@ -24,15 +42,11 @@ const Home = () => {
         
         // Charger les activités ouvertes
         const ouvertesResponse = await activiteService.getActivitesOuvertes();
-        if (ouvertesResponse.success) {
-          setActivitesOuvertes(ouvertesResponse.data);
-        }
+        setActivitesOuvertes(ouvertesResponse);
 
         // Charger les activités populaires
         const populairesResponse = await activiteService.getActivitesPopulaires();
-        if (populairesResponse.success) {
-          setActivitesPopulaires(populairesResponse.data);
-        }
+        setActivitesPopulaires(populairesResponse);
 
         setError(null);
       } catch (err) {
@@ -57,24 +71,24 @@ const Home = () => {
   const packages = activitesPopulaires.slice(0, 4).map((activite, index) => ({
     id: activite.id_activite,
     name: activite.titre_activite,
-    price: activite.capacite ? `${activite.nb_participants}/${activite.capacite} places` : "Illimité",
+    price: activite.capacite ? `0/${activite.capacite} places` : "Illimité",
     rating: "⭐⭐⭐⭐⭐",
-    reviews: activite.nb_participants.toString(),
-    discount: activite.est_complete ? "Complet" : "Disponible",
+    reviews: "0",
+    discount: "Disponible",
     image: activite.image_url || improvedImageBase64,
     date: activite.date_heure_activite,
     lieu: activite.lieu_activite,
-    isBase64: activite.is_base64 || true // Toujours true car on utilise base64
+    isBase64: true // Toujours true car on utilise base64
   }));
 
   // Utiliser les vraies activités ouvertes pour les nouveaux packages
   const newPackages = activitesOuvertes.slice(0, 4).map((activite, index) => ({
     id: activite.id_activite,
-    price: activite.capacite ? `${activite.nb_participants}/${activite.capacite}` : "Illimité",
+    price: activite.capacite ? `0/${activite.capacite}` : "Illimité",
     image: activite.image_url || improvedImageBase64,
     titre: activite.titre_activite,
     date: activite.date_heure_activite,
-    isBase64: activite.is_base64 || true // Toujours true car on utilise base64
+    isBase64: true // Toujours true car on utilise base64
   }));
 
   const infoGuide = [
@@ -136,7 +150,7 @@ const Home = () => {
               <h2>Vision Center Madagascar</h2>
             </div>
             <nav className="header-nav">
-              <button className="nav-btn" onClick={() => navigate("/")}>Accueil</button>
+              <button className="nav-btn" onClick={() => navigate("/dashboard")}>Accueil</button>
               <button className="nav-btn" onClick={() => navigate("/map")}>Carte</button>
               <button className="nav-btn" onClick={() => navigate("/activites")}>Activités</button>
               <button className="nav-btn" onClick={() => navigate("/contact")}>Contact</button>
@@ -144,7 +158,7 @@ const Home = () => {
           </div>
           <div className="header-profile">
             <div className="profile-info">
-              <span className="profile-name">Rakotomalala M.</span>
+              <span className="profile-name">{getDisplayName()}</span>
               <span className="profile-status">En ligne</span>
             </div>
             <div className="profile-avatar">
@@ -160,17 +174,17 @@ const Home = () => {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
-          <h1>Destination Madagascar</h1>
-          <p>Escape at your fingertips</p>
+          <h1>Vision Center Madagascar</h1>
+          <p>Votre santé visuelle, notre priorité</p>
           
           <div className="search-bar">
             <input 
               type="text" 
-              placeholder="Where are you looking?"
+              placeholder="Rechercher une activité..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button className="search-btn">Search</button>
+            <button className="search-btn">Rechercher</button>
           </div>
         </div>
       </section>
@@ -187,8 +201,8 @@ const Home = () => {
       {/* Destinations Section */}
       <section className="destinations-section">
         <div className="section-header">
-          <h2>Find other interesting destinations</h2>
-          <a href="#" className="see-all">More</a>
+          <h2>Découvrez nos services</h2>
+          <a href="#" className="see-all">Plus</a>
         </div>
         
         <div className="destinations-grid">
@@ -257,8 +271,8 @@ const Home = () => {
       {/* New Packages Section */}
       <section className="new-packages-section">
         <div className="section-header">
-          <h2>New package just added</h2>
-          <a href="#" className="see-all">See All</a>
+          <h2>Nouveaux services ajoutés</h2>
+          <a href="#" className="see-all">Voir tout</a>
         </div>
 
         <div className="new-packages-grid">
@@ -301,7 +315,7 @@ const Home = () => {
 
       {/* Information & Guide Section */}
       <section className="info-guide-section">
-        <h2>Information & brief guide</h2>
+        <h2>Informations & guide</h2>
         <div className="info-grid">
           {infoGuide.map((item, idx) => (
             <div key={idx} className="info-card">
