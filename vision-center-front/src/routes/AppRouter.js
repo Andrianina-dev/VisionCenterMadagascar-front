@@ -7,6 +7,7 @@ import AdminLogin from "../pages/auth/AdminLogin";
 import Home from "../pages/public/Home";
 import ShowcaseHomePage from "../pages/showcase/HomePage";
 import SimpleHomePage from "../pages/showcase/SimpleHomePage";
+import Galerie from "../layouts/vitrine/Galerie";
 import MapSearch from "../pages/public/MapSearch";
 import ActiviteDetails from "../pages/public/ActiviteDetails";
 import Profile from "../pages/public/Profile";
@@ -52,6 +53,11 @@ const AppRouterContent = () => {
         {/* PAGE D'ACCUEIL PAR DÉFAUT - VITRINE */}
         <Route path="/" element={
           <AccueilVitrine />
+        } />
+
+        {/* PAGE GALERIE */}
+        <Route path="/galerie" element={
+          <Galerie />
         } />
 
         {/* DASHBOARD */}
