@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import GalerieService from '../../services/GalerieService';
 import './accueilVitrineSimple.css';
 
 function Galerie() {
   const navigate = useNavigate();
   const [selectedMedia, setSelectedMedia] = useState(null);
+  const [mediaItems, setMediaItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -13,75 +17,59 @@ function Galerie() {
     }
   };
 
-  const mediaItems = [
-    {
-      id: 1,
-      type: 'image',
-      title: 'Formation Leadership Chrétien',
-      description: 'Session intensive sur les principes bibliques du leadership pour les jeunes leaders de demain.',
-      thumbnail: 'https://picsum.photos/400/300?random=1',
-      date: '15 Février 2026'
-    },
-    {
-      id: 2,
-      type: 'video',
-      title: 'Retraite Spirituelle Annuelle',
-      description: '3 jours de ressourcement, prière et communion dans un cadre naturel loin de l\'agitation quotidienne.',
-      thumbnail: 'https://picsum.photos/400/300?random=2',
-      date: '10 Février 2026',
-      videoUrl: 'https://sample-videos.com/zip/10/mp4'
-    },
-    {
-      id: 3,
-      type: 'image',
-      title: 'Journée Communautaire',
-      description: 'Moment de partage, d\'entraide et de fraternité entre les membres de notre communauté.',
-      thumbnail: 'https://picsum.photos/400/300?random=3',
-      date: '20 Février 2026'
-    },
-    {
-      id: 4,
-      type: 'video',
-      title: 'Culte et Louange',
-      description: 'Moment d\'adoration collective avec chants traditionnels et louange contemporaine.',
-      thumbnail: 'https://picsum.photos/400/300?random=4',
-      date: '25 Février 2026',
-      videoUrl: 'https://sample-videos.com/zip/10/mp4'
-    },
-    {
-      id: 5,
-      type: 'image',
-      title: 'Camp d\'Été des Jeunes',
-      description: 'Camp de 5 jours avec formations, activités sportives et temps de prière pour les 15-25 ans.',
-      thumbnail: 'https://picsum.photos/400/300?random=5',
-      date: '5 Février 2026'
-    },
-    {
-      id: 6,
-      type: 'image',
-      title: 'Étude Biblique Approfondie',
-      description: 'Session d\'étude approfondie des Écritures avec focus sur l\'application pratique dans la vie quotidienne.',
-      thumbnail: 'https://picsum.photos/400/300?random=6',
-      date: '12 Février 2026'
-    },
-    {
-      id: 7,
-      type: 'video',
-      title: 'Témoignages de Transformation',
-      description: 'Histoires inspirantes de jeunes dont la vie a été transformée par leur engagement au Vision Center.',
-      thumbnail: 'https://picsum.photos/400/300?random=7',
-      date: '8 Février 2026',
-      videoUrl: 'https://sample-videos.com/zip/10/mp4'
-    },
-    {
-      id: 8,
-      type: 'image',
-      title: 'Culte du Dimanche',
-      description: 'Célébration hebdomadaire avec message biblique, louange et communion fraternelle.',
-      thumbnail: 'https://picsum.photos/400/300?random=8',
-      date: '2 Février 2026'
-    }
-  ];
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const raw = await GalerieService.getAllMedias();
+
+        const mapped = (raw || []).map((m, index) => {
+          const type = m.type_media;
+          const createdAt = m.date_ajout || m.created_at || null;
+          const date = createdAt
+            ? new Date(createdAt).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })
+            : '';
+
+          const stableId = m.id_media ?? m.id ?? null;
+          const stableKey = stableId ? `media-${stableId}` : `media-idx-${index}`;
+
+          return {
+            key: stableKey,
+            id: stableId ?? index,
+            type,
+            title: m.titre_media,
+            description: m.description,
+            thumbnail: type === 'image' ? m.chemin_media : 'https://picsum.photos/400/300?random=2',
+            date,
+            videoUrl: type === 'video' ? m.chemin_media : null,
+            galerieId: m.id_galerie,
+          };
+        });
+
+        if (!cancelled) {
+          setMediaItems(mapped);
+        }
+      } catch (e) {
+        if (!cancelled) {
+          setError(e?.message || 'Erreur lors du chargement');
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const openMediaModal = (media) => {
     setSelectedMedia(media);
@@ -124,25 +112,37 @@ function Galerie() {
       {/* Galerie Grid */}
       <section className="features-simple" id="galerie">
         <div className="container">
+          {loading && (
+            <div style={{ padding: '16px 0' }}>
+              Chargement...
+            </div>
+          )}
+
+          {!loading && error && (
+            <div style={{ padding: '16px 0', color: '#b00020' }}>
+              {error}
+            </div>
+          )}
+
           <div className="galerie-grid">
             {mediaItems.map((item) => (
-              <div key={item.id} className="galerie-item" onClick={() => openMediaModal(item)}>
+              <div key={item.key || item.id} className="galerie-item" onClick={() => openMediaModal(item)}>
                 <div className="media-type">
                   {item.type === 'video' ? '🎥' : '📸'}
                 </div>
                 <div className="galerie-image">
                   <img src={item.thumbnail} alt={item.title} />
-                  <div className="galerie-overlay">
-                    <div className="galerie-info">
-                      <h3>{item.title}</h3>
-                      <p>{item.description}</p>
-                      <div className="galerie-meta">
-                        <span className="galerie-date">{item.date}</span>
-                        {item.type === 'video' && (
-                          <span className="galerie-duration">▶ Vidéo</span>
-                        )}
-                      </div>
-                    </div>
+                </div>
+                <div className="galerie-content">
+                  <h3>{item.title}</h3>
+                  <div className="galerie-description">
+                    <p>{item.description}</p>
+                  </div>
+                  <div className="galerie-meta">
+                    <span className="galerie-date">{item.date}</span>
+                    {item.type === 'video' && (
+                      <span className="galerie-duration">▶ Vidéo</span>
+                    )}
                   </div>
                 </div>
               </div>
