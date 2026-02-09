@@ -101,7 +101,12 @@ const Home = () => {
 
   // Gérer le clic sur une activité
   const handleActiviteClick = (activiteId) => {
-    navigate(`/activite/${activiteId}`);
+    navigate(`/activite-details/${activiteId}`);
+  };
+
+  // Gérer l'inscription directe
+  const handleParticiper = (activiteId) => {
+    navigate(`/inscription/${activiteId}`);
   };
 
   const handleSeeOnMap = (activity) => {
@@ -248,6 +253,12 @@ const Home = () => {
                   <span>({pkg.reviews} participants)</span>
                 </div>
                 <div className="package-actions">
+                  <button 
+                    className="participer-btn" 
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleParticiper(pkg.id); }}
+                  >
+                    Participez
+                  </button>
                   <a href="#" className="learn-more" onClick={(e) => { e.preventDefault(); handleActiviteClick(pkg.id); }}>
                     Voir détails
                   </a>
@@ -295,6 +306,12 @@ const Home = () => {
                 📅 {activiteService.formatDateShort(pkg.date)}
               </p>
               <div className="new-package-actions">
+                <button 
+                  className="participer-btn-small" 
+                  onClick={() => handleParticiper(pkg.id)}
+                >
+                  Participez
+                </button>
                 <button 
                   className="learn-more-btn" 
                   onClick={() => handleActiviteClick(pkg.id)}

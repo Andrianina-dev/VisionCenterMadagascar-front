@@ -21,7 +21,7 @@ import MainLayout from "../layouts/MainLayout";
 import MemberLayout from "../layouts/MemberLayout";
 import AdminLayout from "../layouts/AdminLayout";
 import ShowcaseLayout from "../layouts/vitrine/ShowcaseLayout";
-import AccueilVitrine from "../layouts/vitrine/AcceuilVitrine";
+import AccueilVitrine from "../layouts/vitrine/AccueilVitrine";
 import ProtectedRoute from "../component/ProtectedRoute";
 
 const AppRouterContent = () => {

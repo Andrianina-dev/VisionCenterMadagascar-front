@@ -2,6 +2,33 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import activiteService from "../../services/activite.service";
 import "./ActiviteDetails.css";
+import "./ActiviteDetailsEnhanced.css";
+
+// Import direct pour éviter les problèmes de cache
+const getActiviteById = async (id) => {
+  console.log(`Tentative de chargement de l'activité ${id} à ${new Date().toISOString()}`);
+  
+  try {
+    // Correction de l'URL pour éviter le double /api/
+    const baseUrl = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
+    const apiUrl = baseUrl.endsWith('/api') ? `${baseUrl.replace('/api', '')}/api/public/activites/${id}` : `${baseUrl}/api/public/activites/${id}`;
+    
+    console.log(`URL appelée: ${apiUrl}`);
+    
+    const response = await fetch(apiUrl);
+    
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log(`Activité ${id} chargée avec succès:`, data);
+    return data;
+  } catch (error) {
+    console.error('Erreur lors de la récupération de l\'activité:', error);
+    throw error;
+  }
+};
 
 const ActiviteDetails = () => {
   const { id } = useParams();
@@ -13,50 +40,14 @@ const ActiviteDetails = () => {
   // Image améliorée pour Vision Center Madagascar
   const improvedImageBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+";
 
-  // Données de test statiques
-  const testData = {
-    id_activite: "ACT-001",
-    titre_activite: "Atelier de Formation en Leadership",
-    description: "Rejoignez notre atelier intensif de formation en leadership conçu spécialement pour les jeunes professionnels de Madagascar. Cet événement unique vous offrira les compétences essentielles pour développer votre potentiel de leader et faire une différence positive dans votre communauté.\n\nAu programme :\n• Techniques de communication avancées\n• Gestion d'équipe et motivation\n• Prise de décision stratégique\n• Intelligence émotionnelle et empathie\n• Leadership adaptatif au contexte malgache\n\nNos formateurs expérimentés vous guideront à travers des exercices pratiques, des études de cas réelles et des sessions de coaching personnalisé.",
-    date_heure_activite: "2024-02-15T09:00:00",
-    lieu_activite: "Centre de Formation Vision Center - Antananarivo",
-    capacite: 50,
-    nb_participants: 32,
-    est_complete: false,
-    statut: "ouvert",
-    image_activite: improvedImageBase64,
-    image_url: improvedImageBase64,
-    is_base64: true,
-    responsable: {
-      nom: "Rakoto",
-      prenom: "Jean",
-      email: "jean.rakoto@visioncenter.mg",
-      telephone: "+261 34 12 345 67"
-    },
-    inscription_ouverte: true,
-    prix: "Gratuit",
-    duree: "2 jours",
-    niveau: "Intermédiaire",
-    prerequis: "Aucun prérequis spécifique",
-    objectifs: [
-      "Développer les compétences en leadership",
-      "Améliorer la communication interpersonnelle", 
-      "Apprendre à gérer une équipe efficacement",
-      "Maîtriser la prise de décision"
-    ]
-  };
-
   useEffect(() => {
-    // Simuler le chargement avec des données statiques
     const loadActiviteDetails = async () => {
       try {
         setLoading(true);
         
-        // Simuler un délai de chargement
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Utiliser les données de test
-        setActivite(testData);
+        // Charger les données réelles depuis l'API
+        const activiteData = await getActiviteById(id);
+        setActivite(activiteData);
         
       } catch (err) {
         setError("Erreur lors du chargement des détails de l'activité");
@@ -73,8 +64,13 @@ const ActiviteDetails = () => {
     navigate(`/inscription/${id}`);
   };
 
+  const handleParticiper = () => {
+    // Rediriger vers la page d'inscription avec l'ID de l'activité
+    navigate(`/inscription/${id}`);
+  };
+
   const handleRetour = () => {
-    navigate("/");
+    navigate("/dashboard");
   };
 
   if (loading) {
@@ -88,22 +84,62 @@ const ActiviteDetails = () => {
   }
 
   if (error || !activite) {
+    // Essayer de parser l'erreur pour voir si elle contient les activités disponibles
+    let availableActivities = [];
+    let detailedError = error || "Activité non trouvée";
+    
+    try {
+      // Si l'erreur est en JSON, essayer d'extraire les activités disponibles
+      if (error && error.includes('available_activities')) {
+        const errorObj = JSON.parse(error);
+        availableActivities = errorObj.available_activities || [];
+        detailedError = errorObj.message || detailedError;
+      }
+    } catch (e) {
+      console.log('Impossible de parser l\'erreur:', e);
+    }
+
     return (
       <div className="home-container">
         <div className="error-container">
           <div className="error-message">
-            {error || "Activité non trouvée"}
+            {detailedError}
           </div>
+          <div className="error-details">
+            <p>ID demandé: <strong>{id}</strong></p>
+            
+            {availableActivities.length > 0 && (
+              <div className="available-activities">
+                <h4>Activités disponibles dans la base :</h4>
+                <div className="activities-list">
+                  {availableActivities.map((activity, index) => (
+                    <div key={index} className="activity-item">
+                      <span className="activity-id">{activity.id_activite}</span>
+                      <span className="activity-title">{activity.titre_activite}</span>
+                      <span className="activity-status">{activity.statut}</span>
+                      <a 
+                        href={`/activite-details/${activity.id_activite}`}
+                        className="activity-link"
+                      >
+                        Voir →
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          
           <button onClick={handleRetour} className="btn btn-primary">
-            Retour à l'accueil
+            Retour aux activités
           </button>
         </div>
       </div>
     );
   }
 
-  const statut = activiteService.getActivityStatus(activite);
-  const placesRestantes = activite.capacite ? activite.capacite - activite.nb_participants : "Illimité";
+  const statut = activite ? activiteService.getActivityStatus(activite) : { icon: "", text: "Chargement...", class: "loading" };
+  const placesRestantes = activite && activite.capacite ? activite.capacite - (activite.nb_participants || 0) : "Illimité";
 
   return (
     <div className="home-container">
@@ -271,12 +307,21 @@ const ActiviteDetails = () => {
           {/* Actions */}
           <div className="activite-details-actions">
             {!activite.est_complete && new Date(activite.date_heure_activite) > new Date() && (
-              <button 
-                onClick={handleInscription} 
-                className="btn btn-primary btn-large"
-              >
-                S'inscrire à cette activité
-              </button>
+              <>
+                <button 
+                  onClick={handleParticiper} 
+                  className="btn btn-success btn-large"
+                >
+                   Participez
+                </button>
+                
+                <button 
+                  onClick={handleInscription} 
+                  className="btn btn-primary btn-large"
+                >
+                  S'inscrire à cette activité
+                </button>
+              </>
             )}
             
             {activite.est_complete && (
@@ -295,7 +340,7 @@ const ActiviteDetails = () => {
               onClick={handleRetour} 
               className="btn btn-secondary btn-large"
             >
-              Retour à l'accueil
+              Retour aux activités
             </button>
 
             <button 
