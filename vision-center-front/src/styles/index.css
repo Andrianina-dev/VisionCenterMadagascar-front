@@ -1,0 +1,44 @@
+/* Styles principaux - Point d'entrée pour tous les styles */
+
+/* Import des styles de base */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import des styles de base */
+@import './index.css';
+@import './App.css';
+
+/* Import des styles des layouts */
+@import './layouts/PublicLayout.css';
+@import './layouts/AdminLayout.css';
+@import './layouts/MemberLayout.css';
+
+/* Import des styles des composants */
+@import './components/Sidebar.css';
+@import './components/AdminSidebar.css';
+@import './components/MemberSidebar.css';
+
+/* Import des styles des pages publiques */
+@import './pages/Home.css';
+@import './pages/AccountProfile.css';
+@import './pages/ActiviteDetails.css';
+@import './pages/ActiviteDetailsEnhanced.css';
+@import './pages/HomeRegistered.css';
+@import './pages/Inscription.css';
+@import './pages/MapSearch.css';
+@import './pages/Profile.css';
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}

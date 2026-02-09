@@ -1,6 +1,5 @@
 import React from 'react';
 import AdminSidebar from '../components/AdminSidebar';
-import './AdminLayout.css';
 
 const AdminLayout = ({ children, activeNav = 'dashboard' }) => {
   return (

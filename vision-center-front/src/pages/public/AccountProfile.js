@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar';
 import AuthService from '../../services/auth.service';
-import './AccountProfile.css';
 
 const AccountProfile = () => {
   const navigate = useNavigate();

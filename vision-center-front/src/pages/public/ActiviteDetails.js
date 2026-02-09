@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import activiteService from "../../services/activite.service";
-import "./ActiviteDetails.css";
-import "./ActiviteDetailsEnhanced.css";
 
-// Import direct pour éviter les problèmes de cache
 const getActiviteById = async (id) => {
   console.log(`Tentative de chargement de l'activité ${id} à ${new Date().toISOString()}`);
   
@@ -28,7 +25,7 @@ const getActiviteById = async (id) => {
     console.error('Erreur lors de la récupération de l\'activité:', error);
     throw error;
   }
-};
+}
 
 const ActiviteDetails = () => {
   const { id } = useParams();

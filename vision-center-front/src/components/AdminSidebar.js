@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AuthService from '../services/auth.service';
-import './AdminSidebar.css';
 
 const AdminSidebar = ({ activeNav }) => {
   const navigate = useNavigate();

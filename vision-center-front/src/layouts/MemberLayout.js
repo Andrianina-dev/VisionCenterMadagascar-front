@@ -1,6 +1,5 @@
 import React from 'react';
 import MemberSidebar from '../components/MemberSidebar';
-import './MemberLayout.css';
 
 const MemberLayout = ({ children, activeNav = 'dashboard' }) => {
   return (
