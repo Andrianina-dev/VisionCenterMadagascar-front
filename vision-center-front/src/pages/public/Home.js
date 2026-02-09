@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
+import "./HomeRegistered.css";
 import MadagascarMap from "../../component/map/MadagascarMap";
 import activiteService from "../../services/activite.service";
 import AuthService from "../../services/auth.service";
@@ -12,6 +13,7 @@ const Home = () => {
   const [activitesOuvertes, setActivitesOuvertes] = useState([]);
   const [activitesPopulaires, setActivitesPopulaires] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submittingId, setSubmittingId] = useState(null);
   const [error, setError] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -34,29 +36,71 @@ const Home = () => {
   // Image améliorée pour Vision Center Madagascar
   const improvedImageBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+";
 
-  // Charger les activités depuis l'API
-  useEffect(() => {
-    const loadActivites = async () => {
-      try {
-        setLoading(true);
-        
-        // Charger les activités ouvertes
-        const ouvertesResponse = await activiteService.getActivitesOuvertes();
-        setActivitesOuvertes(ouvertesResponse);
-
-        // Charger les activités populaires
-        const populairesResponse = await activiteService.getActivitesPopulaires();
-        setActivitesPopulaires(populairesResponse);
-
-        setError(null);
-      } catch (err) {
-        console.error('Erreur lors du chargement des activités:', err);
-        setError('Impossible de charger les activités. Veuillez réessayer plus tard.');
-      } finally {
-        setLoading(false);
+  // Vérifier si l'utilisateur est déjà inscrit à une activité
+  const checkIfAlreadyRegistered = async (activiteId) => {
+    const auth = localStorage.getItem('auth') || sessionStorage.getItem('auth');
+    const member = localStorage.getItem('member') || sessionStorage.getItem('member');
+    
+    if (!auth || auth !== 'true' || !member) {
+      return false;
+    }
+    
+    try {
+      const memberData = JSON.parse(member);
+      const utilisateurId = memberData.id;
+      
+      if (!utilisateurId) {
+        return false;
       }
-    };
+      
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/public/inscriptions/verifier/${activiteId}/${utilisateurId}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        return data.isRegistered;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error('Erreur vérification inscription:', error);
+      return false;
+    }
+  };
 
+  // Charger les activités depuis l'API
+  const loadActivites = async () => {
+    try {
+      setLoading(true);
+      
+      const activitesOuvertes = await activiteService.getActivitesOuvertes();
+      const activitesPopulaires = await activiteService.getActivitesPopulaires();
+      
+      // Vérifier les inscriptions pour chaque activité
+      const activitesOuvertesWithStatus = await Promise.all(
+        activitesOuvertes.map(async (activite) => ({
+          ...activite,
+          isRegistered: await checkIfAlreadyRegistered(activite.id_activite)
+        }))
+      );
+      
+      const activitesPopulairesWithStatus = await Promise.all(
+        activitesPopulaires.map(async (activite) => ({
+          ...activite,
+          isRegistered: await checkIfAlreadyRegistered(activite.id_activite)
+        }))
+      );
+      
+      setActivitesOuvertes(activitesOuvertesWithStatus);
+      setActivitesPopulaires(activitesPopulairesWithStatus);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     loadActivites();
   }, []);
 
@@ -78,7 +122,8 @@ const Home = () => {
     image: activite.image_url || improvedImageBase64,
     date: activite.date_heure_activite,
     lieu: activite.lieu_activite,
-    isBase64: true // Toujours true car on utilise base64
+    isBase64: true, // Toujours true car on utilise base64
+    isRegistered: activite.isRegistered || false
   }));
 
   // Utiliser les vraies activités ouvertes pour les nouveaux packages
@@ -88,7 +133,8 @@ const Home = () => {
     image: activite.image_url || improvedImageBase64,
     titre: activite.titre_activite,
     date: activite.date_heure_activite,
-    isBase64: true // Toujours true car on utilise base64
+    isBase64: true, // Toujours true car on utilise base64
+    isRegistered: activite.isRegistered || false
   }));
 
   const infoGuide = [
@@ -101,12 +147,168 @@ const Home = () => {
 
   // Gérer le clic sur une activité
   const handleActiviteClick = (activiteId) => {
-    navigate(`/activite-details/${activiteId}`);
+    navigate(`/activite/${activiteId}`);
   };
 
   // Gérer l'inscription directe
-  const handleParticiper = (activiteId) => {
-    navigate(`/inscription/${activiteId}`);
+  const handleParticiper = async (activiteId) => {
+    // Vérifier si l'utilisateur est connecté
+    const auth = localStorage.getItem('auth') || sessionStorage.getItem('auth');
+    const member = localStorage.getItem('member') || sessionStorage.getItem('member');
+    const userIsLoggedIn = auth === 'true' && member;
+    
+    if (!userIsLoggedIn) {
+      // Si non connecté, rediriger vers la page de login
+      navigate('/login');
+      return;
+    }
+
+    // Si connecté, inscrire directement
+    setSubmittingId(activiteId);
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+      const member = localStorage.getItem('member') || sessionStorage.getItem('member');
+      const memberData = member ? JSON.parse(member) : null;
+      
+      console.log('État de connexion:', {
+        auth,
+        member: member,
+        'member parsed': member ? JSON.parse(member) : null
+      });
+      
+      // Vérifier que l'ID utilisateur existe (structure correcte)
+      if (!memberData || !memberData.id) {
+        console.error('Données utilisateur invalides:', memberData);
+        alert('Erreur: données utilisateur invalides. Veuillez vous reconnecter.');
+        setSubmittingId(null);
+        return;
+      }
+      
+      // Récupérer l'ID utilisateur avec fallback
+      let utilisateurId = memberData.id;
+      
+      // Fallback: essayer de récupérer depuis les autres propriétés
+      if (!utilisateurId && memberData) {
+        if (memberData.member?.id) {
+          utilisateurId = memberData.member.id;
+        } else if (memberData.id_utilisateur) {
+          utilisateurId = memberData.id_utilisateur;
+        } else if (memberData.email) {
+          // Extraire l'ID depuis l'email (format: USR-X)
+          const emailMatch = memberData.email.match(/USR-(\d+)/);
+          if (emailMatch) {
+            utilisateurId = 'USR-' + emailMatch[1];
+          }
+        }
+      }
+      
+      if (!utilisateurId) {
+        console.error('ID utilisateur non trouvé dans:', memberData);
+        alert('Erreur: ID utilisateur non trouvé. Veuillez vous reconnecter.');
+        setSubmittingId(null);
+        return;
+      }
+      
+      console.log('Tentative d\'inscription avec:', {
+        activiteId,
+        utilisateurId,
+        memberData,
+        'utilisateur final': utilisateurId
+      });
+      
+      const response = await fetch(`${apiUrl}/public/inscriptions/${activiteId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          id_utilisateur: utilisateurId
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Erreur API:', data);
+        throw new Error(data.message || 'Erreur lors de l\'inscription');
+      }
+
+      // Afficher un message de succès
+      alert('Inscription réussie ! Vous êtes maintenant inscrit à cette activité.');
+      
+      // Rafraîchir les activités pour mettre à jour le statut
+      loadActivites();
+      
+    } catch (err) {
+      console.error('Erreur inscription:', err);
+      alert('Erreur lors de l\'inscription: ' + err.message);
+    } finally {
+      setSubmittingId(null);
+    }
+  };
+
+  // Gérer la désinscription
+  const handleDesinscrire = async (activiteId) => {
+    // Vérifier si l'utilisateur est connecté
+    const auth = localStorage.getItem('auth') || sessionStorage.getItem('auth');
+    const member = localStorage.getItem('member') || sessionStorage.getItem('member');
+    const userIsLoggedIn = auth === 'true' && member;
+    
+    if (!userIsLoggedIn) {
+      navigate('/login');
+      return;
+    }
+
+    setSubmittingId(activiteId);
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+      const member = localStorage.getItem('member') || sessionStorage.getItem('member');
+      const memberData = member ? JSON.parse(member) : null;
+      
+      // Récupérer l'ID utilisateur
+      let utilisateurId = memberData.id;
+      if (!utilisateurId && memberData) {
+        if (memberData.member?.id) {
+          utilisateurId = memberData.member.id;
+        } else if (memberData.id_utilisateur) {
+          utilisateurId = memberData.id_utilisateur;
+        } else if (memberData.email) {
+          const emailMatch = memberData.email.match(/USR-(\d+)/);
+          if (emailMatch) {
+            utilisateurId = 'USR-' + emailMatch[1];
+          }
+        }
+      }
+      
+      const response = await fetch(`${apiUrl}/public/inscriptions/${activiteId}/desinscrire`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          participant_id: utilisateurId
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Erreur lors de la désinscription');
+      }
+
+      alert('Désinscription réussie ! Vous n\'êtes plus inscrit à cette activité.');
+      
+      // Rafraîchir les activités pour mettre à jour le statut
+      loadActivites();
+      
+    } catch (err) {
+      console.error('Erreur désinscription:', err);
+      alert('Erreur lors de la désinscription: ' + err.message);
+    } finally {
+      setSubmittingId(null);
+    }
   };
 
   const handleSeeOnMap = (activity) => {
@@ -254,10 +456,19 @@ const Home = () => {
                 </div>
                 <div className="package-actions">
                   <button 
-                    className="participer-btn" 
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleParticiper(pkg.id); }}
+                    className={`participer-btn ${pkg.isRegistered ? 'registered' : ''}`}
+                    onClick={(e) => { 
+                      e.preventDefault(); 
+                      e.stopPropagation(); 
+                      if (pkg.isRegistered) {
+                        handleDesinscrire(pkg.id);
+                      } else {
+                        handleParticiper(pkg.id);
+                      }
+                    }}
+                    disabled={submittingId === pkg.id}
                   >
-                    Participez
+                    {submittingId === pkg.id ? 'Inscription...' : (pkg.isRegistered ? 'Vous êtes participant' : 'Participez')}
                   </button>
                   <a href="#" className="learn-more" onClick={(e) => { e.preventDefault(); handleActiviteClick(pkg.id); }}>
                     Voir détails
@@ -307,16 +518,17 @@ const Home = () => {
               </p>
               <div className="new-package-actions">
                 <button 
-                  className="participer-btn-small" 
-                  onClick={() => handleParticiper(pkg.id)}
+                  className={`participer-btn-small ${pkg.isRegistered ? 'registered' : ''}`}
+                  onClick={() => {
+                    if (pkg.isRegistered) {
+                      handleDesinscrire(pkg.id);
+                    } else {
+                      handleParticiper(pkg.id);
+                    }
+                  }}
+                  disabled={submittingId === pkg.id}
                 >
-                  Participez
-                </button>
-                <button 
-                  className="learn-more-btn" 
-                  onClick={() => handleActiviteClick(pkg.id)}
-                >
-                  Voir détails
+                  {submittingId === pkg.id ? 'Inscription...' : (pkg.isRegistered ? 'Vous êtes participant' : 'Participez')}
                 </button>
                 <button 
                   className="see-map-btn-small" 

@@ -5,6 +5,7 @@ import Login from "../pages/auth/Login";
 import MemberLogin from "../pages/auth/MemberLogin";
 import AdminLogin from "../pages/auth/AdminLogin";
 import Home from "../pages/public/Home";
+import Inscription from "../pages/public/Inscription";
 import ShowcaseHomePage from "../pages/showcase/HomePage";
 import SimpleHomePage from "../pages/showcase/SimpleHomePage";
 import Galerie from "../layouts/vitrine/Galerie";
@@ -92,6 +93,15 @@ const AppRouterContent = () => {
           <ProtectedRoute>
             <MainLayout>
               <ActiviteDetails />
+            </MainLayout>
+          </ProtectedRoute>
+        } />
+
+        {/* INSCRIPTION PAGE */}
+        <Route path="/inscription/:activiteId" element={
+          <ProtectedRoute>
+            <MainLayout>
+              <Inscription />
             </MainLayout>
           </ProtectedRoute>
         } />

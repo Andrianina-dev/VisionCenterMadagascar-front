@@ -23,6 +23,13 @@ class AuthService {
         // Stocker les informations du membre dans localStorage
         localStorage.setItem('member', JSON.stringify(data.member));
         localStorage.setItem('auth', 'true');
+        
+        // Log pour débogage
+        console.log('AuthService - Données stockées:', {
+          member: data.member,
+          memberString: localStorage.getItem('member')
+        });
+        
         return { success: true, member: data.member };
       } else {
         throw new Error(data.message || 'Erreur de connexion');
