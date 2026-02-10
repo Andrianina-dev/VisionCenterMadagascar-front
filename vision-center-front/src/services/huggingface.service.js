@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 
 export async function sendMessage(message, retryCount = 0) {
   const maxRetries = 3;
@@ -8,15 +8,18 @@ export async function sendMessage(message, retryCount = 0) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-    // Connexion directe au backend
-    const response = await fetch(`${API_BASE_URL}/chat`, {
+    // Utiliser le endpoint Gemini avec système de fallback
+    const response = await fetch(`${API_BASE_URL}/gemini/chat`, {
       method: 'POST',
       mode: 'cors',
       headers: { 
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ 
+        message: message,
+        conversation_history: []
+      }),
       signal: controller.signal
     });
 
@@ -37,7 +40,19 @@ export async function sendMessage(message, retryCount = 0) {
     }
 
     const data = await response.json();
-    return data;
+    
+    // Adapter la réponse au format attendu par le frontend
+    if (data.success) {
+      return {
+        success: true,
+        message: data.response || data.message
+      };
+    } else {
+      return {
+        success: false,
+        error: data.error || "Erreur inconnue"
+      };
+    }
 
   } catch (error) {
     if (error.name === 'AbortError') {
@@ -54,7 +69,7 @@ export async function sendMessage(message, retryCount = 0) {
     }
     
     if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-      throw new Error('Problème de connexion au serveur IA. Le backend fonctionne sur localhost:8000 mais le navigateur bloque la connexion à cause de CORS.');
+      throw new Error('Problème de connexion au serveur IA. Vérifiez que le backend fonctionne sur localhost:8000.');
     }
     
     if (retryCount < maxRetries && !error.message.includes('429')) {

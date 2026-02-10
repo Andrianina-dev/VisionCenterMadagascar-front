@@ -18,7 +18,7 @@ function AccueilVitrine() {
       <header className="header-simple">
         <div className="container">
           <div className="logo">
-            <h1>Vision Center Madagascar</h1>
+            <h1>Centre de Vision</h1>
           </div>
           <nav className="nav-simple">
             <ul className="nav-links">
@@ -36,7 +36,7 @@ function AccueilVitrine() {
       <section className="hero-simple" id="accueil">
         <div className="container">
           <div className="hero-content">
-            <h2>Bienvenue au Vision Center Madagascar</h2>
+            <h2>Bienvenue au Centre de Vision</h2>
             <p>Un lieu de rencontre, de formation et d'épanouissement spirituel au cœur de Madagascar</p>
             <div className="hero-actions">
               <a href="#activites" className="btn-primary">Découvrir nos activités</a>
@@ -153,7 +153,7 @@ function AccueilVitrine() {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2026 Vision Center Madagascar. Tous droits réservés.</p>
+            <p>&copy; 2026 Centre de Vision. Tous droits réservés.</p>
           </div>
         </div>
       </footer>

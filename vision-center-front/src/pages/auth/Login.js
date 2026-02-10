@@ -80,8 +80,8 @@ const Login = ({ history, isAdmin = false }) => {
       <div className="login-right">
         <div className="login-form-container">
           <h1>{isMemberMode ? 'Member Sign in' : isAdmin ? 'Admin Sign in' : 'Sign in'}</h1>
-          {isMemberMode && <p className="member-subtitle">Access to Vision Center Madagascar Member Area</p>}
-          {isAdmin && <p className="admin-subtitle">Access to Vision Center Madagascar Admin Panel</p>}
+          {isMemberMode && <p className="member-subtitle">Access to Centre de Vision Member Area</p>}
+          {isAdmin && <p className="admin-subtitle">Access to Centre de Vision Admin Panel</p>}
           
           {error && <div className="error-message">{error}</div>}
           
@@ -140,7 +140,7 @@ const Login = ({ history, isAdmin = false }) => {
 
           <p className="terms-text">
             {isMemberMode 
-              ? 'Member login means you agree our terms & conditions and Privacy Policy of Vision Center Madagascar'
+              ? 'Member login means you agree our terms & conditions and Privacy Policy of Centre de Vision'
               : isAdmin 
               ? 'Admin access is restricted to authorized personnel only'
               : 'Log in means you agree our terms & conditions and Privacy Policy of Handela Voyages'
@@ -176,7 +176,7 @@ const Login = ({ history, isAdmin = false }) => {
         </div>
 
         <footer className="login-footer">
-          © 2023 {isMemberMode ? 'Vision Center Madagascar' : isAdmin ? 'Vision Center Madagascar Admin Panel' : 'Handela Voyages'}. All Rights Reserved.
+          © 2023 {isMemberMode ? 'Centre de Vision' : isAdmin ? 'Centre de Vision Admin Panel' : 'Handela Voyages'}. All Rights Reserved.
         </footer>
       </div>
     </div>

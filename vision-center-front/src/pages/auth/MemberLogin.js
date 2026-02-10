@@ -116,7 +116,7 @@ const MemberLogin = ({ history }) => {
           </div>
 
           <p className="terms-text">
-            Log in means you agree our <a href="#">terms & conditions</a> and <a href="#">Privacy Policy</a> of Vision Center Madagascar
+            Log in means you agree our <a href="#">terms & conditions</a> and <a href="#">Privacy Policy</a> of Centre de Vision
           </p>
 
           <p className="signup-text">
@@ -129,7 +129,7 @@ const MemberLogin = ({ history }) => {
         </div>
 
         <footer className="login-footer">
-          © 2023 Vision Center Madagascar. All Rights Reserved.
+          © 2023 Centre de Vision. All Rights Reserved.
         </footer>
       </div>
     </div>

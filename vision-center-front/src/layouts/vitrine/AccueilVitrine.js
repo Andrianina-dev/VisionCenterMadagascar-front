@@ -19,7 +19,7 @@ function AccueilVitrine() {
         <div className="container">
           <nav className="nav">
             <a href="/" className="logo">
-              <i className="fas fa-church"></i> Vision Center Madagascar
+              <i className="fas fa-church"></i> Centre de Vision
             </a>
             <ul className="nav-links">
               <li><a href="#activites" onClick={(e) => { e.preventDefault(); scrollToSection('activites'); }}>Activités</a></li>
@@ -34,7 +34,7 @@ function AccueilVitrine() {
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
-          <h1>Bienvenue au Vision Center Madagascar</h1>
+          <h1>Bienvenue au Centre de Vision</h1>
           <p>Un lieu de rencontre, de formation et d'épanouissement spirituel au cœur de Madagascar</p>
           <div className="hero-buttons">
             <a href="#activites" className="btn">Découvrir nos activités</a>
@@ -164,7 +164,7 @@ function AccueilVitrine() {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2026 Vision Center Madagascar. Tous droits réservés.</p>
+            <p>&copy; 2026 Centre de Vision. Tous droits réservés.</p>
           </div>
         </div>
       </footer>

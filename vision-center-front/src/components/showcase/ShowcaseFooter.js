@@ -81,7 +81,7 @@ const ShowcaseFooter = () => {
 
         <div className="footer-bottom">
           <div className="footer-bottom-content">
-            <p>&copy; 2024 Vision Center Madagascar. Tous droits réservés.</p>
+            <p>&copy; 2024 Centre de Vision. Tous droits réservés.</p>
             <div className="footer-links">
               <a href="#privacy">Politique de confidentialité</a>
               <a href="#terms">Conditions d'utilisation</a>

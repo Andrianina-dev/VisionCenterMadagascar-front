@@ -16,7 +16,7 @@ const HeroSection = () => {
               <span className="hero-highlight">Notre Priorité</span>
             </h1>
             <p className="hero-subtitle">
-              Vision Center Madagascar vous offre des soins oculaires de qualité 
+              Centre de Vision vous offre des soins oculaires de qualité 
               avec un équipement moderne et une équipe de professionnels dévoués.
             </p>
             <div className="hero-actions">

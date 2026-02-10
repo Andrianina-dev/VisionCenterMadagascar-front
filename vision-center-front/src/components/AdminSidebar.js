@@ -147,7 +147,7 @@ const AdminSidebar = ({ activeNav }) => {
       </div>
 
       <div className="admin-sidebar-footer">
-        <p className="footer-text">Vision Center Madagascar</p>
+        <p className="footer-text">Centre de Vision</p>
         <p className="footer-version">Admin Panel v1.0</p>
       </div>
     </aside>

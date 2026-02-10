@@ -8,7 +8,7 @@ const AdminLayout = ({ children, activeNav = 'dashboard' }) => {
       <div className="admin-main-content">
         <header className="admin-header">
           <div className="header-content">
-            <h1 className="header-title">Vision Center Madagascar</h1>
+            <h1 className="header-title">Centre de Vision</h1>
             <p className="header-subtitle">Panneau d'Administration</p>
           </div>
         </header>

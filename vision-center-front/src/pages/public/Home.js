@@ -31,7 +31,7 @@ const Home = () => {
     return "Visiteur";
   };
 
-  // Image améliorée pour Vision Center Madagascar
+  // Image améliorée pour Centre de Vision
   const improvedImageBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+";
 
   // Vérifier si l'utilisateur est déjà inscrit à une activité
@@ -352,7 +352,7 @@ const Home = () => {
         <div className="header-content">
           <div className="header-left">
             <div className="header-logo">
-              <h2>Vision Center Madagascar</h2>
+              <h2>Centre de Vision</h2>
             </div>
             <nav className="header-nav">
               <button className="nav-btn" onClick={() => navigate("/dashboard")}>Accueil</button>
@@ -379,7 +379,7 @@ const Home = () => {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
-          <h1>Vision Center Madagascar</h1>
+          <h1>Centre de Vision</h1>
           <p>Votre santé visuelle, notre priorité</p>
           
           <div className="search-bar">

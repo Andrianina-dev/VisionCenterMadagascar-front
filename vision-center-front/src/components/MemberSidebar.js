@@ -137,7 +137,7 @@ const MemberSidebar = ({ activeNav }) => {
       </div>
 
       <div className="member-sidebar-footer">
-        <p className="footer-text">Vision Center Madagascar</p>
+        <p className="footer-text">Centre de Vision</p>
         <p className="footer-version">Member Portal v1.0</p>
       </div>
     </aside>

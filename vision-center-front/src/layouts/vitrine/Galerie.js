@@ -85,7 +85,7 @@ function Galerie() {
       <header className="header-simple">
         <div className="container">
           <div className="logo">
-            <h1>Vision Center Madagascar</h1>
+            <h1>Centre de Vision</h1>
           </div>
           <nav className="nav-simple">
             <ul className="nav-links">
@@ -104,7 +104,7 @@ function Galerie() {
         <div className="container">
           <div className="hero-content">
             <h2>Galerie</h2>
-            <p>Photos et vidéos des activités de Vision Center Madagascar</p>
+            <p>Photos et vidéos des activités du Centre de Vision</p>
           </div>
         </div>
       </section>
@@ -217,7 +217,7 @@ function Galerie() {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2026 Vision Center Madagascar. Tous droits réservés.</p>
+            <p>&copy; 2026 Centre de Vision. Tous droits réservés.</p>
           </div>
         </div>
       </footer>

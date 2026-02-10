@@ -7,7 +7,6 @@ import AdminLogin from "../pages/auth/AdminLogin";
 import Home from "../pages/public/Home";
 import Inscription from "../pages/public/Inscription";
 import ShowcaseHomePage from "../pages/showcase/HomePage";
-import SimpleHomePage from "../pages/showcase/SimpleHomePage";
 import Galerie from "../layouts/vitrine/Galerie";
 import MapSearch from "../pages/public/MapSearch";
 import ActiviteDetails from "../pages/public/ActiviteDetails";
@@ -47,7 +46,7 @@ const AppRouterContent = () => {
         {/* SITE VITRINE - PUBLIC */}
         <Route path="/showcase" element={
           <ShowcaseLayout>
-            <SimpleHomePage />
+            <ShowcaseHomePage />
           </ShowcaseLayout>
         } />
 

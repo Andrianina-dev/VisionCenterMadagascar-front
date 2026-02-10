@@ -16,10 +16,22 @@ export const MessengerProvider = ({ children }) => {
   const [showMessenger, setShowMessenger] = useState(false);
 
   useEffect(() => {
-    // Ne montrer le chatbot que sur les pages protégées et l'accueil membre
-    const protectedPaths = ['/dashboard', '/profile', '/account', '/map', '/activite', '/support'];
-    const isProtected = protectedPaths.some(path => location.pathname.startsWith(path));
-    setShowMessenger(isProtected);
+    // Pages où le chatbot doit être affiché
+    const allowedPaths = [
+      '/dashboard', '/profile', '/account', '/map', '/activite', '/support',
+      '/accueil', '/a-propos', '/programmes', '/ressources', '/galerie', 
+      '/actualites', '/contact', '/inscription', '/activites'
+    ];
+    
+    const isAllowedPath = allowedPaths.some(path => 
+      location.pathname === path || location.pathname.startsWith(path + '/')
+    );
+    
+    // Ne pas afficher sur les pages d'authentification et admin
+    const excludedPaths = ['/login', '/admin/login', '/admin'];
+    const isExcluded = excludedPaths.some(path => location.pathname.startsWith(path));
+    
+    setShowMessenger(isAllowedPath && !isExcluded);
   }, [location.pathname]);
 
   return (

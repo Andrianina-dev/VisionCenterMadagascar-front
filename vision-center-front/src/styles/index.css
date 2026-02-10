@@ -13,6 +13,7 @@
 @import './layouts/PublicLayout.css';
 @import './layouts/AdminLayout.css';
 @import './layouts/MemberLayout.css';
+@import './layouts/MainLayout.css';
 
 /* Import des styles des composants */
 @import './components/Sidebar.css';
@@ -36,6 +37,77 @@ body {
     "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  width: 100vw !important;
+  overflow-x: hidden !important;
+  padding: 0 !important;
+}
+
+html {
+  width: 100vw !important;
+  overflow-x: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#root {
+  width: 100vw !important;
+  overflow-x: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Forcer tous les conteneurs principaux à prendre toute la largeur */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100vw !important;
+  max-width: none !important;
+  min-width: 100vw !important;
+  overflow-x: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#root {
+  width: 100vw !important;
+  max-width: none !important;
+  min-width: 100vw !important;
+  overflow-x: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.App {
+  width: 100vw !important;
+  max-width: none !important;
+  min-width: 100vw !important;
+  overflow-x: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.admin-layout,
+.member-layout,
+.main-layout {
+  width: 100vw !important;
+  max-width: none !important;
+  min-width: 100vw !important;
+  overflow-x: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+/* Forcer tous les éléments principaux */
+div[class*="layout"], 
+div[class*="Layout"] {
+  width: 100vw !important;
+  max-width: none !important;
+  min-width: 100vw !important;
 }
 
 code {

@@ -8,13 +8,23 @@ const FloatingMessenger = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Bonjour ! Je suis votre assistant IA powered by HuggingFace pour Vision Center Madagascar. Je peux vous aider concernant les activités religieuses et culturelles, les inscriptions, et les événements à venir. Comment puis-je vous aider ?",
+      text: "Bonjour ! Je suis votre assistant IA pour le Centre de Vision. Je peux vous aider concernant les activités, les inscriptions, et les événements à venir. Comment puis-je vous aider ?",
       sender: "ai",
       timestamp: new Date()
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [isResponding, setIsResponding] = useState(false);
   const messagesEndRef = useRef(null);
+
+  // Suggestions prédéfinies
+  const suggestions = [
+    "Quelles sont les activités à venir ?",
+    "Comment m'inscrire à une activité ?",
+    "Où se trouvent vos locaux ?",
+    "Quels sont les horaires d'ouverture ?"
+  ];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -40,31 +50,49 @@ const FloatingMessenger = () => {
       setMessages(prev => [...prev, userMessage]);
       setMessageInput("");
       setIsLoading(true);
+      setIsTyping(true);
+      setIsResponding(true);
 
       try {
         const response = await sendMessage(messageInput);
+        
+        // Pause pour l'effet de typing
+        await new Promise(resolve => setTimeout(resolve, 800));
         
         if (response.success) {
           const aiMessage = {
             id: Date.now() + 1,
             text: response.message,
             sender: "ai",
-            timestamp: new Date()
+            timestamp: new Date(),
+            isNew: true
           };
           
           setMessages(prev => [...prev, aiMessage]);
           
-          // Message sent successfully
+          // Marquer le message comme non nouveau après l'animation
+          setTimeout(() => {
+            setMessages(prev => prev.map(msg => 
+              msg.id === aiMessage.id ? { ...msg, isNew: false } : msg
+            ));
+          }, 500);
         } else {
           const errorMessage = {
             id: Date.now() + 1,
             text: response.error || "Désolé, une erreur s'est produite. Veuillez réessayer.",
             sender: "ai",
             timestamp: new Date(),
-            isError: true
+            isError: true,
+            isNew: true
           };
           
           setMessages(prev => [...prev, errorMessage]);
+          
+          setTimeout(() => {
+            setMessages(prev => prev.map(msg => 
+              msg.id === errorMessage.id ? { ...msg, isNew: false } : msg
+            ));
+          }, 500);
         }
       } catch (error) {
         let errorMessage = "Désolé, une erreur technique est survenue. ";
@@ -88,14 +116,45 @@ const FloatingMessenger = () => {
           text: errorMessage,
           sender: "ai",
           timestamp: new Date(),
-          isError: true
+          isError: true,
+          isNew: true
         };
         
         setMessages(prev => [...prev, errorResponse]);
+        
+        setTimeout(() => {
+          setMessages(prev => prev.map(msg => 
+            msg.id === errorResponse.id ? { ...msg, isNew: false } : msg
+          ));
+        }, 500);
       } finally {
         setIsLoading(false);
+        setIsTyping(false);
+        setIsResponding(false);
       }
     }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setMessageInput(suggestion);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  const clearChat = () => {
+    setMessages([
+      {
+        id: 1,
+        text: "Bonjour ! Je suis votre assistant IA pour le Centre de Vision. Je peux vous aider concernant les activités, les inscriptions, et les événements à venir. Comment puis-je vous aider ?",
+        sender: "ai",
+        timestamp: new Date()
+      }
+    ]);
   };
 
   const handleRetry = async (messageToRetry) => {
@@ -148,22 +207,12 @@ const FloatingMessenger = () => {
             <div className="contact-info">
               <div className="avatar-large">AI</div>
               <div className="contact-details">
-                <h3 className="contact-name">Assistant IA</h3>
-                <p className="contact-status">En ligne</p>
+                <h3 className="contact-name">Assistant Centre de Vision</h3>
+                <p className="contact-status">{isTyping ? "En train d'écrire..." : "En ligne"}</p>
               </div>
             </div>
             
             <div className="header-actions">
-              <button className="action-btn" title="Appel">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.3 13.3c-1.2-1.2-3.1-1.9-5.3-1.9 1.2-1.2 1.9-3.1 1.9-5.3 0-4.1-3.3-7.4-7.4-7.4S-1.9 1.8-1.9 5.9c0 2.2.8 4.1 1.9 5.3-2.1 0-4.1.7-5.3 1.9C-7 14.5-7.6 16.4-7.6 18.6c0 4.1 3.3 7.4 7.4 7.4s7.4-3.3 7.4-7.4c0-2.2-.7-4.1-1.9-5.3zm-5.3 1.9c-1.3 0-2.4 1.1-2.4 2.4s1.1 2.4 2.4 2.4 2.4-1.1 2.4-2.4-1.1-2.4-2.4-2.4z"/>
-                </svg>
-              </button>
-              <button className="action-btn" title="Vidéo">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M23 8V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v4h2V4h18v4h2zm0 8v4c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2v-4h2v4h18v-4h2zM1 12h22V8H1v4z"/>
-                </svg>
-              </button>
               <button className="action-btn close-btn" onClick={toggleMessenger} title="Fermer">
                 ×
               </button>
@@ -173,10 +222,10 @@ const FloatingMessenger = () => {
           {/* Messages Area */}
           <div className="chat-messages">
             {messages.map((message) => (
-              <div key={message.id} className={`message-group ${message.sender === "user" ? "sent" : "received"}`}>
+              <div key={message.id} className={`message-group ${message.sender === "user" ? "sent" : "received"} ${message.isNew ? "message-appearing" : ""}`}>
                 {message.sender === "ai" && <div className="avatar-message">AI</div>}
                 <div className="message-content">
-                  <div className={`message-bubble ${message.isError ? "error" : ""}`}>
+                  <div className={`message-bubble ${message.isError ? "error" : ""} ${message.isNew ? "message-new" : ""}`}>
                     <p className="message-text">{message.text}</p>
                     {message.isError && (
                       <button 
@@ -196,7 +245,7 @@ const FloatingMessenger = () => {
             
             {isLoading && (
               <div className="message-group received">
-                <div className="avatar-message">AI</div>
+                <div className="avatar-message typing-avatar">AI</div>
                 <div className="message-content">
                   <div className="message-bubble loading">
                     <div className="typing-indicator">
@@ -204,6 +253,7 @@ const FloatingMessenger = () => {
                       <span></span>
                       <span></span>
                     </div>
+                    <div className="typing-text">L'IA réfléchit...</div>
                   </div>
                 </div>
               </div>
@@ -211,6 +261,24 @@ const FloatingMessenger = () => {
             
             <div ref={messagesEndRef} />
           </div>
+
+          {/* Suggestions */}
+          {messages.length === 1 && !isLoading && (
+            <div className="suggestions-container">
+              <p className="suggestions-title">Questions fréquentes :</p>
+              <div className="suggestions-grid">
+                {suggestions.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    className="suggestion-btn"
+                    onClick={() => handleSuggestionClick(suggestion)}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Input Area */}
           <div className="chat-input-area">
@@ -220,15 +288,13 @@ const FloatingMessenger = () => {
               placeholder={isLoading ? "L'IA réfléchit..." : "Tapez un message..."}
               value={messageInput}
               onChange={(e) => setMessageInput(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === "Enter" && !isLoading) handleSendMessage();
-              }}
+              onKeyPress={handleKeyPress}
               disabled={isLoading}
             />
             <button 
               className={`send-btn ${isLoading ? 'loading' : ''}`} 
               onClick={handleSendMessage}
-              disabled={isLoading}
+              disabled={isLoading || !messageInput.trim()}
             >
               {isLoading ? (
                 <div className="spinner"></div>

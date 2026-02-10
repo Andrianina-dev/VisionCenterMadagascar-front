@@ -1,11 +1,12 @@
-/* Admin Layout Styles */
-.admin-layout {
+/* Main Layout Styles - Dashboard simple avec fond pleine largeur */
+.main-layout {
   display: flex !important;
+  flex-direction: column !important;
   min-height: 100vh !important;
   width: 100vw !important;
   max-width: none !important;
   min-width: 100vw !important;
-  background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%) !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
   position: relative !important;
   overflow: hidden !important;
   margin: 0 !important;
@@ -14,56 +15,43 @@
   right: 0 !important;
 }
 
-.admin-layout::before {
+.main-layout::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-  animation: adminBackgroundShimmer 8s infinite;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: mainBackgroundShimmer 8s infinite;
 }
 
-@keyframes adminBackgroundShimmer {
+@keyframes mainBackgroundShimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
 
-.admin-main-content {
-  flex: 1;
-  margin-left: 350px;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: linear-gradient(135deg, rgba(248, 249, 250, 0.95) 0%, rgba(233, 236, 239, 0.95) 100%);
-  width: calc(100vw - 350px);
-  position: relative;
-  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.admin-header {
-  background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+.main-layout header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 25px 50px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
   position: relative;
   overflow: hidden;
 }
 
-.admin-header::before {
+.main-layout header::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-  animation: adminHeaderShimmer 4s infinite;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: headerShimmer 4s infinite;
 }
 
-@keyframes adminHeaderShimmer {
+@keyframes headerShimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
@@ -81,7 +69,7 @@
   color: #ffffff;
   margin: 0 0 8px 0;
   letter-spacing: -1px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header-subtitle {
@@ -91,34 +79,31 @@
   font-weight: 500;
 }
 
-.admin-main {
+.main-layout main {
   flex: 1;
   padding: 50px;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.95) 100%);
   overflow-y: auto;
   min-height: calc(100vh - 100px);
   position: relative;
+  backdrop-filter: blur(10px);
 }
 
-.admin-main::before {
+.main-layout main::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 20% 80%, rgba(45, 55, 72, 0.05) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(74, 85, 104, 0.05) 0%, transparent 50%);
+  background: radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.05) 0%, transparent 50%);
   pointer-events: none;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .admin-main-content {
-    margin-left: 280px;
-  }
-
-  .admin-header {
+  .main-layout header {
     padding: 15px 20px;
   }
 
@@ -130,22 +115,13 @@
     font-size: 14px;
   }
 
-  .admin-main {
+  .main-layout main {
     padding: 20px;
   }
 }
 
 @media (max-width: 480px) {
-  .admin-layout {
-    flex-direction: column;
-  }
-
-  .admin-main-content {
-    margin-left: 0;
-    margin-top: 0;
-  }
-
-  .admin-header {
+  .main-layout header {
     padding: 10px 15px;
   }
 
@@ -157,7 +133,7 @@
     font-size: 12px;
   }
 
-  .admin-main {
+  .main-layout main {
     padding: 15px;
   }
 }

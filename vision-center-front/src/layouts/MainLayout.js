@@ -4,7 +4,6 @@ const MainLayout = ({ children }) => {
   return (
     <>
       <header className="header">
-        Vision Center Madagascar
       </header>
 
       <main>

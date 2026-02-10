@@ -31,7 +31,7 @@ const PublicLayout = ({ children }) => {
                   <span className="text-white font-bold text-lg">VC</span>
                 </div>
                 <span className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
-                  Vision Center Madagascar
+                  Centre de Vision
                 </span>
               </Link>
             </div>
@@ -113,7 +113,7 @@ const PublicLayout = ({ children }) => {
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">VC</span>
                 </div>
-                <h3 className="text-xl font-bold">Vision Center Madagascar</h3>
+                <h3 className="text-xl font-bold">Centre de Vision</h3>
               </div>
               <p className="text-gray-300 leading-relaxed">
                 Centre de jeunes chrétiens engagé dans l'élévation morale, le développement personnel et la formation spirituelle.
@@ -183,7 +183,7 @@ const PublicLayout = ({ children }) => {
           </div>
 
           <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2026 Vision Center Madagascar. Appuyé par One Seed Madagascar. Tous droits réservés.</p>
+            <p>&copy; 2026 Centre de Vision. Appuyé par One Seed Madagascar. Tous droits réservés.</p>
           </div>
         </div>
       </footer>

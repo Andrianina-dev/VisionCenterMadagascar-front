@@ -56,7 +56,7 @@ const AdminLogin = ({ history }) => {
       <div className="login-right">
         <div className="login-form-container">
           <h1>Administrator Sign in</h1>
-          <p className="admin-subtitle">Access to Vision Center Madagascar Admin Panel</p>
+          <p className="admin-subtitle">Access to Centre de Vision Admin Panel</p>
           
           {error && <div className="error-message">{error}</div>}
           
@@ -122,7 +122,7 @@ const AdminLogin = ({ history }) => {
         </div>
 
         <footer className="login-footer">
-          © 2023 Vision Center Madagascar Admin Panel. All Rights Reserved.
+          © 2023 Centre de Vision Admin Panel. All Rights Reserved.
         </footer>
       </div>
     </div>
