@@ -66,6 +66,30 @@ const Home = () => {
     }
   };
 
+  // Compter le nombre de participants pour une activité
+  const countParticipants = async (activiteId) => {
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+      
+      // Utiliser le nouvel endpoint qui compte directement dans la table inscription_activite
+      const response = await fetch(`${apiUrl}/public/inscription_activite/${activiteId}/count`);
+      if (response.ok) {
+        const data = await response.json();
+        const count = data.success ? data.data : 0;
+        console.log(`🎯 Activité ${activiteId} - ${count} participant(s) trouvé(s) dans inscription_activite`);
+        return count;
+      }
+      
+      // Si l'endpoint n'existe pas, retourner 0
+      console.warn('⚠️ Endpoint count non disponible - 0 participant pour', activiteId);
+      return 0;
+      
+    } catch (error) {
+      console.error('❌ Erreur comptage participants dans inscription_activite pour', activiteId, ':', error);
+      return 0;
+    }
+  };
+
   // Charger les activités depuis l'API
   const loadActivites = async () => {
     try {
@@ -74,19 +98,33 @@ const Home = () => {
       const activitesOuvertes = await activiteService.getActivitesOuvertes();
       const activitesPopulaires = await activiteService.getActivitesPopulaires();
       
-      // Vérifier les inscriptions pour chaque activité
+      // Compter les participants et vérifier les inscriptions pour chaque activité
       const activitesOuvertesWithStatus = await Promise.all(
-        activitesOuvertes.map(async (activite) => ({
-          ...activite,
-          isRegistered: await checkIfAlreadyRegistered(activite.id_activite)
-        }))
+        activitesOuvertes.map(async (activite) => {
+          const [isRegistered, participantsCount] = await Promise.all([
+            checkIfAlreadyRegistered(activite.id_activite),
+            countParticipants(activite.id_activite)
+          ]);
+          return {
+            ...activite,
+            isRegistered,
+            nombre_participants: participantsCount
+          };
+        })
       );
       
       const activitesPopulairesWithStatus = await Promise.all(
-        activitesPopulaires.map(async (activite) => ({
-          ...activite,
-          isRegistered: await checkIfAlreadyRegistered(activite.id_activite)
-        }))
+        activitesPopulaires.map(async (activite) => {
+          const [isRegistered, participantsCount] = await Promise.all([
+            checkIfAlreadyRegistered(activite.id_activite),
+            countParticipants(activite.id_activite)
+          ]);
+          return {
+            ...activite,
+            isRegistered,
+            nombre_participants: participantsCount
+          };
+        })
       );
       
       setActivitesOuvertes(activitesOuvertesWithStatus);
@@ -113,9 +151,9 @@ const Home = () => {
   const packages = activitesPopulaires.slice(0, 4).map((activite, index) => ({
     id: activite.id_activite,
     name: activite.titre_activite,
-    price: activite.capacite ? `0/${activite.capacite} places` : "Illimité",
+    price: activite.capacite ? `${activite.nombre_participants || 0}/${activite.capacite} places` : "Illimité",
     rating: "⭐⭐⭐⭐⭐",
-    reviews: "0",
+    reviews: activite.nombre_participants || 0,
     discount: "Disponible",
     image: activite.image_url || improvedImageBase64,
     date: activite.date_heure_activite,
@@ -127,12 +165,13 @@ const Home = () => {
   // Utiliser les vraies activités ouvertes pour les nouveaux packages
   const newPackages = activitesOuvertes.slice(0, 4).map((activite, index) => ({
     id: activite.id_activite,
-    price: activite.capacite ? `0/${activite.capacite}` : "Illimité",
+    price: activite.capacite ? `${activite.nombre_participants || 0}/${activite.capacite}` : "Illimité",
     image: activite.image_url || improvedImageBase64,
     titre: activite.titre_activite,
     date: activite.date_heure_activite,
     isBase64: true, // Toujours true car on utilise base64
-    isRegistered: activite.isRegistered || false
+    isRegistered: activite.isRegistered || false,
+    nombre_participants: activite.nombre_participants || 0
   }));
 
   const infoGuide = [
@@ -235,6 +274,23 @@ const Home = () => {
       // Afficher un message de succès
       alert('Inscription réussie ! Vous êtes maintenant inscrit à cette activité.');
       
+      // Mettre à jour le nombre de participants localement
+      setActivitesOuvertes(prev => 
+        prev.map(activite => 
+          activite.id_activite === activiteId 
+            ? { ...activite, isRegistered: true, nombre_participants: (activite.nombre_participants || 0) + 1 }
+            : activite
+        )
+      );
+      
+      setActivitesPopulaires(prev => 
+        prev.map(activite => 
+          activite.id_activite === activiteId 
+            ? { ...activite, isRegistered: true, nombre_participants: (activite.nombre_participants || 0) + 1 }
+            : activite
+        )
+      );
+      
       // Rafraîchir les activités pour mettre à jour le statut
       loadActivites();
       
@@ -297,6 +353,23 @@ const Home = () => {
       }
 
       alert('Désinscription réussie ! Vous n\'êtes plus inscrit à cette activité.');
+      
+      // Mettre à jour le nombre de participants localement
+      setActivitesOuvertes(prev => 
+        prev.map(activite => 
+          activite.id_activite === activiteId 
+            ? { ...activite, isRegistered: false, nombre_participants: Math.max((activite.nombre_participants || 0) - 1, 0) }
+            : activite
+        )
+      );
+      
+      setActivitesPopulaires(prev => 
+        prev.map(activite => 
+          activite.id_activite === activiteId 
+            ? { ...activite, isRegistered: false, nombre_participants: Math.max((activite.nombre_participants || 0) - 1, 0) }
+            : activite
+        )
+      );
       
       // Rafraîchir les activités pour mettre à jour le statut
       loadActivites();
@@ -513,6 +586,9 @@ const Home = () => {
               <p className="new-package-title">{pkg.titre}</p>
               <p className="new-package-date">
                 📅 {activiteService.formatDateShort(pkg.date)}
+              </p>
+              <p className="new-package-participants">
+                👥 {pkg.nombre_participants} participant{pkg.nombre_participants > 1 ? 's' : ''}
               </p>
               <div className="new-package-actions">
                 <button 

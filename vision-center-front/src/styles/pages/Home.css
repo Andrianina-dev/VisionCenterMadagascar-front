@@ -1,4 +1,4 @@
-/* Home Layout Styles - Design moderne avec fond pleine largeur */
+/* Home Layout Styles - Design moderne avec fond spirituel */
 .home-layout {
   display: flex !important;
   flex-direction: column !important;
@@ -6,7 +6,7 @@
   width: 100vw !important;
   max-width: none !important;
   min-width: 100vw !important;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background: url('https://images.unsplash.com/photo-1534723452862-4c874018d66d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') center/cover !important;
   position: relative !important;
   overflow: hidden !important;
   margin: 0 !important;
@@ -270,7 +270,12 @@ body {
 
 .header-nav {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .nav-btn {
@@ -307,39 +312,46 @@ body {
 .header-profile {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .profile-info {
   text-align: right;
+  margin-left: 1rem;
 }
 
 .profile-name {
   display: block;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--primary);
-  font-size: 0.9rem;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
 }
 
 .profile-status {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--secondary);
   font-weight: 500;
+  margin-bottom: 0.5rem;
 }
 
 .avatar-wrapper {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
-  border: 2px solid var(--border);
-  transition: border-color 0.2s;
+  border: 3px solid var(--secondary);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  position: relative;
 }
 
 .avatar-wrapper:hover {
-  border-color: var(--secondary);
+  border-color: var(--primary);
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
 }
 
 .profile-img {
@@ -350,18 +362,19 @@ body {
 
 .status-indicator {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 10px;
-  height: 10px;
-  background: #2ecc71;
+  bottom: 3px;
+  right: 3px;
+  width: 14px;
+  height: 14px;
+  background: #28a745;
   border-radius: 50%;
   border: 2px solid var(--lighter);
+  animation: pulse 2s infinite;
 }
 
 /* Hero Section */
 .hero {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+  background: url('https://images.unsplash.com/photo-1595315228966-5021ae9d36e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') center/cover !important;
   color: white;
   padding: 4rem 2rem;
   text-align: center;

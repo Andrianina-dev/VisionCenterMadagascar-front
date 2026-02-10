@@ -20,6 +20,17 @@ const AccountProfile = () => {
     navigate('/bookings');
   };
 
+  const handleLogout = () => {
+    // Supprimer les données d'authentification
+    localStorage.removeItem('auth');
+    localStorage.removeItem('member');
+    sessionStorage.removeItem('auth');
+    sessionStorage.removeItem('member');
+    
+    // Rediriger vers la page d'accueil
+    navigate('/');
+  };
+
   const displayName = currentUser ? `${currentUser.prenom} ${currentUser.nom}` : 'Utilisateur';
   const displayEmail = currentUser ? currentUser.email : 'email@example.com';
 
@@ -109,6 +120,9 @@ const AccountProfile = () => {
                 <div className="form-actions">
                   <button className="cancel-btn">Cancel</button>
                   <button className="save-btn">Save Changes</button>
+                  <button className="logout-btn" onClick={handleLogout}>
+                    🚪 Logout
+                  </button>
                 </div>
               </div>
             )}
