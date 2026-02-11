@@ -33,6 +33,9 @@ const ActiviteDetails = () => {
   const [activite, setActivite] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [exigences, setExigences] = useState([]);
+  const [loadingExigences, setLoadingExigences] = useState(false);
+  const [showExigences, setShowExigences] = useState(true);
 
   // Image améliorée pour Vision Center Madagascar
   const improvedImageBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+";
@@ -46,6 +49,11 @@ const ActiviteDetails = () => {
         const activiteData = await getActiviteById(id);
         setActivite(activiteData);
         
+        // Charger les exigences si le type d'activité est disponible
+        if (activiteData.id_type) {
+          loadExigencesForType(activiteData.id_type);
+        }
+        
       } catch (err) {
         setError("Erreur lors du chargement des détails de l'activité");
         console.error("Erreur:", err);
@@ -56,6 +64,27 @@ const ActiviteDetails = () => {
 
     loadActiviteDetails();
   }, [id]);
+
+  // Charger les exigences pour un type d'activité
+  const loadExigencesForType = async (idType) => {
+    try {
+      setLoadingExigences(true);
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/public/exigences/type/${idType}`);
+      
+      if (response.ok) {
+        const exigencesData = await response.json();
+        setExigences(exigencesData);
+        console.log(`Exigences pour l'activité de type ${idType}:`, exigencesData);
+      } else {
+        console.error('Erreur chargement exigences:', response.status);
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement des exigences:', error);
+    } finally {
+      setLoadingExigences(false);
+    }
+  };
 
   const handleInscription = () => {
     navigate(`/inscription/${id}`);
@@ -292,6 +321,61 @@ const ActiviteDetails = () => {
               </ul>
             </div>
           )}
+
+          {/* Exigences par type d'activité */}
+          <div className="activite-details-exigences">
+            <div className="exigences-header">
+              <h2>📋 Exigences pour cette activité</h2>
+              <button 
+                className="toggle-exigences-btn"
+                onClick={() => setShowExigences(!showExigences)}
+              >
+                {showExigences ? 'Masquer' : 'Afficher'} les exigences
+              </button>
+            </div>
+
+            {showExigences && (
+              <div className="exigences-content">
+                {loadingExigences ? (
+                  <div className="loading-exigences">
+                    <div className="loading-spinner">Chargement des exigences...</div>
+                  </div>
+                ) : exigences.length > 0 ? (
+                  <div className="exigences-grid">
+                    {exigences.map(exigence => (
+                      <div key={exigence.id_exigence} className="exigence-card">
+                        <div className="exigence-header">
+                          <div className="exigence-type">
+                            <span className={`type-badge ${exigence.type_exigence}`}>
+                              {exigence.type_exigence === 'document' ? '📄' : 
+                               exigence.type_exigence === 'materiel' ? '🔧' :
+                               exigence.type_exigence === 'information' ? 'ℹ️' : '📋'}
+                              {exigence.type_exigence}
+                            </span>
+                            <span className={`status-badge ${exigence.obligatoire ? 'obligatoire' : 'optionnel'}`}>
+                              {exigence.obligatoire ? '🔴 Obligatoire' : '🟡 Optionnel'}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="exigence-content">
+                          <h4>{exigence.libelle_exigence}</h4>
+                          <p className="exigence-description">
+                            {exigence.description_exigence || 'Aucune description détaillée disponible.'}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="no-exigences-message">
+                    <div className="no-exigences-icon">📋</div>
+                    <h3>Aucune exigence spécifique</h3>
+                    <p>Cette activité ne nécessite aucune exigence particulière.</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Prérequis */}
           {activite.prerequis && (

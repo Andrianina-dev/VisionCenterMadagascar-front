@@ -10,10 +10,16 @@ const Home = () => {
   const [showMap, setShowMap] = useState(false);
   const [activitesOuvertes, setActivitesOuvertes] = useState([]);
   const [activitesPopulaires, setActivitesPopulaires] = useState([]);
+  const [activitesPopulairesFiltrees, setActivitesPopulairesFiltrees] = useState([]);
+  const [packagesData, setPackagesData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [submittingId, setSubmittingId] = useState(null);
   const [error, setError] = useState(null);
+  const [typesActivites, setTypesActivites] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [submittingId, setSubmittingId] = useState(null);
+  const [selectedTypeFilter, setSelectedTypeFilter] = useState('all');
+  const [exigencesByType, setExigencesByType] = useState({});
+  const [showExigences, setShowExigences] = useState(false);
 
   // Récupérer les informations de l'utilisateur connecté
   useEffect(() => {
@@ -98,6 +104,19 @@ const Home = () => {
       const activitesOuvertes = await activiteService.getActivitesOuvertes();
       const activitesPopulaires = await activiteService.getActivitesPopulaires();
       
+      // Charger les types d'activités pour le filtre
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+      const typesResponse = await fetch(`${apiUrl}/public/types-activites`);
+      if (typesResponse.ok) {
+        const typesData = await typesResponse.json();
+        setTypesActivites(typesData);
+        console.log('Types d\'activités chargés:', typesData);
+        console.log('Premier type pour debug:', typesData[0]);
+        console.log('Vérification libelle_type:', typesData[0]?.libelle_type);
+      } else {
+        console.error('Erreur chargement types:', typesResponse.status, typesResponse.statusText);
+      }
+      
       // Compter les participants et vérifier les inscriptions pour chaque activité
       const activitesOuvertesWithStatus = await Promise.all(
         activitesOuvertes.map(async (activite) => {
@@ -140,6 +159,11 @@ const Home = () => {
     loadActivites();
   }, []);
 
+  // Initialiser les activités filtrées quand les activités populaires changent
+  useEffect(() => {
+    setActivitesPopulairesFiltrees(activitesPopulaires);
+  }, [activitesPopulaires]);
+
   const destinations = [
     { id: 1, name: "Menabe", image: "🌴" },
     { id: 2, name: "Melaky", image: "🏝️" },
@@ -147,8 +171,8 @@ const Home = () => {
     { id: 4, name: "Amoroni Mania", image: "🐵" }
   ];
 
-  // Utiliser les vraies activités populaires au lieu des packages simulés
-  const packages = activitesPopulaires.slice(0, 4).map((activite, index) => ({
+  // Utiliser les vraies activités populaires filtrées au lieu des packages simulés
+  const packages = activitesPopulairesFiltrees.slice(0, 4).map((activite, index) => ({
     id: activite.id_activite,
     name: activite.titre_activite,
     price: activite.capacite ? `${activite.nombre_participants || 0}/${activite.capacite} places` : "Illimité",
@@ -395,6 +419,57 @@ const Home = () => {
     navigate('/activites');
   };
 
+  // Gérer le changement de filtre d'activité
+  const handleActivityFilterChange = (e) => {
+    const filterValue = e.target.value;
+    setSelectedTypeFilter(filterValue);
+    console.log('Filtre sélectionné:', filterValue);
+    
+    // Filtrer les activités populaires selon le type sélectionné
+    if (filterValue === 'all') {
+      setActivitesPopulairesFiltrees(activitesPopulaires);
+    } else {
+      const filtrees = activitesPopulaires.filter(activite => 
+        activite.id_type === filterValue
+      );
+      setActivitesPopulairesFiltrees(filtrees);
+    }
+  };
+
+  // Charger les exigences pour un type d'activité spécifique
+  const loadExigencesForType = async (idType) => {
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/public/exigences/type/${idType}`);
+      
+      if (response.ok) {
+        const exigences = await response.json();
+        setExigencesByType(prev => ({
+          ...prev,
+          [idType]: exigences
+        }));
+        console.log(`Exigences pour type ${idType}:`, exigences);
+      } else {
+        console.error('Erreur chargement exigences:', response.status);
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement des exigences:', error);
+    }
+  };
+
+  // Gérer le clic sur un type d'activité pour voir les exigences
+  const handleTypeClick = (typeId) => {
+    if (typeId === 'all') return;
+    
+    // Charger les exigences si pas encore chargées
+    if (!exigencesByType[typeId]) {
+      loadExigencesForType(typeId);
+    }
+    
+    // Basculer l'affichage des exigences
+    setShowExigences(prev => !prev);
+  };
+
   if (loading) {
     return (
       <div className="home-container">
@@ -497,7 +572,29 @@ const Home = () => {
       <section className="packages-section">
         <div className="section-header">
           <h2>Activités Populaires</h2>
-          <a href="#" className="see-all" onClick={(e) => { e.preventDefault(); handleSeeAllActivites(); }}>Voir tout</a>
+          <div className="header-actions">
+            <select 
+              className="activity-filter" 
+              value={selectedTypeFilter}
+              onChange={handleActivityFilterChange}
+            >
+              <option value="all">Tous les types</option>
+              {typesActivites.map(type => (
+                <option key={type.id} value={type.id}>
+                  {type.libelle_type}
+                </option>
+              ))}
+            </select>
+            {selectedTypeFilter !== 'all' && (
+              <button 
+                className="exigences-btn"
+                onClick={() => handleTypeClick(selectedTypeFilter)}
+              >
+                Voir les exigences
+              </button>
+            )}
+            <a href="#" className="see-all" onClick={(e) => { e.preventDefault(); handleSeeAllActivites(); }}>Voir tout</a>
+          </div>
         </div>
 
         <div className="packages-grid">
@@ -560,6 +657,44 @@ const Home = () => {
           )}
         </div>
       </section>
+
+      {/* Section Exigences par Type d'Activité */}
+      {showExigences && selectedTypeFilter !== 'all' && (
+        <section className="exigences-section">
+          <div className="exigences-header">
+            <h3>Exigences pour {typesActivites.find(t => t.id === selectedTypeFilter)?.libelle_type}</h3>
+            <button className="close-btn" onClick={() => setShowExigences(false)}>✕</button>
+          </div>
+          
+          {exigencesByType[selectedTypeFilter] ? (
+            <div className="exigences-list">
+              {exigencesByType[selectedTypeFilter].length > 0 ? (
+                exigencesByType[selectedTypeFilter].map(exigence => (
+                  <div key={exigence.id_exigence} className="exigence-item">
+                    <div className="exigence-type">
+                      <span className={`type-badge ${exigence.type_exigence}`}>
+                        {exigence.type_exigence}
+                      </span>
+                      <span className={`status-badge ${exigence.obligatoire ? 'obligatoire' : 'optionnel'}`}>
+                        {exigence.obligatoire ? 'Obligatoire' : 'Optionnel'}
+                      </span>
+                    </div>
+                    <div className="exigence-content">
+                      <h4>{exigence.libelle_exigence}</h4>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="no-exigences">Aucune exigence spécifique pour ce type d'activité.</p>
+              )}
+            </div>
+          ) : (
+            <div className="loading-exigences">
+              <div className="loading-spinner">Chargement des exigences...</div>
+            </div>
+          )}
+        </section>
+      )}
 
       {/* New Packages Section */}
       <section className="new-packages-section">
