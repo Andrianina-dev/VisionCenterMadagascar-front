@@ -28,10 +28,10 @@ const MemberSidebar = ({ activeNav }) => {
         navigate('/profile');
         break;
       case 'bookings':
-        navigate('/bookings');
+        navigate('/profile');  // Corrigé: naviguer vers la page Profile.js
         break;
       case 'activities':
-        navigate('/activite');
+        navigate('/member/activites');
         break;
       case 'map':
         navigate('/map');

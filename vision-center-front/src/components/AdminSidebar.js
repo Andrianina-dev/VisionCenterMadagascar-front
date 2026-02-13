@@ -19,7 +19,7 @@ const AdminSidebar = ({ activeNav }) => {
     // Naviguer vers la page correspondante
     switch(nav) {
       case 'dashboard':
-        navigate('/admin');
+        navigate('/admin/dashboard');
         break;
       case 'activities':
         navigate('/admin/activities');
@@ -79,7 +79,7 @@ const AdminSidebar = ({ activeNav }) => {
             onClick={() => handleNavClick('dashboard')}
           >
             <span className="nav-icon">📊</span>
-            <span className="nav-text">Dashboard</span>
+            <span className="nav-text">Tableau de bord</span>
           </button>
         </div>
 

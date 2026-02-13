@@ -123,12 +123,14 @@
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: flex-start; /* Aligne à gauche pour voir le texte */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 16px;
   margin-bottom: 4px;
   backdrop-filter: blur(20px);
   position: relative;
   overflow: hidden;
+  min-width: 0; /* Permet au flex de fonctionner correctement */
 }
 
 .member-nav-item::before {
@@ -181,11 +183,18 @@
   font-size: 18px;
   width: 24px;
   text-align: center;
+  flex-shrink: 0; /* Empêche l'icône de rétrécir */
+  display: inline-block; /* Assure que l'icône est visible */
 }
 
 .nav-text {
   flex: 1;
   font-weight: 600;
+  white-space: nowrap; /* Empêche le texte de se casser */
+  overflow: hidden; /* Cache le débordement */
+  text-overflow: ellipsis; /* Ajoute "..." si le texte est trop long */
+  display: inline-block; /* Assure que le texte est visible */
+  min-width: 0; /* Permet au flex de réduire si nécessaire */
 }
 
 .member-sign-out-section {
@@ -276,6 +285,16 @@
   .nav-icon {
     font-size: 16px;
     margin-right: 12px;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+
+  .nav-text {
+    display: inline-block; /* S'assure que le texte est visible */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
   }
 }
 
@@ -310,6 +329,16 @@
   .nav-icon {
     font-size: 14px;
     margin-right: 10px;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+
+  .nav-text {
+    display: inline-block; /* S'assure que le texte est visible */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
   }
 }
 

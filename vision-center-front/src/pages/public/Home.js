@@ -30,12 +30,7 @@ const Home = () => {
   }, []);
 
   // Créer le nom d'affichage
-  const getDisplayName = () => {
-    if (currentUser) {
-      return `${currentUser.prenom} ${currentUser.nom.charAt(0)}.`;
-    }
-    return "Visiteur";
-  };
+  const displayName = currentUser ? `${currentUser.prenom} ${currentUser.nom.charAt(0)}.` : 'Membre';
 
   // Image améliorée pour Centre de Vision
   const improvedImageBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+";
@@ -511,7 +506,7 @@ const Home = () => {
           </div>
           <div className="header-profile">
             <div className="profile-info">
-              <span className="profile-name">{getDisplayName()}</span>
+              <span className="profile-name">{displayName}</span>
               <span className="profile-status">En ligne</span>
             </div>
             <div className="profile-avatar">

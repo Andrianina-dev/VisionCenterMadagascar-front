@@ -61,28 +61,28 @@ const Sidebar = ({ activeNav }) => {
           className={`nav-item ${activeNav === 'account' ? 'active' : ''}`}
           onClick={() => handleNavClick('account')}
         >
-          <span className="nav-dash">-</span>
-          Account
+          <span className="nav-icon">👤</span>
+          <span className="nav-text">Compte</span>
         </button>
         <button 
           className={`nav-item ${activeNav === 'bookings' ? 'active' : ''}`}
           onClick={() => handleNavClick('bookings')}
         >
-          <span className="nav-dash">-</span>
-          My Bookings
+          <span className="nav-icon">📅</span>
+          <span className="nav-text">Mes Réservations</span>
         </button>
         <button 
           className={`nav-item ${activeNav === 'support' ? 'active' : ''}`}
           onClick={() => handleNavClick('support')}
         >
-          <span className="nav-dash">-</span>
-          Support
+          <span className="nav-icon">💬</span>
+          <span className="nav-text">Support</span>
         </button>
       </nav>
 
       <div className="sign-out-section">
         <button className="sign-out-btn" onClick={handleSignOut}>
-          <span className="sign-out-text">Sign out</span>
+          <span className="sign-out-text">Déconnexion</span>
           <span className="sign-out-arrow">→</span>
         </button>
       </div>

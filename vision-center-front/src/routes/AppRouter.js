@@ -13,6 +13,7 @@ import ActiviteDetails from "../pages/public/ActiviteDetails";
 import Profile from "../pages/public/Profile";
 import AccountProfile from "../pages/public/AccountProfile";
 import Activites from "../pages/member/Activites";
+import Messages from "../pages/member/Messages";
 import AdminStatistics from "../pages/admin/AdminStatistics";
 import FloatingMessenger from "../component/FloatingMessenger/FloatingMessenger";
 import { MessengerProvider, useMessenger } from "../contexts/MessengerContext";
@@ -93,6 +94,15 @@ const AppRouterContent = () => {
           <ProtectedRoute>
             <MemberLayout activeNav="activities">
               <Activites />
+            </MemberLayout>
+          </ProtectedRoute>
+        } />
+
+        {/* MEMBER MESSAGES PAGE */}
+        <Route path="/member/messages" element={
+          <ProtectedRoute>
+            <MemberLayout activeNav="messages">
+              <Messages />
             </MemberLayout>
           </ProtectedRoute>
         } />

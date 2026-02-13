@@ -24,6 +24,7 @@ function AccueilVitrine() {
             <ul className="nav-links">
               <li><a href="#activites" onClick={(e) => { e.preventDefault(); scrollToSection('activites'); }}>Activités</a></li>
               <li><a href="#a-propos" onClick={(e) => { e.preventDefault(); scrollToSection('a-propos'); }}>À Propos</a></li>
+              <li><button onClick={() => navigate('/galerie')} className="btn-nav-link">Galerie</button></li>
               <li><a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection('contact'); }}>Contact</a></li>
               <li><button onClick={() => navigate('/login')} className="btn-nav">Espace Membre</button></li>
             </ul>
@@ -150,6 +151,7 @@ function AccueilVitrine() {
               <ul>
                 <li><a href="#activites">Activités</a></li>
                 <li><a href="#a-propos">À Propos</a></li>
+                <li><button onClick={() => navigate('/galerie')}>Galerie</button></li>
                 <li><a href="#contact">Contact</a></li>
                 <li><button onClick={() => navigate('/login')}>Espace Membre</button></li>
               </ul>
