@@ -19,13 +19,15 @@ const getActiviteById = async (id) => {
     }
     
     const data = await response.json();
+    
+    // Utiliser les données réelles de la base sans modifications statiques
     console.log(`Activité ${id} chargée avec succès:`, data);
     return data;
   } catch (error) {
     console.error('Erreur lors de la récupération de l\'activité:', error);
     throw error;
   }
-}
+};
 
 const ActiviteDetails = () => {
   const { id } = useParams();
@@ -36,6 +38,7 @@ const ActiviteDetails = () => {
   const [exigences, setExigences] = useState([]);
   const [loadingExigences, setLoadingExigences] = useState(false);
   const [showExigences, setShowExigences] = useState(true);
+  const [typesActivites, setTypesActivites] = useState([]);
 
   // Image améliorée pour Vision Center Madagascar
   const improvedImageBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+";
@@ -48,6 +51,16 @@ const ActiviteDetails = () => {
         // Charger les données réelles depuis l'API
         const activiteData = await getActiviteById(id);
         setActivite(activiteData);
+        
+        // Charger les types d'activités pour déterminer le type
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+        const typesResponse = await fetch(`${apiUrl}/public/types-activites`);
+        
+        if (typesResponse.ok) {
+          const typesData = await typesResponse.json();
+          setTypesActivites(typesData);
+          console.log('Types d\'activités chargés:', typesData);
+        }
         
         // Charger les exigences si le type d'activité est disponible
         if (activiteData.id_type) {
@@ -165,7 +178,9 @@ const ActiviteDetails = () => {
   }
 
   const statut = activite ? activiteService.getActivityStatus(activite) : { icon: "", text: "Chargement...", class: "loading" };
-  const placesRestantes = activite && activite.capacite ? activite.capacite - (activite.nb_participants || 0) : "Illimité";
+  const placesRestantes = activite && activite.capacite ? (activite.capacite - (activite.nombre_participants || 0)) : "Illimité";
+  const pourcentageRempli = activite && activite.capacite ? Math.round(((activite.nombre_participants || 0) / activite.capacite) * 100) : 0;
+  const estComplet = activite && activite.capacite ? (activite.nombre_participants || 0) >= activite.capacite : false;
 
   return (
     <div className="home-container">
@@ -194,7 +209,10 @@ const ActiviteDetails = () => {
               <div className="activite-hero-badges">
                 <div className="activite-badge">
                   <span className="badge-icon">👥</span>
-                  <span className="badge-text">{activite.nb_participants}/{activite.capacite}</span>
+                  <span className="badge-text">{activite.nombre_participants || 0}/{activite.capacite || "Illimité"} places</span>
+                  {pourcentageRempli > 0 && (
+                    <span className="badge-percentage">({pourcentageRempli}% rempli)</span>
+                  )}
                 </div>
                 <div className="activite-badge">
                   <span className="badge-icon">📍</span>
@@ -258,15 +276,21 @@ const ActiviteDetails = () => {
               </div>
             </div>
 
-            {/* Capacité */}
+            {/* Participants */}
             <div className="activite-info-card">
               <div className="activite-info-icon">👥</div>
               <div className="activite-info-content">
                 <h3>Participants</h3>
-                <p>{activite.nb_participants} / {activite.capacite || "Illimité"}</p>
+                <p>{activite.nombre_participants || 0} / {activite.capacite || "Illimité"} places</p>
                 <div className="places-restantes">
                   {placesRestantes} place{placesRestantes !== 1 ? "s" : ""} restante{placesRestantes !== 1 ? "s" : ""}
+                  {pourcentageRempli > 0 && (
+                    <span className="pourcentage-info">({pourcentageRempli}% rempli)</span>
+                  )}
                 </div>
+                {activite.est_complet && (
+                  <div className="complet-badge">⚠️ Complet</div>
+                )}
               </div>
             </div>
 
@@ -300,6 +324,198 @@ const ActiviteDetails = () => {
               </div>
             </div>
           </div>
+
+          {/* Sections spécifiques selon le type d'activité */}
+          {typesActivites.find(t => t.id === activite.id_type)?.libelle_type?.toLowerCase() === 'formation' && (
+            <div className="activite-details-formation">
+              <h2>📚 Ressources de Formation</h2>
+              <div className="formation-resources">
+                <div className="resource-section">
+                  <h3>🎥 Vidéos de Formation</h3>
+                  <div className="videos-grid">
+                    <div className="video-item">
+                      <div className="video-thumbnail">
+                        <span className="play-icon">▶️</span>
+                      </div>
+                      <div className="video-info">
+                        <h4>Introduction à la formation</h4>
+                        <p className="video-duration">15 min</p>
+                      </div>
+                    </div>
+                    <div className="video-item">
+                      <div className="video-thumbnail">
+                        <span className="play-icon">▶️</span>
+                      </div>
+                      <div className="video-info">
+                        <h4>Module principal</h4>
+                        <p className="video-duration">45 min</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="resource-section">
+                  <h3>📄 Documents Nécessaires</h3>
+                  <div className="documents-list">
+                    <div className="document-item">
+                      <span className="doc-icon">📄</span>
+                      <div className="doc-info">
+                        <h4>Guide de formation</h4>
+                        <p className="doc-size">PDF - 2.3 MB</p>
+                      </div>
+                      <button className="download-btn">Télécharger</button>
+                    </div>
+                    <div className="document-item">
+                      <span className="doc-icon">📋</span>
+                      <div className="doc-info">
+                        <h4>Exercices pratiques</h4>
+                        <p className="doc-size">PDF - 1.5 MB</p>
+                      </div>
+                      <button className="download-btn">Télécharger</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {typesActivites.find(t => t.id === activite.id_type)?.libelle_type?.toLowerCase() === 'rencontre' && (
+            <div className="activite-details-rencontre">
+              <h2>🙏 Détails de la Rencontre Spirituelle</h2>
+              <div className="rencontre-content">
+                <div className="rencontre-lieu">
+                  <h3>📍 Lieu de Rencontre</h3>
+                  <div className="lieu-details">
+                    <div className="lieu-info">
+                      <p className="lieu-nom">{activite.lieu_activite}</p>
+                      <p className="lieu-adresse">Adresse complète du lieu</p>
+                      <p className="lieu-horaires">Ouverture: 30 min avant</p>
+                    </div>
+                    <button className="voir-carte-btn">🗺️ Voir sur la carte</button>
+                  </div>
+                </div>
+                <div className="rencontre-programme">
+                  <h3>📅 Programme Spirituel</h3>
+                  <div className="programme-items">
+                    <div className="programme-item">
+                      <span className="time">14:00</span>
+                      <div className="programme-content">
+                        <h4>Accueil et prière d'ouverture</h4>
+                        <p>Moment de recueillement et bienvenue</p>
+                      </div>
+                    </div>
+                    <div className="programme-item">
+                      <span className="time">14:30</span>
+                      <div className="programme-content">
+                        <h4>Partage spirituel</h4>
+                        <p>Thème: La foi et la persévérance</p>
+                      </div>
+                    </div>
+                    <div className="programme-item">
+                      <span className="time">15:30</span>
+                      <div className="programme-content">
+                        <h4>Méditation guidée</h4>
+                        <p>Session de méditation collective</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="rencontre-recommandations">
+                  <h3>💡 Recommandations</h3>
+                  <div className="recommandations-list">
+                    <div className="recommandation-item">
+                      <span className="rec-icon">👕</span>
+                      <p>Tenue vestimentaire modeste et respectueuse</p>
+                    </div>
+                    <div className="recommandation-item">
+                      <span className="rec-icon">📿</span>
+                      <p>Apporter votre Bible ou livre spirituel</p>
+                    </div>
+                    <div className="recommandation-item">
+                      <span className="rec-icon">🙏</span>
+                      <p>Venir avec un cœur ouvert et humble</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {typesActivites.find(t => t.id === activite.id_type)?.libelle_type?.toLowerCase() === 'evenement' && (
+            <div className="activite-details-evenement">
+              <h2>🎉 Détails de l'Événement</h2>
+              <div className="evenement-content">
+                <div className="evenement-lieu">
+                  <h3>📍 Lieu de l'Événement</h3>
+                  <div className="lieu-details">
+                    <div className="lieu-info">
+                      <p className="lieu-nom">{activite.lieu_activite}</p>
+                      <p className="lieu-adresse">Adresse complète de l'événement</p>
+                      <p className="lieu-acces">Accès: Transport public disponible</p>
+                    </div>
+                    <button className="voir-carte-btn">🗺️ Voir sur la carte</button>
+                  </div>
+                </div>
+                <div className="evenement-activites">
+                  <h3>🎯 Ce qu'on ferait</h3>
+                  <div className="activites-list">
+                    <div className="activite-item">
+                      <span className="activite-icon">🎵</span>
+                      <div className="activite-content">
+                        <h4>Musique et chants</h4>
+                        <p>Session de louange et adoration</p>
+                      </div>
+                    </div>
+                    <div className="activite-item">
+                      <span className="activite-icon">🍽️</span>
+                      <div className="activite-content">
+                        <h4>Partage de repas</h4>
+                        <p>Moment de communion et fraternité</p>
+                      </div>
+                    </div>
+                    <div className="activite-item">
+                      <span className="activite-icon">🎪</span>
+                      <div className="activite-content">
+                        <h4>Activités pour enfants</h4>
+                        <p>Programme spécial pour les plus jeunes</p>
+                      </div>
+                    </div>
+                    <div className="activite-item">
+                      <span className="activite-icon">🎁</span>
+                      <div className="activite-content">
+                        <h4>Distribution de cadeaux</h4>
+                        <p>Partage de bénédictions matérielles</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="evenement-suggestions">
+                  <h3>💡 Ce qu'on devrait y mettre</h3>
+                  <div className="suggestions-list">
+                    <div className="suggestion-item">
+                      <span className="sug-icon">📸</span>
+                      <p>Zone photo pour immortaliser les moments</p>
+                    </div>
+                    <div className="suggestion-item">
+                      <span className="sug-icon">💺</span>
+                      <p>Sièges confortables pour tous</p>
+                    </div>
+                    <div className="suggestion-item">
+                      <span className="sug-icon">🎤</span>
+                      <p>Système sonore de qualité</p>
+                    </div>
+                    <div className="suggestion-item">
+                      <span className="sug-icon">🚻</span>
+                      <p>Installations sanitaires propres</p>
+                    </div>
+                    <div className="suggestion-item">
+                      <span className="sug-icon">♿️</span>
+                      <p>Accès pour personnes à mobilité réduite</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Description */}
           <div className="activite-details-description">

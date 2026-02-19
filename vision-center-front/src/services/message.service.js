@@ -96,7 +96,7 @@ class MessageService {
         throw new Error('Admin non connecté');
       }
 
-      const response = await fetch(`${API_URL}/admin/messages/send/${memberId}`, {
+      const response = await fetch(`${API_URL}/api/admin/messages/send/${memberId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,7 +104,11 @@ class MessageService {
           'X-Requested-With': 'XMLHttpRequest'
         },
         credentials: 'include', // Important pour les cookies de session admin
-        body: JSON.stringify(messageData)
+        body: JSON.stringify({
+            message: message,
+            recipient_id: memberId,  // Corrigé: utiliser recipient_id au lieu de membre_id
+            recipient_email: recipientEmail
+          })
       });
 
       if (!response.ok) {
@@ -126,7 +130,7 @@ class MessageService {
         throw new Error('Admin non connecté');
       }
 
-      const response = await fetch(`${API_URL}/admin/messages`, {
+      const response = await fetch(`${API_URL}/api/admin/messages`, {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

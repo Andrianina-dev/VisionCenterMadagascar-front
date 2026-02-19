@@ -15,6 +15,7 @@ import AccountProfile from "../pages/public/AccountProfile";
 import Activites from "../pages/member/Activites";
 import Messages from "../pages/member/Messages";
 import AdminStatistics from "../pages/admin/AdminStatistics";
+import AdminMessages from "../pages/admin/AdminMessages";
 import FloatingMessenger from "../component/FloatingMessenger/FloatingMessenger";
 import { MessengerProvider, useMessenger } from "../contexts/MessengerContext";
 
@@ -166,6 +167,15 @@ const AppRouterContent = () => {
           <ProtectedRoute>
             <AdminLayout activeNav="statistics">
               <AdminStatistics />
+            </AdminLayout>
+          </ProtectedRoute>
+        } />
+
+        {/* ADMIN MESSAGES */}
+        <Route path="/admin/messages" element={
+          <ProtectedRoute>
+            <AdminLayout activeNav="messages">
+              <AdminMessages />
             </AdminLayout>
           </ProtectedRoute>
         } />

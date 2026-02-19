@@ -1,0 +1,260 @@
+/* Member Layout Styles - Design maquette */
+.member-layout {
+  display: flex !important;
+  min-height: 100vh !important;
+  width: 100vw !important;
+  max-width: none !important;
+  min-width: 100vw !important;
+  background: #f8f9fa !important;
+  position: relative !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+/* Sidebar compacte - Design maquette */
+.member-sidebar-compact {
+  width: 200px; /* Augmenté pour afficher le texte */
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Aligné à gauche */
+  padding: 25px 15px 20px 15px; /* Ajout de padding horizontal */
+  position: relative;
+  z-index: 10;
+}
+
+.sidebar-logo {
+  margin-bottom: 40px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: #f3f4f6;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  color: #6b7280;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.nav-item {
+  width: 100%; /* Prend toute la largeur */
+  height: 48px;
+  background: transparent;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Aligne à gauche */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  position: relative;
+  padding: 0 12px; /* Ajout de padding */
+  gap: 12px; /* Espacement entre icône et texte */
+}
+
+.nav-item:hover {
+  background: #f3f4f6;
+}
+
+.nav-item.active {
+  background: #e5e7eb;
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  background: #3b82f6;
+  border-radius: 2px;
+}
+
+.nav-icon {
+  color: #9ca3af;
+  transition: all 0.2s ease;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0; /* Empêche l'icône de rétrécir */
+}
+
+.nav-item:hover .nav-icon {
+  color: #6b7280;
+}
+
+.nav-item.active .nav-icon {
+  color: #374151;
+}
+
+.nav-text {
+  color: #9ca3af;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap; /* Empêche le texte de se casser */
+  overflow: hidden; /* Cache le débordement */
+  text-overflow: ellipsis; /* Ajoute "..." si le texte est trop long */
+  flex: 1; /* Prend l'espace restant */
+}
+
+.nav-item:hover .nav-text {
+  color: #6b7280;
+}
+
+.nav-item.active .nav-text {
+  color: #374151;
+  font-weight: 600;
+}
+
+/* Zone de contenu - Design maquette */
+.member-content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin-left: 0;
+  background: #ffffff;
+}
+
+.member-header {
+  background: #ffffff;
+  padding: 20px 32px;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+}
+
+.header-content {
+  max-width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.5px;
+}
+
+.header-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  font-weight: 500;
+}
+
+.member-main {
+  flex: 1;
+  padding: 32px;
+  background: #f8f9fa;
+  overflow-y: auto;
+  min-height: calc(100vh - 80px);
+  position: relative;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .member-sidebar-compact {
+    width: 180px; /* Légèrement réduit pour mobile */
+    padding: 20px 10px 15px 10px;
+  }
+
+  .nav-item {
+    padding: 0 10px;
+    gap: 10px;
+  }
+
+  .nav-text {
+    font-size: 13px;
+  }
+
+  .member-main-content {
+    margin-left: 180px;
+  }
+
+  .member-header {
+    padding: 15px 20px;
+  }
+
+  .header-title {
+    font-size: 24px;
+  }
+
+  .header-subtitle {
+    font-size: 14px;
+  }
+
+  .member-main {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .member-layout {
+    flex-direction: column;
+  }
+
+  .member-sidebar-compact {
+    width: 100%;
+    flex-direction: row;
+    height: auto;
+    padding: 10px;
+    overflow-x: auto;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    gap: 5px;
+    overflow-x: auto;
+  }
+
+  .nav-item {
+    min-width: 120px;
+    padding: 8px;
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+  }
+
+  .nav-text {
+    font-size: 12px;
+    white-space: normal;
+  }
+
+  .member-main-content {
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  .member-header {
+    padding: 10px 15px;
+  }
+
+  .header-title {
+    font-size: 20px;
+  }
+
+  .header-subtitle {
+    font-size: 12px;
+  }
+
+  .member-main {
+    padding: 15px;
+  }
+}
