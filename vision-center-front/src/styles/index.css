@@ -22,13 +22,12 @@
 
 /* Import des styles des pages publiques */
 @import './pages/Home.css';
-@import './pages/AccountProfile.css';
 @import './pages/ActiviteDetails.css';
 @import './pages/ActiviteDetailsEnhanced.css';
 @import './pages/HomeRegistered.css';
 @import './pages/Inscription.css';
 @import './pages/MapSearch.css';
-@import './pages/Profile.css';
+@import './pages/profileMembre.css';
 
 body {
   margin: 0;

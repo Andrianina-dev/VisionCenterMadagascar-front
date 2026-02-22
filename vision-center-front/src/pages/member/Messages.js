@@ -34,7 +34,7 @@ const Messages = () => {
       }
 
       // Récupérer les messages envoyés par l'admin pour le membre connecté
-      const response = await fetch(`${apiUrl}/public/messages/admin?member_id=${member.id}`, {
+      const response = await fetch(`${apiUrl}/public/messages/member?member_id=${member.id}`, {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

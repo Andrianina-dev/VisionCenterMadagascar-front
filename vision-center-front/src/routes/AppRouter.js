@@ -10,10 +10,8 @@ import ShowcaseHomePage from "../pages/showcase/HomePage";
 import Galerie from "../layouts/vitrine/Galerie";
 import MapSearch from "../pages/public/MapSearch";
 import ActiviteDetails from "../pages/public/ActiviteDetails";
-import Profile from "../pages/public/Profile";
-import AccountProfile from "../pages/public/AccountProfile";
-import Activites from "../pages/member/Activites";
 import Messages from "../pages/member/Messages";
+import ProfileMembre from "../pages/member/profileMembre";
 import AdminStatistics from "../pages/admin/AdminStatistics";
 import AdminMessages from "../pages/admin/AdminMessages";
 import FloatingMessenger from "../component/FloatingMessenger/FloatingMessenger";
@@ -90,21 +88,27 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        {/* MEMBER ACTIVITIES PAGE */}
-        <Route path="/member/activites" element={
-          <ProtectedRoute>
-            <MemberLayout activeNav="activities">
-              <Activites />
-            </MemberLayout>
-          </ProtectedRoute>
-        } />
-
+        
         {/* MEMBER MESSAGES PAGE */}
         <Route path="/member/messages" element={
           <ProtectedRoute>
             <MemberLayout activeNav="messages">
               <Messages />
             </MemberLayout>
+          </ProtectedRoute>
+        } />
+
+        {/* MEMBER ACCOUNT PAGE */}
+        <Route path="/member/account" element={
+          <ProtectedRoute>
+            <ProfileMembre />
+          </ProtectedRoute>
+        } />
+
+        {/* PROFILE PAGE */}
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <ProfileMembre />
           </ProtectedRoute>
         } />
 
@@ -126,24 +130,7 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        {/* PROFILE PAGE - AVEC SIDEBAR */}
-        <Route path="/profile" element={
-          <ProtectedRoute>
-            <MemberLayout activeNav="profile">
-              <Profile />
-            </MemberLayout>
-          </ProtectedRoute>
-        } />
-
-        {/* ACCOUNT PROFILE PAGE - AVEC SIDEBAR */}
-        <Route path="/account" element={
-          <ProtectedRoute>
-            <MemberLayout activeNav="account">
-              <AccountProfile />
-            </MemberLayout>
-          </ProtectedRoute>
-        } />
-
+        
         {/* ADMIN ROUTES */}
         <Route path="/admin" element={
           <ProtectedRoute>
