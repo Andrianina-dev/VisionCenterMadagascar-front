@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GalerieService from '../../services/GalerieService';
+import NavigationSiteVitrine from '../../components/vitrine/NavigationSiteVitrine';
+import FooterSiteVitrine from '../../components/vitrine/FooterSiteVitrine';
 import './accueilVitrineSimple.css';
 
 function Galerie() {
@@ -82,22 +84,7 @@ function Galerie() {
   return (
     <div className="accueil-simple">
       {/* Header */}
-      <header className="header-simple">
-        <div className="container">
-          <div className="logo">
-            <h1>Centre de Vision</h1>
-          </div>
-          <nav className="nav-simple">
-            <ul className="nav-links">
-              <li><a href="#activites" onClick={(e) => { e.preventDefault(); scrollToSection('activites'); }}>Activités</a></li>
-              <li><a href="#a-propos" onClick={(e) => { e.preventDefault(); scrollToSection('a-propos'); }}>À Propos</a></li>
-              <li><a href="#galerie" onClick={(e) => { e.preventDefault(); scrollToSection('galerie'); }}>Galerie</a></li>
-              <li><a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection('contact'); }}>Contact</a></li>
-              <li><button onClick={() => navigate('/login')} className="btn-connexion">Espace Membre</button></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
+      <NavigationSiteVitrine scrollToSection={scrollToSection} />
 
       {/* Hero Section */}
       <section className="hero-simple" id="accueil">
@@ -190,37 +177,7 @@ function Galerie() {
       )}
 
       {/* Footer */}
-      <footer className="footer-simple" id="contact">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-section">
-              <h4>Vision Center</h4>
-              <p>Un centre chrétien au service de la communauté malgache.</p>
-            </div>
-            <div className="footer-section">
-              <h4>Liens Rapides</h4>
-              <ul>
-                <li><a href="#activites">Activités</a></li>
-                <li><a href="#a-propos">À Propos</a></li>
-                <li><a href="#galerie">Galerie</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><button onClick={() => navigate('/login')}>Espace Membre</button></li>
-              </ul>
-            </div>
-            <div className="footer-section">
-              <h4>Contact</h4>
-              <ul>
-                <li>contact@visioncenter.mg</li>
-                <li>+261 34 123 456</li>
-                <li>Antananarivo, Madagascar</li>
-              </ul>
-            </div>
-          </div>
-          <div className="footer-bottom">
-            <p>&copy; 2026 Centre de Vision. Tous droits réservés.</p>
-          </div>
-        </div>
-      </footer>
+      <FooterSiteVitrine />
     </div>
   );
 }

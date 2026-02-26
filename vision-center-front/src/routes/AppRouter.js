@@ -12,6 +12,7 @@ import MapSearch from "../pages/public/MapSearch";
 import ActiviteDetails from "../pages/public/ActiviteDetails";
 import Messages from "../pages/member/Messages";
 import ProfileMembre from "../pages/member/profileMembre";
+import LocationSalle from "../pages/member/LocationSalle";
 import AdminStatistics from "../pages/admin/AdminStatistics";
 import AdminMessages from "../pages/admin/AdminMessages";
 import FloatingMessenger from "../component/FloatingMessenger/FloatingMessenger";
@@ -95,6 +96,13 @@ const AppRouterContent = () => {
             <MemberLayout activeNav="messages">
               <Messages />
             </MemberLayout>
+          </ProtectedRoute>
+        } />
+
+        {/* MEMBER LOCATION SALLE PAGE */}
+        <Route path="/location-salle" element={
+          <ProtectedRoute>
+            <LocationSalle />
           </ProtectedRoute>
         } />
 

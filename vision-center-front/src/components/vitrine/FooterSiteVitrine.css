@@ -1,0 +1,135 @@
+/* Footer Styles */
+.footer {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #ffffff;
+  padding: 60px 0 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #7FFEF4, transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-section h4 {
+  color: #7FFEF4;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+  position: relative;
+}
+
+.footer-section h4::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: #7FFEF4;
+}
+
+.footer-section p {
+  color: #b0b0b0;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 12px;
+  color: #b0b0b0;
+  transition: all 0.3s ease;
+}
+
+.footer-section ul li:hover {
+  color: #7FFEF4;
+  transform: translateX(5px);
+}
+
+.footer-section a {
+  color: #b0b0b0;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-section a:hover {
+  color: #7FFEF4;
+}
+
+.footer-section button {
+  background: none;
+  border: none;
+  color: #b0b0b0;
+  cursor: pointer;
+  font-size: inherit;
+  transition: all 0.3s ease;
+  padding: 0;
+  text-align: left;
+}
+
+.footer-section button:hover {
+  color: #7FFEF4;
+  transform: translateX(5px);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(127, 254, 244, 0.2);
+  padding-top: 20px;
+  text-align: center;
+}
+
+.footer-bottom p {
+  color: #b0b0b0;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footer {
+    padding: 40px 0 20px;
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .footer-section h4 {
+    font-size: 1.1rem;
+  }
+}

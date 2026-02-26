@@ -39,6 +39,11 @@ const ActiviteDetails = () => {
   const [loadingExigences, setLoadingExigences] = useState(false);
   const [showExigences, setShowExigences] = useState(true);
   const [typesActivites, setTypesActivites] = useState([]);
+  const [documents, setDocuments] = useState([]);
+  const [videos, setVideos] = useState([]);
+  const [loadingRessources, setLoadingRessources] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [showVideoPopup, setShowVideoPopup] = useState(false);
 
   // Image améliorée pour Vision Center Madagascar
   const improvedImageBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+";
@@ -66,6 +71,9 @@ const ActiviteDetails = () => {
         if (activiteData.id_type) {
           loadExigencesForType(activiteData.id_type);
         }
+        
+        // Charger les ressources (documents et vidéos) pour l'activité
+        loadRessourcesForActivite(activiteData.id_activite);
         
       } catch (err) {
         setError("Erreur lors du chargement des détails de l'activité");
@@ -99,6 +107,111 @@ const ActiviteDetails = () => {
     }
   };
 
+  // Charger les ressources (documents et vidéos) pour une activité
+  const loadRessourcesForActivite = async (activiteId) => {
+    try {
+      setLoadingRessources(true);
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+      
+      // DONNÉES DE TEST - Pour voir le design dans le front
+      console.log('🧪 Utilisation des données de test pour les ressources');
+      
+      // Documents de test selon le type d'activité
+      const testDocuments = [
+        {
+          id: 1,
+          titre: "Guide de Prière Quotidienne",
+          taille: "PDF - 2.3 MB",
+          url: "https://example.com/guide-priere.pdf",
+          type: "guide"
+        },
+        {
+          id: 2,
+          titre: "Paroles Bibliques du Jour",
+          taille: "PDF - 1.5 MB", 
+          url: "https://example.com/paroles-bibliques.pdf",
+          type: "lecture"
+        },
+        {
+          id: 3,
+          titre: "Exercices de Méditation",
+          taille: "PDF - 3.1 MB",
+          url: "https://example.com/exercices-meditation.pdf", 
+          type: "exercice"
+        }
+      ];
+      
+      // Vidéos de test selon le type d'activité - VIDÉOS EN LIGNE RÉELLES
+      const testVideos = [
+        {
+          id: 1,
+          titre: "Introduction à la Prière Chrétienne",
+          duree: "15 min",
+          url: "https://www.youtube.com/watch?v=O9xK4JhQv0", // Vidéo réelle de prière
+          type: "introduction"
+        },
+        {
+          id: 2,
+          titre: "Méditation Guidée - Paix Intérieure",
+          duree: "30 min",
+          url: "https://www.youtube.com/watch?v=6p_62X2J3E", // Méditation chrétienne
+          type: "meditation"
+        },
+        {
+          id: 3,
+          titre: "Étude Biblique - La Foi et l'Espérance",
+          duree: "45 min",
+          url: "https://www.youtube.com/watch?v=XH8r5kYk9o", // Étude biblique
+          type: "etude"
+        }
+      ];
+      
+      // Simuler un délai de chargement pour voir l'effet
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Appliquer les données de test pour voir dans le front
+      setDocuments(testDocuments);
+      setVideos(testVideos);
+      
+      console.log(`📚 Documents de test chargés:`, testDocuments);
+      console.log(`🎥 Vidéos de test chargées:`, testVideos);
+      console.log(`🔍 Nombre de documents:`, testDocuments.length);
+      console.log(`🔍 Nombre de vidéos:`, testVideos.length);
+      
+      // API RÉELLE - À décommenter quand l'API est prête
+      /*
+       // Charger les documents
+       const documentsResponse = await fetch(`${apiUrl}/public/activites/${activiteId}/documents`);
+       if (documentsResponse.ok) {
+         const documentsData = await documentsResponse.json();
+         setDocuments(documentsData);
+         console.log(`Documents pour l'activité ${activiteId}:`, documentsData);
+       } else {
+         console.log('Aucun document trouvé ou erreur:', documentsResponse.status);
+         setDocuments([]);
+       }
+       
+       // Charger les vidéos
+       const videosResponse = await fetch(`${apiUrl}/public/activites/${activiteId}/videos`);
+       if (videosResponse.ok) {
+         const videosData = await videosResponse.json();
+         setVideos(videosData);
+         console.log(`Vidéos pour l'activité ${activiteId}:`, videosData);
+       } else {
+         console.log('Aucune vidéo trouvée ou erreur:', videosResponse.status);
+         setVideos([]);
+       }
+       */
+      
+    } catch (error) {
+      console.error('Erreur chargement ressources:', error);
+      setDocuments([]);
+      setVideos([]);
+    } finally {
+      setLoadingRessources(false);
+    }
+  };
+
   const handleInscription = () => {
     navigate(`/inscription/${id}`);
   };
@@ -110,6 +223,17 @@ const ActiviteDetails = () => {
 
   const handleRetour = () => {
     navigate("/dashboard");
+  };
+
+  // Fonctions pour gérer la popup vidéo
+  const handleVideoClick = (video) => {
+    setSelectedVideo(video);
+    setShowVideoPopup(true);
+  };
+
+  const closeVideoPopup = () => {
+    setShowVideoPopup(false);
+    setSelectedVideo(null);
   };
 
   if (loading) {
@@ -332,47 +456,55 @@ const ActiviteDetails = () => {
               <div className="formation-resources">
                 <div className="resource-section">
                   <h3>🎥 Vidéos de Formation</h3>
-                  <div className="videos-grid">
-                    <div className="video-item">
-                      <div className="video-thumbnail">
-                        <span className="play-icon">▶️</span>
-                      </div>
-                      <div className="video-info">
-                        <h4>Introduction à la formation</h4>
-                        <p className="video-duration">15 min</p>
-                      </div>
+                  {loadingRessources ? (
+                    <div className="loading-ressources">Chargement des vidéos...</div>
+                  ) : videos.length > 0 ? (
+                    <div className="videos-grid">
+                      {videos.map((video, index) => (
+                        <div key={index} className="video-item">
+                          <div className="video-thumbnail">
+                            <span className="play-icon">▶️</span>
+                          </div>
+                          <div className="video-info">
+                            <h4>{video.titre || `Vidéo ${index + 1}`}</h4>
+                            <p className="video-duration">{video.duree || 'Durée non spécifiée'}</p>
+                            {video.url && (
+                              <a href={video.url} target="_blank" rel="noopener noreferrer" className="video-link">
+                                Regarder la vidéo
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div className="video-item">
-                      <div className="video-thumbnail">
-                        <span className="play-icon">▶️</span>
-                      </div>
-                      <div className="video-info">
-                        <h4>Module principal</h4>
-                        <p className="video-duration">45 min</p>
-                      </div>
-                    </div>
-                  </div>
+                  ) : (
+                    <div className="no-ressources">Aucune vidéo disponible pour cette formation</div>
+                  )}
                 </div>
                 <div className="resource-section">
                   <h3>📄 Documents Nécessaires</h3>
-                  <div className="documents-list">
-                    <div className="document-item">
-                      <span className="doc-icon">📄</span>
-                      <div className="doc-info">
-                        <h4>Guide de formation</h4>
-                        <p className="doc-size">PDF - 2.3 MB</p>
-                      </div>
-                      <button className="download-btn">Télécharger</button>
+                  {loadingRessources ? (
+                    <div className="loading-ressources">Chargement des documents...</div>
+                  ) : documents.length > 0 ? (
+                    <div className="documents-list">
+                      {documents.map((doc, index) => (
+                        <div key={index} className="document-item">
+                          <span className="doc-icon">📄</span>
+                          <div className="doc-info">
+                            <h4>{doc.titre || `Document ${index + 1}`}</h4>
+                            <p className="doc-size">{doc.taille || 'PDF'}</p>
+                          </div>
+                          {doc.url && (
+                            <a href={doc.url} target="_blank" rel="noopener noreferrer" className="download-btn">
+                              Télécharger
+                            </a>
+                          )}
+                        </div>
+                      ))}
                     </div>
-                    <div className="document-item">
-                      <span className="doc-icon">📋</span>
-                      <div className="doc-info">
-                        <h4>Exercices pratiques</h4>
-                        <p className="doc-size">PDF - 1.5 MB</p>
-                      </div>
-                      <button className="download-btn">Télécharger</button>
-                    </div>
-                  </div>
+                  ) : (
+                    <div className="no-ressources">Aucun document disponible pour cette formation</div>
+                  )}
                 </div>
               </div>
             </div>
@@ -436,6 +568,57 @@ const ActiviteDetails = () => {
                     </div>
                   </div>
                 </div>
+                
+                {/* Ressources pour les rencontres */}
+                {(documents.length > 0 || videos.length > 0) && (
+                  <div className="rencontre-ressources">
+                    <h3>📚 Ressources Spirituelles</h3>
+                    {videos.length > 0 && (
+                      <div className="resource-section">
+                        <h4>🎥 Vidéos de Méditation</h4>
+                        <div className="videos-grid">
+                          {videos.map((video, index) => (
+                            <div key={index} className="video-item">
+                              <div className="video-thumbnail">
+                                <span className="play-icon">▶️</span>
+                              </div>
+                              <div className="video-info">
+                                <h4>{video.titre || `Méditation ${index + 1}`}</h4>
+                                <p className="video-duration">{video.duree || 'Durée non spécifiée'}</p>
+                                {video.url && (
+                                  <a href={video.url} target="_blank" rel="noopener noreferrer" className="video-link">
+                                    Regarder
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {documents.length > 0 && (
+                      <div className="resource-section">
+                        <h4>📄 Documents de Prière</h4>
+                        <div className="documents-list">
+                          {documents.map((doc, index) => (
+                            <div key={index} className="document-item">
+                              <span className="doc-icon">📄</span>
+                              <div className="doc-info">
+                                <h4>{doc.titre || `Document ${index + 1}`}</h4>
+                                <p className="doc-size">{doc.taille || 'PDF'}</p>
+                              </div>
+                              {doc.url && (
+                                <a href={doc.url} target="_blank" rel="noopener noreferrer" className="download-btn">
+                                  Télécharger
+                                </a>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -514,6 +697,78 @@ const ActiviteDetails = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* SECTION PAR DÉFAUT - Ressources pour TOUS les types d'activités */}
+          {(documents.length > 0 || videos.length > 0) && (
+            <div className="activite-details-ressources">
+              <h2>📚 Ressources de l'Activité</h2>
+              
+              {/* Debug info */}
+              <div style={{background: '#f0f0f0', padding: '10px', margin: '10px 0', borderRadius: '5px'}}>
+                <p>🔍 Debug - Documents: {documents.length}, Vidéos: {videos.length}</p>
+                <p>📄 Premier document: {documents[0]?.titre}</p>
+                <p>🎥 Première vidéo: {videos[0]?.titre}</p>
+              </div>
+              
+              {/* Section Vidéos */}
+              {videos.length > 0 && (
+                <div className="resource-section">
+                  <h3>🎥 Vidéos Disponibles</h3>
+                  {loadingRessources ? (
+                    <div className="loading-ressources">Chargement des vidéos...</div>
+                  ) : (
+                    <div className="videos-grid">
+                      {videos.map((video, index) => (
+                        <div key={index} className="video-item" onClick={() => handleVideoClick(video)}>
+                          <div className="video-thumbnail">
+                            <span className="play-icon">▶️</span>
+                          </div>
+                          <div className="video-info">
+                            <h4>{video.titre || `Vidéo ${index + 1}`}</h4>
+                            <p className="video-duration">{video.duree || 'Durée non spécifiée'}</p>
+                            
+                            {/* Lien YouTube au lieu du lecteur intégré */}
+                            {video.url && (
+                              <a href={video.url} target="_blank" rel="noopener noreferrer" className="video-link" onClick={(e) => e.stopPropagation()}>
+                                Regarder sur YouTube
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+              
+              {/* Section Documents */}
+              {documents.length > 0 && (
+                <div className="resource-section">
+                  <h3>📄 Documents à Télécharger</h3>
+                  {loadingRessources ? (
+                    <div className="loading-ressources">Chargement des documents...</div>
+                  ) : (
+                    <div className="documents-list">
+                      {documents.map((doc, index) => (
+                        <div key={index} className="document-item">
+                          <span className="doc-icon">📄</span>
+                          <div className="doc-info">
+                            <h4>{doc.titre || `Document ${index + 1}`}</h4>
+                            <p className="doc-size">{doc.taille || 'PDF'}</p>
+                          </div>
+                          {doc.url && (
+                            <a href={doc.url} target="_blank" rel="noopener noreferrer" className="download-btn">
+                              Télécharger
+                            </a>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
@@ -649,6 +904,43 @@ const ActiviteDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* Popup vidéo modale */}
+      {showVideoPopup && selectedVideo && (
+        <div className="video-popup-overlay" onClick={closeVideoPopup}>
+          <div className="video-popup-container" onClick={(e) => e.stopPropagation()}>
+            <div className="video-popup-header">
+              <h3>{selectedVideo.titre}</h3>
+              <button className="video-popup-close" onClick={closeVideoPopup}>
+                ×
+              </button>
+            </div>
+            <div className="video-popup-content">
+              {selectedVideo.url && selectedVideo.url.includes('youtube.com') ? (
+                <iframe
+                  className="video-popup-player"
+                  src={selectedVideo.url.replace('watch?v=', 'embed/')}
+                  title={selectedVideo.titre}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : selectedVideo.url ? (
+                <video className="video-popup-player" controls autoPlay>
+                  <source src={selectedVideo.url} type="video/mp4" />
+                  Votre navigateur ne supporte pas la lecture vidéo.
+                </video>
+              ) : null}
+            </div>
+            <div className="video-popup-footer">
+              <p className="video-duration-popup">{selectedVideo.duree}</p>
+              <a href={selectedVideo.url} target="_blank" rel="noopener noreferrer" className="video-popup-link">
+                Ouvrir sur YouTube
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

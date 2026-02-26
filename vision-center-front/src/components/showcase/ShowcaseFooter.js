@@ -42,7 +42,7 @@ const ShowcaseFooter = () => {
               <li><a href="#gallery">Galerie</a></li>
               <li><a href="#contact">Contact</a></li>
               <li><a href="#faq">FAQ</a></li>
-              <li><a href="#appointment">Prendre rendez-vous</a></li>
+      
             </ul>
           </div>
 
@@ -70,7 +70,7 @@ const ShowcaseFooter = () => {
             <div className="social-links">
               <h5>Suivez-nous</h5>
               <div className="social-icons">
-                <a href="#" className="social-icon">📘</a>
+                <a href="https://www.facebook.com/visioncentermadagascar" target="_blank" rel="noopener noreferrer" className="social-icon">📘</a>
                 <a href="#" className="social-icon">📷</a>
                 <a href="#" className="social-icon">🐦</a>
                 <a href="#" className="social-icon">💼</a>

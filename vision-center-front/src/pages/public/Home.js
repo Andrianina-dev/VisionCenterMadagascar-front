@@ -8,6 +8,8 @@ import activiteService from "../../services/activite.service";
 
 import AuthService from "../../services/auth.service";
 
+import NavigationMembre from "../../components/NavigationMembre";
+
 
 
 const Home = () => {
@@ -78,9 +80,32 @@ const Home = () => {
 
 
 
-  // Image améliorée pour Centre de Vision
+  // Images spirituelles et religieuses variées en ligne pour le projet
+  const spiritualImages = {
+    vision: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=60&h=40&fit=crop&auto=format", // Lumière spirituelle
+    prayer: "https://images.unsplash.com/photo-1596424986036-55096d083be1?w=60&h=40&fit=crop&auto=format", // Prière
+    bible: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=60&h=40&fit=crop&auto=format", // Bible ouverte
+    cross: "https://images.unsplash.com/photo-1544620334-9fc037e0935b?w=60&h=40&fit=crop&auto=format", // Croix lumineuse
+    church: "https://images.unsplash.com/photo-1515940326542-7736d91b918c?w=60&h=40&fit=crop&auto=format", // Église
+    nature: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=60&h=40&fit=crop&auto=format", // Forêt spirituelle
+    community: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=60&h=40&fit=crop&auto=format", // Communauté
+    meditation: "https://images.unsplash.com/photo-1588266835491-1b1b5e05c2c7?w=60&h=40&fit=crop&auto=format", // Méditation profonde
+    sunset: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=60&h=40&fit=crop&auto=format", // Coucher de soleil spirituel
+    light: "https://images.unsplash.com/photo-1579532585360-1e8b0b3d4a0e?w=60&h=40&fit=crop&auto=format", // Lumière divine
+    peace: "https://images.unsplash.com/photo-1540206395-6880857c32f6?w=60&h=40&fit=crop&auto=format", // Paix spirituelle
+    worship: "https://images.unsplash.com/photo-1494232410401-ad00d543542e?w=60&h=40&fit=crop&auto=format", // Adoration
+    dove: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=60&h=40&fit=crop&auto=format", // Colombe de la paix
+    candles: "https://images.unsplash.com/photo-1549286088-27ee7c637a6a?w=60&h=40&fit=crop&auto=format", // Bougies de prière
+    mountains: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=60&h=40&fit=crop&auto=format", // Montagnes sacrées
+    water: "https://images.unsplash.com/photo-1540206395-6880857c32f6?w=60&h=40&fit=crop&auto=format", // Eau bénite
+    sky: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=60&h=40&fit=crop&auto=format", // Ciel divin
+    garden: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=60&h=40&fit=crop&auto=format", // Jardin de prière
+    stainedGlass: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=60&h=40&fit=crop&auto=format", // Vitraux
+    sunrise: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=60&h=40&fit=crop&auto=format" // Lever de soleil spirituel
+  };
 
-  const improvedImageBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+";
+  // Image améliorée pour Centre de Vision (spirituelle)
+  const improvedImageBase64 = spiritualImages.vision;
 
 
 
@@ -250,15 +275,10 @@ const Home = () => {
 
 
   const destinations = [
-
-    { id: 1, name: "Menabe", image: "🌴" },
-
-    { id: 2, name: "Melaky", image: "🏝️" },
-
-    { id: 3, name: "East", image: "🌅" },
-
-    { id: 4, name: "Amoroni Mania", image: "🐵" }
-
+    { id: 1, name: "Centre de Prière", image: spiritualImages.prayer },
+    { id: 2, name: "Église Locale", image: spiritualImages.church },
+    { id: 3, name: "Méditation Spirituelle", image: spiritualImages.meditation },
+    { id: 4, name: "Communauté Foi", image: spiritualImages.community }
   ];
 
 
@@ -909,89 +929,8 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      {/* Header Moderne */}
-      <header className="home-header">
-        <div className="header-container">
-          {/* Logo */}
-          <div className="header-logo">
-            <span className="logo-icon">👁️</span>
-            <span className="logo-text">Vision Center</span>
-          </div>
-          
-          {/* Navigation Centre */}
-          <nav className="header-nav">
-            <button className="nav-link" onClick={() => navigate("/dashboard")}>Accueil</button>
-            <button className="nav-link" onClick={() => navigate("/map")}>Carte</button>
-            <button className="nav-link" onClick={() => navigate("/activites")}>Activités</button>
-            <button className="nav-link" onClick={() => navigate("/contact")}>Contact</button>
-          </nav>
-          
-          {/* Right Section */}
-          <div className="header-right">
-            {/* Search */}
-            <div className="search-box">
-              <input 
-                type="text" 
-                placeholder="Rechercher..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
-              />
-              <button className="search-btn">
-                <span>🔍</span>
-              </button>
-            </div>
-            
-            {/* Notifications */}
-            <button className="notification-btn">
-              <span className="notification-icon">🔔</span>
-              <span className="notification-badge">3</span>
-            </button>
-            
-            {/* Profile */}
-            <div className="profile-menu">
-              <div className="profile-avatar">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face&auto=format" alt="Profile" />
-                <div className="profile-status-dot"></div>
-              </div>
-              <div className="profile-info">
-                <span className="profile-name">{displayName}</span>
-                <span className="profile-role">Membre</span>
-              </div>
-              <div className="profile-dropdown">
-                <div className="dropdown-header">
-                  <div className="dropdown-avatar">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face&auto=format" alt="Profile" />
-                  </div>
-                  <div className="dropdown-info">
-                    <div className="dropdown-name">{displayName}</div>
-                    <div className="dropdown-email">membre@visioncenter.mg</div>
-                  </div>
-                </div>
-                <div className="dropdown-divider"></div>
-                <button onClick={handleProfileClick} className="dropdown-item">
-                  <span className="dropdown-icon">👤</span>
-                  Mon Profil
-                </button>
-                <button onClick={() => navigate("/settings")} className="dropdown-item">
-                  <span className="dropdown-icon">⚙️</span>
-                  Paramètres
-                </button>
-                <button onClick={() => navigate("/notifications")} className="dropdown-item">
-                  <span className="dropdown-icon">🔔</span>
-                  Notifications
-                  <span className="dropdown-badge">3</span>
-                </button>
-                <div className="dropdown-divider"></div>
-                <button onClick={() => navigate('/login')} className="dropdown-item logout-item">
-                  <span className="dropdown-icon">🚪</span>
-                  Déconnexion
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Header complet via NavigationMembre */}
+      <NavigationMembre />
 
       {/* Hero Section */}
       <section className="hero">

@@ -1,31 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import NavigationSiteVitrine from '../../components/vitrine/NavigationSiteVitrine';
+import FooterSiteVitrine from '../../components/vitrine/FooterSiteVitrine';
 import './accueilVitrine.css';
 
 function AccueilVitrine() {
   const navigate = useNavigate();
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-      
-      const sections = ['hero', 'features', 'activities', 'cta', 'footer'];
-      const current = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      setActiveSection(current || '');
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -37,25 +17,7 @@ function AccueilVitrine() {
   return (
     <div className="accueil-vitrine">
       {/* Header */}
-      <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
-        <div className="container">
-          <div className="logo">
-            <div className="logo-icon">✨</div>
-            <div className="logo-text">
-              <h1>Vision Center</h1>
-              <span className="tagline">Madagascar</span>
-            </div>
-          </div>
-          <nav className="nav">
-            <ul className="nav-links">
-              <li><a href="#features" onClick={(e) => { e.preventDefault(); scrollToSection('features'); }} className={activeSection === 'features' ? 'active' : ''}>Valeurs</a></li>
-              <li><a href="#activities" onClick={(e) => { e.preventDefault(); scrollToSection('activities'); }} className={activeSection === 'activities' ? 'active' : ''}>Événements</a></li>
-              <li><button onClick={() => navigate('/galerie')} className="btn-nav-link">Galerie</button></li>
-              <li><button onClick={() => navigate('/login')} className="btn-primary btn-member">Espace Membre</button></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
+      <NavigationSiteVitrine scrollToSection={scrollToSection} />
 
       {/* Hero Section */}
       <section className="hero" id="hero">
@@ -330,36 +292,7 @@ function AccueilVitrine() {
       </section>
 
       {/* Footer */}
-      <footer className="footer" id="contact">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-section">
-              <h4>Vision Center</h4>
-              <p>Formation et développement pour la jeunesse malgache</p>
-            </div>
-            <div className="footer-section">
-              <h4>Liens Utiles</h4>
-              <ul>
-                <li><a href="#activites">Activités</a></li>
-                <li><a href="#a-propos">À Propos</a></li>
-                <li><button onClick={() => navigate('/galerie')}>Galerie</button></li>
-                <li><button onClick={() => navigate('/login')}>Espace Membre</button></li>
-              </ul>
-            </div>
-            <div className="footer-section">
-              <h4>Contact</h4>
-              <ul>
-                <li>📧 contact@visioncenter.mg</li>
-                <li>📱 +261 34 123 456</li>
-                <li>📍 Antananarivo, Madagascar</li>
-              </ul>
-            </div>
-          </div>
-          <div className="footer-bottom">
-            <p>&copy; 2026 Vision Center Madagascar. Tous droits réservés.</p>
-          </div>
-        </div>
-      </footer>
+      <FooterSiteVitrine />
     </div>
   );
 }

@@ -341,7 +341,7 @@ const ProfileMembre = () => {
         <div className="header-content">
           <div className="logo">VISION CENTER</div>
           <nav className="header-nav">
-            <button className="header-link">Favourite</button>
+            <button className="header-link" onClick={() => navigate('/dashboard')}>Activité</button>
             <button className="header-link">Bookings</button>
             <div className="user-avatar">{currentUser?.prenom?.[0]}{currentUser?.nom?.[0]}</div>
           </nav>
