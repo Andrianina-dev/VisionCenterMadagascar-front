@@ -97,10 +97,14 @@ class ApiService {
   }
 
   async createReservationForNonMember(reservationData, memberData) {
-    return this.post('/reservations/non-member', {
+    return this.post('/reservations/for-non-member', {
       reservation: reservationData,
       member: memberData
     });
+  }
+
+  async createOrFindNonMember(memberData) {
+    return this.post('/non-members/create-or-find', memberData);
   }
 
   async getReservations() {

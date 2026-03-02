@@ -1,0 +1,209 @@
+.reservation-validation {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.validation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.validation-header h1 {
+  color: #1f2937;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.validation-content {
+  display: grid;
+  gap: 30px;
+}
+
+.summary-card,
+.actions-card,
+.info-card {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card h2,
+.actions-card h2,
+.info-card h2 {
+  color: #1f2937;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #3b82f6;
+  padding-bottom: 10px;
+}
+
+.summary-section {
+  margin-bottom: 25px;
+}
+
+.summary-section h3 {
+  color: #4b5563;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.salle-info,
+.period-info,
+.member-info,
+.price-info {
+  background: #f9fafb;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #3b82f6;
+}
+
+.salle-info p,
+.period-info p,
+.member-info p {
+  margin: 5px 0;
+  color: #374151;
+}
+
+.salle-info strong,
+.period-info strong,
+.member-info strong {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.price-total {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #059669;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.validation-actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.validation-actions button {
+  flex: 1;
+  min-width: 200px;
+}
+
+.info-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-card li {
+  padding: 10px 0;
+  border-bottom: 1px solid #e5e7eb;
+  color: #4b5563;
+  position: relative;
+  padding-left: 25px;
+}
+
+.info-card li:before {
+  content: "ℹ";
+  position: absolute;
+  left: 0;
+  color: #3b82f6;
+  font-weight: bold;
+}
+
+.info-card li:last-child {
+  border-bottom: none;
+}
+
+.validation-loading,
+.validation-error,
+.validation-empty {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.validation-loading .spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.validation-error h2,
+.validation-empty h2 {
+  color: #dc2626;
+  margin-bottom: 15px;
+}
+
+.validation-error p {
+  color: #7f1d1d;
+  margin-bottom: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .reservation-validation {
+    padding: 15px;
+  }
+  
+  .validation-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .validation-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .validation-actions {
+    flex-direction: column;
+  }
+  
+  .validation-actions button {
+    width: 100%;
+  }
+  
+  .summary-card,
+  .actions-card,
+  .info-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .validation-header h1 {
+    font-size: 1.3rem;
+  }
+  
+  .summary-card h2,
+  .actions-card h2,
+  .info-card h2 {
+    font-size: 1.3rem;
+  }
+  
+  .salle-info,
+  .period-info,
+  .member-info {
+    padding: 12px;
+  }
+  
+  .price-total {
+    font-size: 1.3rem;
+  }
+}

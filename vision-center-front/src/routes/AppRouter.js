@@ -13,6 +13,8 @@ import ActiviteDetails from "../pages/public/ActiviteDetails";
 import Messages from "../pages/member/Messages";
 import ProfileMembre from "../pages/member/profileMembre";
 import LocationSalle from "../pages/member/LocationSalle";
+import ReservationValidation from "../pages/ReservationValidation";
+import ReservationSuccess from "../pages/ReservationSuccess";
 import AdminStatistics from "../pages/admin/AdminStatistics";
 import AdminMessages from "../pages/admin/AdminMessages";
 import FloatingMessenger from "../component/FloatingMessenger/FloatingMessenger";
@@ -103,6 +105,20 @@ const AppRouterContent = () => {
         <Route path="/location-salle" element={
           <ProtectedRoute>
             <LocationSalle />
+          </ProtectedRoute>
+        } />
+
+        {/* RESERVATION VALIDATION PAGE */}
+        <Route path="/reservation-validation" element={
+          <ProtectedRoute>
+            <ReservationValidation />
+          </ProtectedRoute>
+        } />
+
+        {/* RESERVATION SUCCESS PAGE */}
+        <Route path="/reservation-success" element={
+          <ProtectedRoute>
+            <ReservationSuccess />
           </ProtectedRoute>
         } />
 

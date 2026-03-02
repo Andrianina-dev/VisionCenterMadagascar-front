@@ -4,6 +4,7 @@ import NavigationSiteVitrine from '../../components/vitrine/NavigationSiteVitrin
 import FooterSiteVitrine from '../../components/vitrine/FooterSiteVitrine';
 import ApiService from '../../services/api';
 import '../../styles/pages/LocationSalle.css';
+import '../../styles/pages/ReservationValidation.css';
 
 const LocationSalle = () => {
   const navigate = useNavigate();
@@ -30,15 +31,112 @@ const LocationSalle = () => {
     description: ''
   });
 
-  // État pour les infos non-membre
+  // État pour les infos du non-membre
   const [memberInfo, setMemberInfo] = useState({
     nom: '',
     prenom: '',
     email: '',
     telephone: '',
-    carte_identite_recto: null,
-    carte_identite_verso: null
+    numero_carte_identite: '',
+    id: null
   });
+
+  // État pour le résultat de réservation (étape 3)
+  const [reservationResult, setReservationResult] = useState(null);
+  
+  // État pour la popup de confirmation
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+
+  // Fonction pour afficher la popup de confirmation
+  const handleConfirmReservation = () => {
+    setShowConfirmPopup(true);
+  };
+
+  // Fonction pour confirmer réellement la réservation
+  const confirmReservation = async () => {
+    try {
+      // Préparer les données de réservation
+      const reservationData = {
+        salle_id: selectedSalle.id,
+        date_debut: formData.date_debut,
+        date_fin: formData.date_fin,
+        heure_debut: formData.heure_debut,
+        heure_fin: formData.heure_fin,
+        capacite_requise: formData.capacite_requise,
+        description: formData.description,
+        statut: 'En attente'
+      };
+
+      console.log('Données de réservation initiales:', reservationData);
+      console.log('selectedSalle:', selectedSalle);
+      console.log('formData:', formData);
+      console.log('isMember:', isMember, 'isLoggedIn:', isLoggedIn);
+
+      let result;
+
+      if (isMember && isLoggedIn) {
+        // Réservation pour un membre connecté - ajouter utilisateur_id
+        reservationData.utilisateur_id = memberInfo.id || 1; // Adapter selon ton système
+        console.log('Création réservation pour membre avec utilisateur_id:', reservationData.utilisateur_id);
+        result = await ApiService.createReservation(reservationData);
+      } else {
+        // Utiliser l'ID du non-membre créé à l'étape 1
+        console.log('memberInfo complet:', memberInfo);
+        console.log('memberInfo.id:', memberInfo.id);
+        
+        if (!memberInfo.id) {
+          console.error('ERREUR: memberInfo.id est null ou undefined!');
+          console.error('memberInfo complet pour debug:', JSON.stringify(memberInfo, null, 2));
+          throw new Error('ID du non-membre non trouvé. Veuillez recommencer depuis l\'étape 1.');
+        }
+        
+        // Ajouter l'ID du non-membre aux données de réservation
+        reservationData.non_member_id = memberInfo.id;
+        console.log('Utilisation non-membre ID de l\'étape 1:', memberInfo.id);
+        console.log('Données de réservation finales:', reservationData);
+        console.log('DataJSON envoyé à l\'API:', JSON.stringify(reservationData, null, 2));
+        
+        // Créer la réservation avec l'ID du non-membre
+        result = await ApiService.createReservation(reservationData);
+      }
+
+      console.log('Résultat de l API:', result);
+
+      if (result.success) {
+        // Mettre à jour le résultat de réservation
+        console.log('selectedSalle au moment de la confirmation:', selectedSalle);
+        console.log('result.data (réservation créée):', result.data);
+        
+        const validationData = {
+          reservation: result.data,
+          salle: selectedSalle,
+          member: memberInfo
+        };
+        
+        console.log('validationData complet:', validationData);
+        setReservationResult(validationData);
+        
+        // Rediriger vers la page de succès
+        navigate('/reservation-success', { 
+          state: { 
+            reservation: result.data, 
+            salle: selectedSalle 
+          } 
+        });
+      } else {
+        alert(`Erreur: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la confirmation:', error);
+      alert('Erreur lors de la confirmation. Veuillez réessayer.');
+    }
+    setShowConfirmPopup(false);
+  };
+
+  // Fonction pour annuler la confirmation
+  const cancelConfirmation = () => {
+    setShowConfirmPopup(false);
+  };
 
   // État pour les infos de connexion membre
   const [loginInfo, setLoginInfo] = useState({
@@ -96,79 +194,6 @@ const LocationSalle = () => {
     setSearchQuery(e.target.value);
   };
 
-  const handleReserver = async () => {
-    if (!selectedSalle) {
-      alert('Veuillez sélectionner une salle');
-      return;
-    }
-    
-    // Validate form data
-    if (!formData.date_debut || !formData.date_fin) {
-      alert('Veuillez remplir les dates de début et de fin');
-      return;
-    }
-    
-    // Validation pour les non-membres
-    if (!isMember) {
-      if (!memberInfo.nom || !memberInfo.prenom || !memberInfo.email) {
-        alert('Veuillez remplir vos informations personnelles');
-        return;
-      }
-    }
-    
-    try {
-      // Préparer les données de réservation selon la structure de la table
-      const reservationData = {
-        salle_id: selectedSalle.id,
-        date_debut: formData.date_debut,
-        date_fin: formData.date_fin,
-        heure_debut: formData.heure_debut,
-        heure_fin: formData.heure_fin,
-        capacite_requise: formData.capacite_requise || selectedSalle.capacite,
-        description: formData.description || ''
-      };
-      
-      let result;
-      
-      if (isMember) {
-        // Réservation pour un membre
-        result = await ApiService.createReservation(reservationData);
-      } else {
-        // Réservation pour un non-membre
-        result = await ApiService.createReservationForNonMember(reservationData, memberInfo);
-      }
-      
-      if (result.success) {
-        alert(`Réservation de la salle ${selectedSalle.nom} effectuée avec succès!`);
-        // Reset form
-        setFormData({
-          salle_id: '',
-          date_debut: '',
-          date_fin: '',
-          heure_debut: '09:00',
-          heure_fin: '18:00',
-          capacite_requise: '',
-          description: ''
-        });
-        setMemberInfo({
-          nom: '',
-          prenom: '',
-          email: '',
-          telephone: '',
-          numero_carte_identite: ''
-        });
-        setSelectedSalle(null);
-        // Refresh salles to update availability
-        fetchSalles();
-      } else {
-        alert(`Erreur: ${result.message}`);
-      }
-    } catch (err) {
-      console.error('Erreur lors de la réservation:', err);
-      alert('Erreur lors de la réservation. Veuillez réessayer.');
-    }
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -183,16 +208,6 @@ const LocationSalle = () => {
       ...prev,
       [name]: value
     }));
-  };
-
-  const handleFileChange = (e) => {
-    const { name, files } = e.target;
-    if (files && files[0]) {
-      setMemberInfo(prev => ({
-        ...prev,
-        [name]: files[0]
-      }));
-    }
   };
 
   const handleLoginChange = (e) => {
@@ -222,33 +237,76 @@ const LocationSalle = () => {
     }
   };
 
-  const handleStep1Submit = () => {
+  const handleStep1Submit = async () => {
     // Valider les informations personnelles
     if (!isMember) {
       if (!memberInfo.nom || !memberInfo.prenom || !memberInfo.email || !memberInfo.telephone) {
         alert('Veuillez remplir tous les champs obligatoires');
         return;
       }
+      
+      try {
+        // Créer le non-membre dès l'étape 1
+        const memberData = {
+          nom: memberInfo.nom,
+          prenom: memberInfo.prenom,
+          email: memberInfo.email,
+          telephone: memberInfo.telephone,
+          numero_carte_identite: memberInfo.numero_carte_identite
+        };
+        
+        const result = await ApiService.createOrFindNonMember(memberData);
+        
+        if (result.success) {
+          console.log('Non-membre créé/trouvé:', result.data);
+          console.log('Structure complète de result.data:', JSON.stringify(result.data, null, 2));
+          console.log('ID du non-membre:', result.data.id);
+          
+          // Stocker l'ID du non-membre créé pour l'utiliser plus tard
+          setMemberInfo(prev => ({ 
+            ...prev, 
+            id: result.data.id 
+          }));
+          
+          console.log('memberInfo mis à jour avec ID:', { ...memberInfo, id: result.data.id });
+          nextStep();
+        } else {
+          alert(`Erreur: ${result.message}`);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la création du non-membre:', error);
+        alert('Erreur lors de la création du non-membre. Veuillez réessayer.');
+      }
     } else if (!isLoggedIn) {
       alert('Veuillez vous connecter pour continuer');
       return;
+    } else {
+      nextStep();
     }
-    
-    nextStep();
   };
 
-  const handleStep2Submit = () => {
+  const handleStep2Submit = async () => {
     // Valider le formulaire de réservation
     if (!formData.date_debut || !formData.date_fin || !formData.capacite_requise) {
       alert('Veuillez remplir tous les champs de réservation');
       return;
     }
     
-    nextStep();
+    // Passer à l'étape 3 (validation) sans créer la réservation
+    setCurrentStep(3);
   };
 
   const handleFinalSubmit = async () => {
     try {
+      // Debug: vérifier si selectedSalle est défini
+      console.log('selectedSalle:', selectedSalle);
+      console.log('formData:', formData);
+      
+      if (!selectedSalle || !selectedSalle.id) {
+        alert('Erreur: Veuillez sélectionner une salle');
+        return;
+      }
+      
       // Soumettre la réservation finale
       const reservationData = {
         salle_id: selectedSalle.id,
@@ -260,71 +318,57 @@ const LocationSalle = () => {
         description: formData.description || ''
       };
       
+      console.log('reservationData à envoyer:', reservationData);
+      
       let result;
       
       if (isMember) {
         // Réservation pour un membre
         result = await ApiService.createReservation(reservationData);
       } else {
-        // Réservation pour un non-membre avec fichiers
-        const formDataWithFiles = new FormData();
+        // Réservation pour un non membre déjà créé à l'étape 1
+        // Utiliser l'ID du non membre déjà stocké dans memberInfo.id
+        reservationData.user_id = memberInfo.id;
         
-        // Ajouter les données de réservation
-        Object.keys(reservationData).forEach(key => {
-          formDataWithFiles.append(key, reservationData[key]);
-        });
+        // Envoyer les données complètes du non membre pour validation
+        const memberDataForReservation = {
+          user_id: memberInfo.id, // Ajouter l'ID du non-membre créé à l'étape 1
+          nom: memberInfo.nom,
+          prenom: memberInfo.prenom,
+          email: memberInfo.email,
+          telephone: memberInfo.telephone,
+          numero_carte_identite: memberInfo.numero_carte_identite
+        };
         
-        // Ajouter les infos du non-membre
-        formDataWithFiles.append('nom', memberInfo.nom);
-        formDataWithFiles.append('prenom', memberInfo.prenom);
-        formDataWithFiles.append('email', memberInfo.email);
-        formDataWithFiles.append('telephone', memberInfo.telephone);
+        result = await ApiService.createReservationForNonMember(reservationData, memberDataForReservation);
         
-        // Ajouter les fichiers de carte d'identité
-        formDataWithFiles.append('carte_identite_recto', memberInfo.carte_identite_recto);
-        formDataWithFiles.append('carte_identite_verso', memberInfo.carte_identite_verso);
-        
-        result = await ApiService.createReservationForNonMember(formDataWithFiles);
+        // Alternative : utiliser la route normale avec user_id
+        // result = await ApiService.createReservation(reservationData);
       }
       
       if (result.success) {
-        alert(`Réservation de la salle ${selectedSalle.nom} effectuée avec succès!`);
+        // Stocker les données de réservation pour l'étape 3
+        const validationData = {
+          reservation: result.data,
+          salle: selectedSalle,
+          member: memberInfo
+        };
         
-        // Reset form et retour à l'étape 1
-        setFormData({
-          salle_id: '',
-          date_debut: '',
-          date_fin: '',
-          heure_debut: '09:00',
-          heure_fin: '18:00',
-          capacite_requise: '',
-          description: ''
-        });
-        setMemberInfo({
-          nom: '',
-          prenom: '',
-          email: '',
-          telephone: '',
-          carte_identite_recto: null,
-          carte_identite_verso: null
-        });
-        setSelectedSalle(null);
-        setCurrentStep(1);
-        
-        // Refresh salles to update availability
-        fetchSalles();
+        // Passer à l'étape 3 (validation) dans la même page
+        setReservationResult(validationData);
+        setCurrentStep(3);
       } else {
         alert(`Erreur: ${result.message}`);
       }
-    } catch (err) {
-      console.error('Erreur lors de la réservation:', err);
-      alert('Erreur lors de la réservation. Veuillez réessayer.');
+    } catch (error) {
+      console.error('Erreur lors de la création de la réservation:', error);
+      alert('Erreur lors de la création de la réservation. Veuillez réessayer.');
     }
   };
 
   const handleLogin = async () => {
     if (!loginInfo.email || !loginInfo.password) {
-      alert('Veuillez remplir votre email et mot de passe');
+      alert('Veuillez remplir l\'email et le mot de passe');
       return;
     }
     
@@ -597,33 +641,16 @@ const LocationSalle = () => {
                               </div>
                               
                               <div className="form-group full-width">
-                                <label>Carte d'identité (recto) *</label>
+                                <label>Numéro de carte d'identité *</label>
                                 <input
-                                  type="file"
-                                  name="carte_identite_recto"
-                                  onChange={handleFileChange}
-                                  accept="image/*"
+                                  type="text"
+                                  name="numero_carte_identite"
+                                  value={memberInfo.numero_carte_identite}
+                                  onChange={handleMemberInfoChange}
+                                  placeholder="Ex: 1234567890123"
                                   className="form-input"
                                   required
                                 />
-                                {memberInfo.carte_identite_recto && (
-                                  <small>Fichier sélectionné : {memberInfo.carte_identite_recto.name}</small>
-                                )}
-                              </div>
-                              
-                              <div className="form-group full-width">
-                                <label>Carte d'identité (verso) *</label>
-                                <input
-                                  type="file"
-                                  name="carte_identite_verso"
-                                  onChange={handleFileChange}
-                                  accept="image/*"
-                                  className="form-input"
-                                  required
-                                />
-                                {memberInfo.carte_identite_verso && (
-                                  <small>Fichier sélectionné : {memberInfo.carte_identite_verso.name}</small>
-                                )}
                               </div>
                             </div>
                           </div>
@@ -766,45 +793,230 @@ const LocationSalle = () => {
                       <div className="step-content">
                         <h3>🎯 Étape 3 : Validation de la réservation</h3>
                         
-                        <div className="validation-summary">
-                          <h4>Récapitulatif de votre réservation</h4>
-                          
-                          <div className="summary-section">
-                            <h5>📍 Salle sélectionnée</h5>
-                            <p><strong>{selectedSalle?.nom}</strong></p>
-                            <p>Capacité : {selectedSalle?.capacite} personnes</p>
-                            <p>Prix : {selectedSalle?.prix}</p>
+                        {!reservationResult ? (
+                          <div className="validation-container">
+                            <div className="validation-summary">
+                              <h4>Résumé de votre réservation</h4>
+                              
+                              <div className="summary-section">
+                                <h5>📍 Salle réservée</h5>
+                                <div className="info-row">
+                                  <span className="info-label">Nom:</span>
+                                  <span className="info-value">{selectedSalle?.nom}</span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Capacité:</span>
+                                  <span className="info-value">{selectedSalle?.capacite} personnes</span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Prix:</span>
+                                  <span className="info-value">{selectedSalle?.prix} Ar</span>
+                                </div>
+                              </div>
+                              
+                              <div className="summary-section">
+                                <h5>📅 Période de réservation</h5>
+                                <div className="info-row">
+                                  <span className="info-label">Date début:</span>
+                                  <span className="info-value">{new Date(formData?.date_debut).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Date fin:</span>
+                                  <span className="info-value">{new Date(formData?.date_fin).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Horaires:</span>
+                                  <span className="info-value">
+                                    {formData?.heure_debut && formData?.heure_fin ? 
+                                      (() => {
+                                        const formatHeure = (heure) => {
+                                          if (typeof heure === 'string' && heure.includes('T')) {
+                                            const date = new Date(heure);
+                                            return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
+                                          }
+                                          else if (typeof heure === 'string' && heure.includes(':')) {
+                                            return heure.split(':').slice(0, 2).join(':');
+                                          }
+                                          else {
+                                            const date = new Date(heure);
+                                            return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
+                                          }
+                                        };
+                                        return `${formatHeure(formData.heure_debut)} à ${formatHeure(formData.heure_fin)}`;
+                                      })()
+                                      : 'Non défini'
+                                    }
+                                  </span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Durée:</span>
+                                  <span className="info-value">{Math.ceil((new Date(formData?.date_fin) - new Date(formData?.date_debut)) / (1000 * 60 * 60 * 24)) + 1} jour(s)</span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Capacité:</span>
+                                  <span className="info-value">{formData?.capacite_requise} personnes</span>
+                                </div>
+                              </div>
+                              
+                              <div className="summary-section">
+                                <h5>👤 Informations du réservataire</h5>
+                                <div className="info-row">
+                                  <span className="info-label">Nom:</span>
+                                  <span className="info-value">{memberInfo?.nom} {memberInfo?.prenom}</span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Email:</span>
+                                  <span className="info-value">{memberInfo?.email}</span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Téléphone:</span>
+                                  <span className="info-value">{memberInfo?.telephone}</span>
+                                </div>
+                              </div>
+                              
+                              {formData?.description && (
+                                <div className="summary-section">
+                                  <h5>📝 Description</h5>
+                                  <div className="info-row">
+                                    <span className="info-value">{formData.description}</span>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
                           </div>
-                          
-                          <div className="summary-section">
-                            <h5>📅 Période de réservation</h5>
-                            <p>Du {formData.date_debut} au {formData.date_fin}</p>
-                            <p>De {formData.heure_debut} à {formData.heure_fin}</p>
-                            <p>Capacité requise : {formData.capacite_requise} personnes</p>
+                        ) : (
+                          <div className="validation-container">
+                            <div className="validation-summary">
+                              <h4>Réservation créée avec succès!</h4>
+                              
+                              <div className="summary-section">
+                                <h5>📍 Salle réservée</h5>
+                                <div className="info-row">
+                                  <span className="info-label">Nom:</span>
+                                  <span className="info-value">{reservationResult.salle?.nom}</span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Capacité:</span>
+                                  <span className="info-value">{reservationResult.salle?.capacite} personnes</span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Prix:</span>
+                                  <span className="info-value">{reservationResult.salle?.prix} Ar</span>
+                                </div>
+                              </div>
+                              
+                              <div className="summary-section">
+                                <h5>📅 Période de réservation</h5>
+                                <div className="info-row">
+                                  <span className="info-label">Date début:</span>
+                                  <span className="info-value">{new Date(reservationResult.reservation?.date_debut).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Date fin:</span>
+                                  <span className="info-value">{new Date(reservationResult.reservation?.date_fin).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Horaires:</span>
+                                  <span className="info-value">
+                                    {reservationResult.reservation?.heure_debut && reservationResult.reservation?.heure_fin ? 
+                                      (() => {
+                                        const formatHeure = (heure) => {
+                                          // Si c'est une chaîne ISO comme "2026-03-02T10:00:00.000Z"
+                                          if (typeof heure === 'string' && heure.includes('T')) {
+                                            const date = new Date(heure);
+                                            return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
+                                          }
+                                          // Si c'est juste une heure comme "10:00"
+                                          else if (typeof heure === 'string' && heure.includes(':')) {
+                                            return heure.split(':').slice(0, 2).join(':');
+                                          }
+                                          // Sinon, essayer de convertir en date
+                                          else {
+                                            const date = new Date(heure);
+                                            return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
+                                          }
+                                        };
+                                        return `${formatHeure(reservationResult.reservation.heure_debut)} à ${formatHeure(reservationResult.reservation.heure_fin)}`;
+                                      })()
+                                      : 'Non défini'
+                                    }
+                                  </span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Durée:</span>
+                                  <span className="info-value">{Math.ceil((new Date(reservationResult.reservation?.date_fin) - new Date(reservationResult.reservation?.date_debut)) / (1000 * 60 * 60 * 24)) + 1} jour(s)</span>
+                                </div>
+                                <div className="info-row">
+                                  <span className="info-label">Capacité:</span>
+                                  <span className="info-value">{reservationResult.reservation?.capacite_requise} personnes</span>
+                                </div>
+                                <div className="info-row highlight">
+                                  <span className="info-label">Référence:</span>
+                                  <span className="info-value">#{reservationResult.reservation?.id}</span>
+                                </div>
+                              </div>
+                              
+                              <div className="summary-section">
+                                <h5>👤 Informations du réservataire</h5>
+                                {!isMember ? (
+                                  <>
+                                    <div className="info-row">
+                                      <span className="info-label">Nom:</span>
+                                      <span className="info-value">{reservationResult.member?.prenom} {reservationResult.member?.nom}</span>
+                                    </div>
+                                    <div className="info-row">
+                                      <span className="info-label">Email:</span>
+                                      <span className="info-value">{reservationResult.member?.email}</span>
+                                    </div>
+                                    <div className="info-row">
+                                      <span className="info-label">Téléphone:</span>
+                                      <span className="info-value">{reservationResult.member?.telephone}</span>
+                                    </div>
+                                    <div className="info-row">
+                                      <span className="info-label">Carte d'identité:</span>
+                                      <span className="info-value status">✅ Validée</span>
+                                    </div>
+                                  </>
+                                ) : (
+                                  <div className="info-row">
+                                    <span className="info-label">Statut membre:</span>
+                                    <span className="info-value status">✅ Connecté</span>
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="summary-section">
+                                <h5>💰 Prix total</h5>
+                                <p className="price-total">{reservationResult.reservation?.prix_total || 'Calcul en cours...'} Ar</p>
+                              </div>
+                            </div>
                           </div>
-                          
-                          <div className="summary-section">
-                            <h5>👤 Informations personnelles</h5>
-                            {!isMember ? (
-                              <>
-                                <p><strong>{memberInfo.prenom} {memberInfo.nom}</strong></p>
-                                <p>Email : {memberInfo.email}</p>
-                                <p>Téléphone : {memberInfo.telephone}</p>
-                                <p>Carte d'identité : ✅ Fichiers uploadés</p>
-                              </>
-                            ) : (
-                              <p>Membre connecté : ✅</p>
-                            )}
-                          </div>
-                        </div>
+                        )}
                         
                         <div className="step-actions">
-                          <button className="btn btn-secondary" onClick={prevStep}>
-                            ← Précédent
+                          <button className="btn btn-secondary" onClick={() => setCurrentStep(2)}>
+                            ← Revenir en arrière
                           </button>
-                          <button className="btn btn-success" onClick={handleFinalSubmit}>
-                            ✅ Confirmer la réservation
+                          <button className="btn btn-success" onClick={handleConfirmReservation}>
+                            ✅ Valider
                           </button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Popup de confirmation */}
+                    {showConfirmPopup && (
+                      <div className="confirm-popup-overlay">
+                        <div className="confirm-popup">
+                          <h3>Confirmez-vous votre réservation ?</h3>
+                          <div className="confirm-popup-actions">
+                            <button className="btn btn-secondary" onClick={cancelConfirmation}>
+                              Non
+                            </button>
+                            <button className="btn btn-success" onClick={confirmReservation}>
+                              Oui
+                            </button>
+                          </div>
                         </div>
                       </div>
                     )}
