@@ -441,6 +441,17 @@ const LocationSalle = () => {
           </div>
         </header>
 
+        {/* Section Suivi Location - Bouton visible */}
+        <div className="suivi-location-section">
+          <div className="suivi-content">
+            <h3>📋 Vous avez déjà une réservation ?</h3>
+            <p>Suivez l'état de votre location de salle et vos paiements</p>
+            <button onClick={() => navigate('/acces-non-membre')} className="btn-outline btn-medium">
+              <span>📋 Suivre ma location de salle</span>
+            </button>
+          </div>
+        </div>
+
         {/* Affichage détaillé de la salle sélectionnée */}
         {selectedSalle ? (
           <div className="salle-detail-container">

@@ -51,6 +51,12 @@ function AccueilVitrine() {
                 </svg>
               </button>
             </div>
+            
+            <div className="hero-secondary-actions">
+              <button onClick={() => navigate('/acces-non-membre')} className="btn-outline btn-medium">
+                <span>📋 Suivre ma location de salle</span>
+              </button>
+            </div>
             <div className="hero-stats">
               <div className="stat-item">
                 <span className="stat-number">500+</span>

@@ -10,7 +10,7 @@
 
 .login-left {
   flex: 1;
-  background: linear-gradient(135deg, #b3f5fc 0%, #a19c37 50%, #80deea 100%);
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,8 +24,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #fff;
+  background: linear-gradient(135deg, #b3f5fc 0%, #7ffef4 50%, #80deea 100%);
   padding: 40px;
+  position: relative;
   transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
 }
 
@@ -71,6 +72,24 @@
 .input-field:focus {
   outline: none;
   border-color: #7ffef4;
+}
+
+.signup-form .input-field {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #00d4ff;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+  background-color: white;
+}
+
+.signup-form .input-field:focus {
+  outline: none;
+  border-color: #00d4ff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.25);
 }
 
 .password-wrapper {
@@ -212,6 +231,27 @@
   color: #999;
 }
 
+/* Styles pour les liens entre pages de login */
+.admin-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.admin-login-link {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.admin-login-link:hover {
+  text-decoration: underline;
+  color: #004499;
+}
+
+/* Responsive design */
 @media (max-width: 900px) {
   .login-wrapper {
     flex-direction: column;
@@ -229,20 +269,128 @@
   }
 }
 
-/* Styles pour les liens entre pages de login */
-.admin-link {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 14px;
-  color: #666;
+/* Styles spécifiques pour la page d'inscription */
+.blue-accent {
+  position: absolute;
+  top: 0;
+  left: 50%; /* Déplace le fond vers la droite */
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(135deg, #00bcd4 0%, #00d4ff 50%, #0099cc 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%, 0% 100%); /* Forme pour la droite */
+  z-index: -1;
 }
 
-.admin-login-link {
+.signup-form {
+  position: relative; /* Assure que le formulaire reste au-dessus */
+  z-index: 1; /* Place le formulaire au-dessus du fond cyan */
+}
+
+.signup-form .row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.signup-form .col-md-6 {
+  flex: 1;
+}
+
+.signup-form .form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+.signup-form .form-label i {
+  margin-right: 8px;
   color: #7ffef4;
+}
+
+.signup-form .form-check {
+  margin-bottom: 20px;
+}
+
+.signup-form .form-check-input {
+  margin-right: 8px;
+}
+
+.signup-form .form-check-label {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.signup-form .form-check-label a {
+  color: #0099ff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.signup-form .form-check-label a:hover {
+  text-decoration: underline;
+}
+
+.signup-form .alert {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: none;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.signup-form .alert-danger {
+  background-color: #fee;
+  color: #c33;
+  border-left: 4px solid #dc3545;
+}
+
+.signup-form .invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #dc3545;
+}
+
+.signup-form .is-invalid {
+  border-color: #dc3545;
+}
+
+.signup-form .btn-lg {
+  padding: 16px;
+  font-size: 18px;
+}
+
+.signup-form .spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
+.signup-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.signup-footer p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 0;
+}
+
+.signup-footer a {
+  color: #0099ff;
   text-decoration: none;
   font-weight: 600;
 }
 
-.admin-login-link:hover {
+.signup-footer a:hover {
   text-decoration: underline;
 }

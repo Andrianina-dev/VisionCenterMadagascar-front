@@ -540,6 +540,65 @@ input:-webkit-autofill:active {
 .location-header p {
   color: #b0b0b0;
   font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Section Suivi Location */
+.suivi-location-section {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: rgba(127, 254, 244, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(127, 254, 244, 0.3);
+  text-align: center;
+}
+
+.suivi-content h3 {
+  color: #7FFEF4;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.suivi-content p {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.btn-outline {
+  padding: 0.8rem 1.5rem;
+  border: 2px solid rgba(127, 254, 244, 0.8);
+  background: transparent;
+  color: #7FFEF4;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 10;
+}
+
+.btn-outline:hover {
+  background: rgba(127, 254, 244, 0.2);
+  border-color: #7FFEF4;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(127, 254, 244, 0.3);
 }
 
 /* Search simple */
@@ -804,9 +863,10 @@ input:-webkit-autofill:active {
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid #e2e8f0;
-  width: 160%;
+  width: 150%;
   margin-left: auto;
   margin-right: auto;
+  display: block;
 }
 
 .reservation-card h3 {

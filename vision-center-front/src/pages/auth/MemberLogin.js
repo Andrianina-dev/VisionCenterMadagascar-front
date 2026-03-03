@@ -1,13 +1,35 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.service";
 import "./Login.css";
 
 const MemberLogin = ({ history }) => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const handleNavigateToSignup = (e) => {
+    e.preventDefault();
+    const wrapper = document.querySelector('.login-wrapper');
+    wrapper.classList.add('transitioning');
+    
+    setTimeout(() => {
+      navigate('/signup');
+    }, 600);
+  };
+
+  const handleNavigateToAdmin = (e) => {
+    e.preventDefault();
+    const wrapper = document.querySelector('.login-wrapper');
+    wrapper.classList.add('transitioning');
+    
+    setTimeout(() => {
+      navigate('/admin/login');
+    }, 600);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,7 +47,7 @@ const MemberLogin = ({ history }) => {
       
       if (result.success) {
         // Rediriger vers le dashboard membre
-        window.location.href = "/dashboard";
+        navigate("/dashboard");
       } else {
         setError(result.error || "Erreur de connexion");
       }
@@ -120,11 +142,7 @@ const MemberLogin = ({ history }) => {
           </p>
 
           <p className="signup-text">
-            Don't have account? <a href="#" className="signup-link">Sign up!</a>
-          </p>
-          
-          <p className="admin-link">
-            Are you an administrator? <a href="/admin/login" className="admin-login-link">Admin Login</a>
+            Don't have account? <a href="/signup" className="signup-link" onClick={handleNavigateToSignup}>Sign up!</a>
           </p>
         </div>
 

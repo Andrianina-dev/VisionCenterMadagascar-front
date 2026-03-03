@@ -2,11 +2,12 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Login from "../pages/auth/Login";
+import SignUp from "../pages/auth/SignUp";
 import MemberLogin from "../pages/auth/MemberLogin";
 import AdminLogin from "../pages/auth/AdminLogin";
+import CodeVerification from "../pages/auth/CodeVerification";
 import Home from "../pages/public/Home";
 import Inscription from "../pages/public/Inscription";
-import ShowcaseHomePage from "../pages/showcase/HomePage";
 import Galerie from "../layouts/vitrine/Galerie";
 import MapSearch from "../pages/public/MapSearch";
 import ActiviteDetails from "../pages/public/ActiviteDetails";
@@ -20,11 +21,14 @@ import AdminMessages from "../pages/admin/AdminMessages";
 import FloatingMessenger from "../component/FloatingMessenger/FloatingMessenger";
 import { MessengerProvider, useMessenger } from "../contexts/MessengerContext";
 
+// Pages non-membre
+import AccesNonMembre from "../pages/non-member/AccesNonMembre";
+import MesReservations from "../pages/non-member/MesReservations";
+
 import AuthLayout from "../layouts/AuthLayout";
 import MainLayout from "../layouts/MainLayout";
 import MemberLayout from "../layouts/MemberLayout";
 import AdminLayout from "../layouts/AdminLayout";
-import ShowcaseLayout from "../layouts/vitrine/ShowcaseLayout";
 import AccueilVitrine from "../layouts/vitrine/AccueilVitrine";
 import ProtectedRoute from "../component/ProtectedRoute";
 
@@ -41,20 +45,38 @@ const AppRouterContent = () => {
           </AuthLayout>
         } />
         
+        <Route path="/signup" element={
+          <AuthLayout>
+            <SignUp />
+          </AuthLayout>
+        } />
+        
         <Route path="/admin/login" element={
           <AuthLayout>
             <AdminLogin />
           </AuthLayout>
         } />
-
-        {/* SITE VITRINE - PUBLIC */}
-        <Route path="/showcase" element={
-          <ShowcaseLayout>
-            <ShowcaseHomePage />
-          </ShowcaseLayout>
+        
+        <Route path="/admin/code" element={
+          <AuthLayout>
+            <CodeVerification />
+          </AuthLayout>
         } />
 
-        {/* PAGE D'ACCUEIL PAR DÉFAUT - VITRINE */}
+        {/* NON-MEMBRES */}
+        <Route path="/acces-non-membre" element={
+          <AuthLayout>
+            <AccesNonMembre />
+          </AuthLayout>
+        } />
+        
+        <Route path="/mes-reservations" element={
+          <AuthLayout>
+            <MesReservations />
+          </AuthLayout>
+        } />
+
+        {/* SITE VITRINE - PAGE D'ACCUEIL UNIQUE */}
         <Route path="/" element={
           <AccueilVitrine />
         } />
