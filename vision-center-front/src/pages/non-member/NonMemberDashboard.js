@@ -68,18 +68,23 @@ const NonMemberDashboard = () => {
     try {
       console.log('🔍 Chargement des réservations pour:', email);
       
-      // Appel API complètement isolée - PAS DE MIDDLEWARE LARAVEL
-      const response = await fetch(`http://localhost:8000/cors-free-api.php?email=${email}`, {
-        method: 'GET',
+      // Utiliser le bon controller pour les non-membres
+      const response = await fetch(`http://localhost:8000/api/auth/create-non-membre`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          'Accept': 'application/json'
         },
-        credentials: 'include',
+        body: JSON.stringify({
+          email: email,
+          nom: '', // Sera rempli plus tard
+          prenom: '', // Sera rempli plus tard
+          numero_carte_identite: '', // Sera rempli plus tard
+          // Les autres champs optionnels
+        })
       });
 
       console.log('📡 Status de la réponse:', response.status);
-      console.log('📡 Headers de la réponse:', response.headers);
 
       if (!response.ok) {
         throw new Error(`Erreur HTTP: ${response.status}`);
@@ -89,19 +94,24 @@ const NonMemberDashboard = () => {
       console.log('📊 Données reçues:', data);
       
       if (data.success) {
-        console.log('✅ Succès - Nombre de réservations:', data.reservations?.length || 0);
-        console.log('📋 Debug info:', data.debug);
-        setReservations(data.reservations || []);
+        console.log('✅ Succès - Utilisateur créé:', data.data);
+        
+        // Stocker l'utilisateur créé dans localStorage
+        if (data.data) {
+          localStorage.setItem('non-member', JSON.stringify(data.data));
+        }
+        
+        setReservations([]); // Vider les réservations existantes
+        setUser(data.data); // Définir l'utilisateur
       } else {
-        console.log('❌ Erreur API:', data.message);
-        console.log('🐛 Debug info:', data.debug);
-        setError(data.message || 'Erreur inconnue');
+        console.log('❌ Erreur création utilisateur:', data.message);
+        setError(data.message || 'Erreur lors de la création du compte');
       }
       
       setLoading(false);
     } catch (error) {
       console.error('💥 Erreur complète:', error);
-      setError('Erreur lors du chargement des réservations: ' + error.message);
+      setError('Erreur lors de la création du compte: ' + error.message);
       setLoading(false);
     }
   };
@@ -167,15 +177,141 @@ const NonMemberDashboard = () => {
     }
   };
 
-  const handlePayNow = (reservationId) => {
-    // Logique de paiement ici
-    console.log('Paiement pour réservation:', reservationId);
-    console.log('Méthode:', selectedPaymentMethods[reservationId]);
-    console.log('Opérateur:', selectedMobileProviders[reservationId]);
-    console.log('Montant:', paymentAmounts[reservationId]);
-    
-    // Rediriger vers la page de paiement ou traiter le paiement
-    navigate(`/payment/${reservationId}`);
+  const handlePayNow = async (reservationId) => {
+    try {
+      // Debug: Vérifier l'ID de réservation
+      console.log('Frontend - ID de réservation:', reservationId);
+      console.log('Frontend - Type de l\'ID:', typeof reservationId);
+      
+      // Récupérer les données de paiement
+      const selectedMethod = selectedPaymentMethods[reservationId];
+      const selectedProvider = selectedMobileProviders[reservationId];
+      const amount = paymentAmounts[reservationId];
+
+      console.log('Frontend - Méthode sélectionnée:', selectedMethod);
+      console.log('Frontend - Opérateur sélectionné:', selectedProvider);
+      console.log('Frontend - Montant:', amount);
+
+      // Validation des données
+      if (!selectedMethod) {
+        alert('Veuillez choisir une méthode de paiement');
+        return;
+      }
+
+      if (!amount || amount <= 0) {
+        alert('Veuillez entrer un montant valide');
+        return;
+      }
+
+      // Préparer les données pour l'API
+      const paiementData = {
+        methode_paiement_id: selectedMethod,
+        operateur_id: selectedProvider || null,
+        montant: parseFloat(amount)
+      };
+
+      console.log('Frontend - Données de paiement:', paiementData);
+      console.log('Frontend - URL de l\'API:', `http://localhost:8000/api/reservations/${reservationId}/paiement`);
+
+      // Appel API pour faire le paiement
+      const response = await fetch(`http://localhost:8000/api/reservations/${reservationId}/paiement`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(paiementData)
+      });
+
+      const result = await response.json();
+      console.log('Frontend - Réponse API:', result);
+
+      if (result.success) {
+        // Notification élégante de succès
+        showPaymentNotification('✅ Paiement effectué avec succès!', 'Votre paiement est enregistré et en attente de validation par l\'administrateur.');
+        
+        // Mettre à jour l'affichage pour montrer "En attente"
+        // Optionnel: recharger les réservations pour voir le nouveau statut
+        if (user) {
+          loadReservations(user.email);
+        }
+      } else {
+        alert('Erreur lors du paiement: ' + result.message);
+      }
+
+    } catch (error) {
+      console.error('Frontend - Erreur lors du paiement:', error);
+      alert('Erreur technique lors du paiement. Veuillez réessayer.');
+    }
+  };
+
+  // Fonction pour afficher une notification de paiement
+  const showPaymentNotification = (title, message) => {
+    // Créer l'élément de notification
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(40, 167, 69, 0.3);
+      z-index: 10000;
+      max-width: 350px;
+      animation: slideInRight 0.5s ease-out;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    `;
+
+    notification.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="font-size: 24px;">✅</div>
+        <div>
+          <div style="font-weight: bold; font-size: 16px; margin-bottom: 4px;">${title}</div>
+          <div style="font-size: 14px; opacity: 0.9;">${message}</div>
+        </div>
+      </div>
+    `;
+
+    // Ajouter l'animation CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOutRight {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Ajouter la notification au DOM
+    document.body.appendChild(notification);
+
+    // Retirer la notification après 5 secondes
+    setTimeout(() => {
+      notification.style.animation = 'slideOutRight 0.5s ease-out';
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 500);
+    }, 5000);
   };
 
   const handleNewReservation = () => {
