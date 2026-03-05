@@ -24,6 +24,8 @@ import { MessengerProvider, useMessenger } from "../contexts/MessengerContext";
 // Pages non-membre
 import AccesNonMembre from "../pages/non-member/AccesNonMembre";
 import MesReservations from "../pages/non-member/MesReservations";
+import NonMemberDashboard from "../pages/non-member/NonMemberDashboard";
+import PaymentPage from "../pages/non-member/PaymentPage";
 
 import AuthLayout from "../layouts/AuthLayout";
 import MainLayout from "../layouts/MainLayout";
@@ -76,6 +78,18 @@ const AppRouterContent = () => {
           </AuthLayout>
         } />
 
+        <Route path="/non-member/dashboard" element={
+          <ProtectedRoute>
+            <NonMemberDashboard />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/payment/:id" element={
+          <ProtectedRoute>
+            <PaymentPage />
+          </ProtectedRoute>
+        } />
+
         {/* SITE VITRINE - PAGE D'ACCUEIL UNIQUE */}
         <Route path="/" element={
           <AccueilVitrine />
@@ -114,6 +128,15 @@ const AppRouterContent = () => {
         } />
 
         
+        {/* MEMBER DASHBOARD */}
+        <Route path="/member/dashboard" element={
+          <ProtectedRoute>
+            <MemberLayout activeNav="dashboard">
+              <Home />
+            </MemberLayout>
+          </ProtectedRoute>
+        } />
+
         {/* MEMBER MESSAGES PAGE */}
         <Route path="/member/messages" element={
           <ProtectedRoute>

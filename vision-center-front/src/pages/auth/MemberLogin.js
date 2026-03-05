@@ -10,6 +10,7 @@ const MemberLogin = ({ history }) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isMember, setIsMember] = useState(true); // Toggle pour membre/non-membre
 
   const handleNavigateToSignup = (e) => {
     e.preventDefault();
@@ -33,26 +34,53 @@ const MemberLogin = ({ history }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
-    if (!email || !password) {
-      setError("Veuillez remplir tous les champs");
-      return;
-    }
-
-    setLoading(true);
     setError("");
+    setLoading(true);
 
     try {
-      const result = await AuthService.login(email, password);
-      
-      if (result.success) {
-        // Rediriger vers le dashboard membre
-        navigate("/dashboard");
+      if (isMember) {
+        // Connexion membre existante
+        const response = await AuthService.login(email, password);
+        
+        if (response.success) {
+          // Redirection vers le dashboard membre
+          navigate('/member/dashboard');
+        } else {
+          throw new Error(response.error || 'Erreur de connexion membre');
+        }
       } else {
-        setError(result.error || "Erreur de connexion");
+        // Connexion non-membre - vérifier dans la base de données
+        const response = await fetch('http://localhost:8000/auth/non-member/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Stocker les informations du non-membre dans localStorage
+          localStorage.setItem('non-member', JSON.stringify(data.data.user));
+          localStorage.setItem('auth', 'true');
+          
+          // Redirection vers le dashboard non-membre
+          navigate('/non-member/dashboard');
+        } else {
+          throw new Error(data.message || 'Erreur de connexion non-membre');
+        }
       }
     } catch (error) {
-      setError("Une erreur est survenue. Veuillez réessayer.");
+      const errorMessage = error.response?.data?.message || 
+                        error.message || 
+                        (isMember ? "Erreur de connexion membre" : "Erreur de connexion non-membre");
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -101,21 +129,46 @@ const MemberLogin = ({ history }) => {
               <div className="password-wrapper">
                 <input 
                   type={showPassword ? "text" : "password"}
-                  placeholder="Password"
+                  placeholder={isMember ? "Password" : "Password (optionnel)"}
                   className="input-field"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={loading}
-                  required
+                  required={isMember}  // Requis seulement pour les membres
                 />
+                {isMember && (
+                  <button 
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                    disabled={loading}
+                  >
+                    👁️
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Toggle Membre/Non-membre - Vraie toggle avec slider */}
+            <div className="member-type-toggle">
+              <div className="toggle-switch">
                 <button 
                   type="button"
-                  className="password-toggle"
-                  onClick={() => setShowPassword(!showPassword)}
+                  className={`toggle-option ${isMember ? 'active' : ''}`}
+                  onClick={() => setIsMember(true)}
                   disabled={loading}
                 >
-                  👁️
+                  Membre
                 </button>
+                <button 
+                  type="button"
+                  className={`toggle-option ${!isMember ? 'active' : ''}`}
+                  onClick={() => setIsMember(false)}
+                  disabled={loading}
+                >
+                  Non-membre
+                </button>
+                <div className={`toggle-slider ${isMember ? '' : 'non-member'}`}></div>
               </div>
             </div>
 
@@ -126,7 +179,7 @@ const MemberLogin = ({ history }) => {
               className="login-button"
               disabled={loading}
             >
-              {loading ? 'Connexion en cours...' : 'Log in as Member'}
+              {loading ? 'Connexion en cours...' : (isMember ? 'Log in as Member' : 'Log in as Non-Member')}
             </button>
           </form>
 
@@ -142,7 +195,7 @@ const MemberLogin = ({ history }) => {
           </p>
 
           <p className="signup-text">
-            Don't have account? <a href="/signup" className="signup-link" onClick={handleNavigateToSignup}>Sign up!</a>
+            {isMember ? "Don't have account?" : "Vous n'avez pas de réservation?"} <a href={isMember ? "/signup" : "/location-salle"} className="signup-link" onClick={isMember ? handleNavigateToSignup : undefined}>{isMember ? 'Sign up!' : 'Faire une réservation'}</a>
           </p>
         </div>
 

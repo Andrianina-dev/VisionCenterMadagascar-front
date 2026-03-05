@@ -21,9 +21,6 @@ const AdminSidebar = ({ activeNav }) => {
       case 'dashboard':
         navigate('/admin/dashboard');
         break;
-      case 'activities':
-        navigate('/admin/activities');
-        break;
       case 'participants':
         navigate('/admin/participants');
         break;
@@ -85,14 +82,6 @@ const AdminSidebar = ({ activeNav }) => {
 
         <div className="nav-section">
           <p className="nav-section-title">Gestion</p>
-          <button 
-            className={`admin-nav-item ${activeNav === 'activities' ? 'active' : ''}`}
-            onClick={() => handleNavClick('activities')}
-          >
-            <span className="nav-icon">🎯</span>
-            <span className="nav-text">Activités</span>
-          </button>
-          
           <button 
             className={`admin-nav-item ${activeNav === 'participants' ? 'active' : ''}`}
             onClick={() => handleNavClick('participants')}

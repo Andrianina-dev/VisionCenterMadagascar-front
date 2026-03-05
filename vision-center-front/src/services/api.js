@@ -104,7 +104,12 @@ class ApiService {
   }
 
   async createOrFindNonMember(memberData) {
-    return this.post('/non-members/create-or-find', memberData);
+    return this.post('/member/auth/create-non-membre', {
+      email: memberData.email,
+      nom: memberData.nom,
+      prenom: memberData.prenom,
+      numero_carte_identite: memberData.numero_carte_identite
+    });
   }
 
   async getReservations() {

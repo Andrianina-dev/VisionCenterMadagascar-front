@@ -10,7 +10,6 @@ const LocationSalle = () => {
   const navigate = useNavigate();
   
   const [salles, setSalles] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSalle, setSelectedSalle] = useState(null);
@@ -90,13 +89,13 @@ const LocationSalle = () => {
           throw new Error('ID du non-membre non trouvé. Veuillez recommencer depuis l\'étape 1.');
         }
         
-        // Ajouter l'ID du non-membre aux données de réservation
-        reservationData.non_member_id = memberInfo.id;
-        console.log('Utilisation non-membre ID de l\'étape 1:', memberInfo.id);
+        // Ajouter l'ID de l'utilisateur aux données de réservation
+        reservationData.utilisateur_id = memberInfo.id;
+        console.log('Utilisation utilisateur_id de l\'étape 1:', memberInfo.id);
         console.log('Données de réservation finales:', reservationData);
         console.log('DataJSON envoyé à l\'API:', JSON.stringify(reservationData, null, 2));
         
-        // Créer la réservation avec l'ID du non-membre
+        // Créer la réservation avec l'ID de l'utilisateur
         result = await ApiService.createReservation(reservationData);
       }
 
@@ -157,7 +156,6 @@ const LocationSalle = () => {
   // Fetch salles from API
   const fetchSalles = async () => {
     try {
-      setLoading(true);
       setError(null);
       
       const result = await ApiService.getSalles();
@@ -181,8 +179,6 @@ const LocationSalle = () => {
     } catch (err) {
       console.error('Erreur lors du chargement des salles:', err);
       setError(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -260,15 +256,15 @@ const LocationSalle = () => {
         if (result.success) {
           console.log('Non-membre créé/trouvé:', result.data);
           console.log('Structure complète de result.data:', JSON.stringify(result.data, null, 2));
-          console.log('ID du non-membre:', result.data.id);
+          console.log('ID du non-membre:', result.data.id_utilisateur);
           
-          // Stocker l'ID du non-membre créé pour l'utiliser plus tard
+          // Stocker l'ID de l'utilisateur créé pour l'utiliser plus tard
           setMemberInfo(prev => ({ 
             ...prev, 
-            id: result.data.id 
+            id: result.data.id_utilisateur  // Utiliser id_utilisateur au lieu de id
           }));
           
-          console.log('memberInfo mis à jour avec ID:', { ...memberInfo, id: result.data.id });
+          console.log('memberInfo mis à jour avec ID:', { ...memberInfo, id: result.data.id_utilisateur });
           nextStep();
         } else {
           alert(`Erreur: ${result.message}`);
@@ -327,23 +323,14 @@ const LocationSalle = () => {
         result = await ApiService.createReservation(reservationData);
       } else {
         // Réservation pour un non membre déjà créé à l'étape 1
-        // Utiliser l'ID du non membre déjà stocké dans memberInfo.id
-        reservationData.user_id = memberInfo.id;
+        // Utiliser l'ID de l'utilisateur déjà stocké dans memberInfo.id
+        reservationData.utilisateur_id = memberInfo.id;
         
-        // Envoyer les données complètes du non membre pour validation
-        const memberDataForReservation = {
-          user_id: memberInfo.id, // Ajouter l'ID du non-membre créé à l'étape 1
-          nom: memberInfo.nom,
-          prenom: memberInfo.prenom,
-          email: memberInfo.email,
-          telephone: memberInfo.telephone,
-          numero_carte_identite: memberInfo.numero_carte_identite
-        };
+        console.log('Réservation pour non-membre avec utilisateur_id:', memberInfo.id);
+        console.log('Données de réservation finales:', reservationData);
         
-        result = await ApiService.createReservationForNonMember(reservationData, memberDataForReservation);
-        
-        // Alternative : utiliser la route normale avec user_id
-        // result = await ApiService.createReservation(reservationData);
+        // Utiliser la route normale avec utilisateur_id
+        result = await ApiService.createReservation(reservationData);
       }
       
       if (result.success) {
@@ -403,16 +390,6 @@ const LocationSalle = () => {
   const filteredSalles = salles.filter(salle =>
     salle.nom.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  if (loading) {
-    return (
-      <div className="location-salle-container">
-        <div className="loading-container">
-          <div className="loading-spinner">Chargement des salles...</div>
-        </div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
