@@ -108,7 +108,8 @@ class ApiService {
       email: memberData.email,
       nom: memberData.nom,
       prenom: memberData.prenom,
-      numero_carte_identite: memberData.numero_carte_identite
+      numero_carte_identite: memberData.numero_carte_identite,
+      numero_telephone: memberData.telephone // Ajouter le numéro de téléphone
     });
   }
 

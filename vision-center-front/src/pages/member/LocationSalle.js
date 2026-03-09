@@ -258,6 +258,17 @@ const LocationSalle = () => {
           console.log('Structure complète de result.data:', JSON.stringify(result.data, null, 2));
           console.log('ID du non-membre:', result.data.id_utilisateur);
           
+          // Stocker les données complètes du non-membre dans localStorage
+          const nonMemberData = {
+            id_utilisateur: result.data.id_utilisateur,
+            nom: memberInfo.nom,
+            prenom: memberInfo.prenom,
+            email: memberInfo.email,
+            telephone: memberInfo.telephone,
+            numero_carte_identite: memberInfo.numero_carte_identite
+          };
+          localStorage.setItem('non-member', JSON.stringify(nonMemberData));
+          
           // Stocker l'ID de l'utilisateur créé pour l'utiliser plus tard
           setMemberInfo(prev => ({ 
             ...prev, 

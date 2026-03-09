@@ -16,16 +16,43 @@ const NonMemberDashboard = () => {
 
   useEffect(() => {
     // Récupérer les infos du non-membre depuis localStorage
-    const nonMemberData = localStorage.getItem('non-member');
-    if (nonMemberData) {
-      const userData = JSON.parse(nonMemberData);
-      setUser(userData);
-      loadReservations(userData.email);
-      loadPaymentMethods();
+    const storedUser = localStorage.getItem('non-member');
+    console.log('🔄 useEffect - Données dans localStorage:', storedUser);
+    
+    if (storedUser) {
+      try {
+        const userData = JSON.parse(storedUser);
+        console.log('🔄 useEffect - Données parsées:', userData);
+        console.log('🔄 useEffect - Email utilisateur:', userData.email);
+        
+        // Utiliser directement les données du localStorage sans se reconnecter
+        setUser(userData);
+        
+        // Charger les réservations directement avec l'ID utilisateur
+        const userId = userData.id_utilisateur || userData.id || userData.member?.id;
+        if (userId) {
+          console.log('🔄 useEffect - Chargement réservations pour ID:', userId);
+          loadUserReservations(userId);
+        } else {
+          console.error('❌ ID utilisateur non trouvé');
+          setError('ID utilisateur non trouvé');
+        }
+        
+        setLoading(false);
+      } catch (error) {
+        console.error('❌ Erreur parsing localStorage:', error);
+        setError('Erreur dans les données locales');
+        setLoading(false);
+      }
     } else {
-      setError('Aucune information utilisateur trouvée');
+      // Aucun utilisateur dans localStorage, rediriger vers la page de connexion
+      console.log('🔄 useEffect - Aucun utilisateur trouvé, redirection...');
+      navigate('/member/login');
       setLoading(false);
     }
+    
+    // Charger les méthodes de paiement
+    loadPaymentMethods();
   }, []);
 
   const loadPaymentMethods = async () => {
@@ -37,12 +64,11 @@ const NonMemberDashboard = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        // credentials: 'include', // Enlevé pour contourner CORS
+          'Accept': 'application/json'
+        }
       });
 
-      console.log('📡 Status API méthodes paiement:', response.status);
+      console.log('📡 Status réponse méthodes paiement:', response.status);
 
       if (!response.ok) {
         throw new Error(`Erreur HTTP: ${response.status}`);
@@ -52,14 +78,14 @@ const NonMemberDashboard = () => {
       console.log('📊 Méthodes de paiement reçues:', data);
 
       if (data.success) {
+        console.log('✅ Méthodes de paiement chargées:', data.data);
         setPaymentMethods(data.data || []);
-        console.log('✅ Méthodes de paiement chargées:', data.data?.length || 0);
       } else {
         console.error('❌ Erreur API méthodes de paiement:', data.message);
         setPaymentMethods([]);
       }
     } catch (error) {
-      console.error('💥 Erreur lors du chargement des méthodes de paiement:', error);
+      console.error('💥 Erreur chargement méthodes paiement:', error);
       setPaymentMethods([]);
     }
   };
@@ -68,8 +94,52 @@ const NonMemberDashboard = () => {
     try {
       console.log('🔍 Chargement des réservations pour:', email);
       
-      // Utiliser le bon controller pour les non-membres
-      const response = await fetch(`http://localhost:8000/api/auth/create-non-membre`, {
+      // Debug: Vérifier le contenu du localStorage
+      const nonMemberData = localStorage.getItem('non-member');
+      console.log('📦 Contenu brut du localStorage:', nonMemberData);
+      
+      let userData;
+      
+      if (nonMemberData) {
+        try {
+          const parsed = JSON.parse(nonMemberData);
+          console.log('📦 Données parsées du localStorage:', parsed);
+          userData = {
+            email: email,
+            nom: parsed.nom || '',
+            prenom: parsed.prenom || '',
+            numero_carte_identite: parsed.numero_carte_identite || parsed.numero_carte || '', // Utiliser les deux noms possibles
+            numero_telephone: parsed.numero_telephone || parsed.telephone || '' // Utiliser les deux noms possibles
+          };
+          console.log('📋 Données du localStorage utilisées:', userData);
+        } catch (parseError) {
+          console.error('❌ Erreur parsing localStorage:', parseError);
+          // En cas d'erreur de parsing, utiliser des valeurs par défaut
+          userData = {
+            email: email,
+            nom: '',
+            prenom: '',
+            numero_carte_identite: '',
+            numero_telephone: ''
+          };
+          console.log('📋 Utilisation valeurs par défaut (erreur parsing):', userData);
+        }
+      } else {
+        // Si aucune donnée dans localStorage, créer un objet avec des chaînes vides
+        userData = {
+          email: email,
+          nom: '',
+          prenom: '',
+          numero_carte_identite: '',
+          numero_telephone: ''
+        };
+        console.log('📋 Aucune donnée dans localStorage, utilisation valeurs par défaut:', userData);
+      }
+      
+      console.log('📤 Données envoyées au backend:', userData);
+      
+      // Utiliser la route de login pour les non-membres (avec mot de passe par défaut)
+      const response = await fetch(`http://localhost:8000/api/member/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,14 +147,14 @@ const NonMemberDashboard = () => {
         },
         body: JSON.stringify({
           email: email,
-          nom: '', // Sera rempli plus tard
-          prenom: '', // Sera rempli plus tard
-          numero_carte_identite: '', // Sera rempli plus tard
-          // Les autres champs optionnels
+          password: '1234567' // Mot de passe par défaut pour les non-membres
         })
       });
 
-      console.log('📡 Status de la réponse:', response.status);
+      console.log('� Données envoyées au backend (brut JSON):', JSON.stringify(userData));
+      console.log('📤 Données envoyées au backend (formaté):', userData);
+
+      console.log('�� Status de la réponse:', response.status);
 
       if (!response.ok) {
         throw new Error(`Erreur HTTP: ${response.status}`);
@@ -94,15 +164,16 @@ const NonMemberDashboard = () => {
       console.log('📊 Données reçues:', data);
       
       if (data.success) {
-        console.log('✅ Succès - Utilisateur créé:', data.data);
+        console.log('✅ Succès - Utilisateur créé/trouvé:', data.data);
         
         // Stocker l'utilisateur créé dans localStorage
         if (data.data) {
           localStorage.setItem('non-member', JSON.stringify(data.data));
         }
         
-        setReservations([]); // Vider les réservations existantes
-        setUser(data.data); // Définir l'utilisateur
+        // Charger les réservations existantes pour cet utilisateur
+        await loadUserReservations(data.data.id_utilisateur);
+        
       } else {
         console.log('❌ Erreur création utilisateur:', data.message);
         setError(data.message || 'Erreur lors de la création du compte');
@@ -113,6 +184,43 @@ const NonMemberDashboard = () => {
       console.error('💥 Erreur complète:', error);
       setError('Erreur lors de la création du compte: ' + error.message);
       setLoading(false);
+    }
+  };
+
+  // Fonction pour charger les réservations d'un utilisateur
+  const loadUserReservations = async (userId) => {
+    try {
+      console.log('🔍 Chargement des réservations pour utilisateur ID:', userId);
+      
+      // Utiliser l'API Laravel officielle pour les réservations
+      const response = await fetch(`http://localhost:8000/api/reservations/user/${encodeURIComponent(userId)}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
+
+      console.log('📡 Status réponse réservations:', response.status);
+
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP: ${response.status}`);
+      }
+
+      const reservationData = await response.json();
+      console.log('📊 Données réservations reçues:', reservationData);
+      
+      if (reservationData.success) {
+        console.log('✅ Succès - Nombre de réservations:', reservationData.data?.length || 0);
+        console.log('📋 Structure complète des réservations:', JSON.stringify(reservationData.data, null, 2));
+        setReservations(reservationData.data || []);
+      } else {
+        console.log('❌ Erreur chargement réservations:', reservationData.message);
+        setReservations([]);
+      }
+    } catch (error) {
+      console.error('💥 Erreur chargement réservations:', error);
+      setReservations([]);
     }
   };
 
@@ -206,7 +314,7 @@ const NonMemberDashboard = () => {
       // Préparer les données pour l'API
       const paiementData = {
         methode_paiement_id: selectedMethod,
-        operateur_id: selectedProvider || null,
+        operateur_id: selectedProvider && selectedProvider !== 'mobile-money' ? selectedProvider : null,
         montant: parseFloat(amount)
       };
 
@@ -223,7 +331,17 @@ const NonMemberDashboard = () => {
         body: JSON.stringify(paiementData)
       });
 
+      console.log('📡 Status réponse paiement:', response.status);
+      console.log('📊 Données envoyées au backend:', JSON.stringify(paiementData, null, 2));
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('❌ Erreur réponse paiement:', errorData);
+        throw new Error(`Erreur HTTP: ${response.status} - ${errorData.message}`);
+      }
+
       const result = await response.json();
+      console.log('✅ Réponse paiement reçue:', result);
       console.log('Frontend - Réponse API:', result);
 
       if (result.success) {
@@ -239,7 +357,7 @@ const NonMemberDashboard = () => {
         alert('Erreur lors du paiement: ' + result.message);
       }
 
-    } catch (error) {
+} catch (error) {
       console.error('Frontend - Erreur lors du paiement:', error);
       alert('Erreur technique lors du paiement. Veuillez réessayer.');
     }
@@ -402,7 +520,7 @@ const NonMemberDashboard = () => {
                   {/* Carte de réservation */}
                   <div className="booking-card">
                     <div className="booking-header">
-                      <h3>{reservation.salle}</h3>
+                      <h3>{reservation.salle?.nom || 'Salle inconnue'}</h3>
                       <span className={`booking-status ${reservation.statut}`}>
                         {reservation.statut}
                       </span>
@@ -411,15 +529,15 @@ const NonMemberDashboard = () => {
                     <div className="booking-details">
                       <div className="detail-row">
                         <span className="icon">📅</span>
-                        <span>{reservation.date}</span>
+                        <span>{new Date(reservation.date_debut).toLocaleDateString()}</span>
                       </div>
                       <div className="detail-row">
                         <span className="icon">⏰</span>
-                        <span>{reservation.heure_debut} → {reservation.heure_fin} ({reservation.duree})</span>
+                        <span>{new Date(reservation.heure_debut).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})} → {new Date(reservation.heure_fin).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</span>
                       </div>
                       <div className="detail-row price">
                         <span className="icon">💰</span>
-                        <span>{reservation.prix.toLocaleString()} Ar</span>
+                        <span>{parseFloat(reservation.prix_total).toLocaleString()} Ar</span>
                       </div>
                     </div>
                     
@@ -434,127 +552,137 @@ const NonMemberDashboard = () => {
                   <div className="payment-card">
                     <div className="payment-header">
                       <h4>💳 Paiement</h4>
-                      <span className={`payment-status ${reservation.paiement === 'payé' ? 'paid' : 'pending'}`}>
-                        {reservation.paiement === 'payé' ? '✅ Payé' : '⏳ En attente'}
+                      <span className={`payment-status ${reservation.paiement_statut === 'Payé' ? 'paid' : reservation.paiement_statut === 'en_attente_validation' ? 'pending' : 'unpaid'}`}>
+                        {reservation.paiement_statut === 'Payé' ? 'Payé' : 
+                         reservation.paiement_statut === 'en_attente_validation' ? '⏳ En attente de validation' : 
+                         '💰 Non payé'}
                       </span>
                     </div>
                     
                     <div className="payment-amount">
                       <span className="amount-label">Montant à payer</span>
-                      <span className="amount-value">{reservation.prix.toLocaleString()} Ar</span>
+                      <span className="amount-value">{parseFloat(reservation.prix_total).toLocaleString()} Ar</span>
                     </div>
                     
-                    {/* Méthodes de paiement - données de la base de données avec design actuel */}
-                    <div className="payment-methods-simple">
-                      <span className="simple-title">Comment payer ?</span>
-                      
-                      {/* Debug - Afficher les méthodes chargées */}
-                      {paymentMethods.length === 0 && (
-                        <div style={{color: 'red', fontSize: '12px', marginBottom: '10px'}}>
-                          Aucune méthode de paiement chargée (API: /api/methodes-paiement)
-                        </div>
-                      )}
-                      
-                      <div className="simple-options">
-                        {/* Espèce - depuis la base de données */}
-                        {paymentMethods.filter(m => m.nom.toLowerCase().includes('espèce')).map((method) => (
-                          <button 
-                            key={method.id}
-                            className={`simple-option cash ${selectedPaymentMethods[reservation.id] === method.id ? 'selected' : ''}`}
-                            onClick={() => handlePaymentMethodChange(reservation.id, method.id)}
-                          >
-                            <span className="option-text">{method.nom}</span>
-                          </button>
-                        ))}
+                    {/* Méthodes de paiement - SEULEMENT SI NON PAYÉ */}
+                    {reservation.paiement_statut !== 'Payé' && reservation.paiement_statut !== 'en_attente_validation' && (
+                      <div className="payment-methods-simple">
+                        <span className="simple-title">Comment payer ?</span>
                         
-                        {/* Mobile Money - bouton principal avec fond de couleur et contour si un opérateur est choisi */}
-                        <button 
-                          className={`simple-option mobile-money ${
-                            selectedMobileProviders[reservation.id] ? 'selected' : 
-                            selectedPaymentMethods[reservation.id] === 'mobile-money' ? 'selected' : ''
-                          }`}
-                          style={{
-                            border: selectedMobileProviders[reservation.id] ? '2px solid #007bff' : 
-                                   selectedPaymentMethods[reservation.id] === 'mobile-money' ? '2px solid #007bff' : '1px solid #ddd'
-                          }}
-                          onClick={() => handlePaymentMethodChange(reservation.id, 'mobile-money')}
-                        >
-                          <span className="option-text">
-                            Mobile Money
-                            {selectedMobileProviders[reservation.id] && (
-                              <span style={{marginLeft: '8px', fontSize: '12px', fontWeight: 'bold'}}>
-                                → {paymentMethods.find(m => m.id === selectedMobileProviders[reservation.id])?.nom}
-                              </span>
-                            )}
-                          </span>
-                        </button>
+                        {/* Debug - Afficher les méthodes chargées */}
+                        {paymentMethods.length === 0 && (
+                          <div style={{color: 'orange', fontSize: '12px', marginBottom: '10px'}}>
+                            📋 Méthodes de paiement en cours de chargement...
+                          </div>
+                        )}
+                        
+                        <div className="simple-options">
+                          {/* Espèce - depuis la base de données */}
+                          {paymentMethods.filter(m => m.nom.toLowerCase().includes('espèce')).map((method) => (
+                            <button 
+                              key={method.id}
+                              className={`simple-option cash ${selectedPaymentMethods[reservation.id] === method.id ? 'selected' : ''}`}
+                              onClick={() => handlePaymentMethodChange(reservation.id, method.id)}
+                            >
+                              <span className="option-text">{method.nom}</span>
+                            </button>
+                          ))}
+                          
+                          {/* Mobile Money - bouton principal avec fond de couleur et contour si un opérateur est choisi */}
+                          <button 
+                            className={`simple-option mobile-money ${
+                              selectedMobileProviders[reservation.id] ? 'selected' : 
+                              selectedPaymentMethods[reservation.id] === 'mobile-money' ? 'selected' : ''
+                            }`}
+                            style={{
+                              border: selectedMobileProviders[reservation.id] ? '2px solid #007bff' : 
+                                     selectedPaymentMethods[reservation.id] === 'mobile-money' ? '2px solid #007bff' : '1px solid #ddd'
+                            }}
+                            onClick={() => handlePaymentMethodChange(reservation.id, 'mobile-money')}
+                          >
+                            <span className="option-text">
+                              Mobile Money
+                              {selectedMobileProviders[reservation.id] && (
+                                <span style={{marginLeft: '8px', fontSize: '12px', fontWeight: 'bold'}}>
+                                  → {paymentMethods.find(m => m.id === selectedMobileProviders[reservation.id])?.nom}
+                                </span>
+                              )}
+                            </span>
+                          </button>
+                        </div>
+                        
+                        {/* Options Mobile Money - toujours visibles quand Mobile Money est choisi ou si un opérateur est sélectionné */}
+                        {(selectedPaymentMethods[reservation.id] === 'mobile-money' || selectedMobileProviders[reservation.id]) && (
+                          <div className="mobile-money-simple">
+                            <div className="provider-buttons">
+                              {paymentMethods
+                                .filter(m => 
+                                  m.nom.toLowerCase().includes('mvola') || 
+                                  m.nom.toLowerCase().includes('orange') || 
+                                  m.nom.toLowerCase().includes('airtel')
+                                )
+                                .map((method) => (
+                                  <button 
+                                    key={method.id}
+                                    className={`provider-btn ${selectedMobileProviders[reservation.id] === method.id ? 'selected' : ''}`}
+                                    style={{
+                                      border: selectedMobileProviders[reservation.id] === method.id ? '2px solid #007bff' : '1px solid #ddd'
+                                    }}
+                                    onClick={() => handleMobileProviderChange(reservation.id, method.id)}
+                                  >
+                                    {method.nom}
+                                  </button>
+                                ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      
-                      {/* Options Mobile Money - toujours visibles quand Mobile Money est choisi ou si un opérateur est sélectionné */}
-                      {(selectedPaymentMethods[reservation.id] === 'mobile-money' || selectedMobileProviders[reservation.id]) && (
-                        <div className="mobile-money-simple">
-                          <div className="provider-buttons">
-                            {paymentMethods
-                              .filter(m => 
-                                m.nom.toLowerCase().includes('mvola') || 
-                                m.nom.toLowerCase().includes('orange') || 
-                                m.nom.toLowerCase().includes('airtel')
-                              )
-                              .map((method) => (
-                                <button 
-                                  key={method.id}
-                                  className={`provider-btn ${selectedMobileProviders[reservation.id] === method.id ? 'selected' : ''}`}
-                                  style={{
-                                    border: selectedMobileProviders[reservation.id] === method.id ? '2px solid #007bff' : '1px solid #ddd'
-                                  }}
-                                  onClick={() => handleMobileProviderChange(reservation.id, method.id)}
-                                >
-                                  {method.nom}
-                                </button>
-                              ))}
+                    )}
+                    
+                    {/* Champ de saisie et bouton Payez - SEULEMENT SI NON PAYÉ */}
+                    {reservation.paiement_statut !== 'Payé' && reservation.paiement_statut !== 'en_attente_validation' && (
+                      <div className="payment-actions">
+                        {/* Champ de saisie du montant */}
+                        <div className="payment-input-section">
+                          <span className="input-label">Montant à payer</span>
+                          <div className="input-group">
+                            <span className="currency">Ar</span>
+                            <input
+                              type="text"
+                              className="payment-input"
+                              placeholder="0"
+                              value={inputValues[reservation.id] !== undefined ? inputValues[reservation.id] : reservation.prix}
+                              onChange={(e) => handlePaymentAmountChange(reservation.id, e.target.value, reservation)}
+                            />
                           </div>
                         </div>
-                      )}
-                    </div>
-                    
-                    {/* Champ de saisie et bouton Payez - toujours affichés */}
-                    <div className="payment-actions">
-                      {/* Champ de saisie du montant */}
-                      <div className="payment-input-section">
-                        <span className="input-label">Montant à payer</span>
-                        <div className="input-group">
-                          <span className="currency">Ar</span>
-                          <input
-                            type="text"
-                            className="payment-input"
-                            placeholder="0"
-                            value={inputValues[reservation.id] !== undefined ? inputValues[reservation.id] : reservation.prix}
-                            onChange={(e) => handlePaymentAmountChange(reservation.id, e.target.value, reservation)}
-                          />
+                        
+                        {/* Bouton Payez */}
+                        <button 
+                          className="btn-pay-final"
+                          onClick={() => handlePayNow(reservation.id)}
+                        >
+                          {reservation.paiement === 'payé' ? 'Payer à nouveau' : 'Payez'}
+                        </button>
+                        
+                        <div className="payment-security">
+                          <span className="security-icon">🔒</span>
+                          <span className="security-text">Paiement sécurisé</span>
                         </div>
                       </div>
-                      
-                      {/* Bouton Payez */}
-                      <button 
-                        className="btn-pay-final"
-                        onClick={() => handlePayNow(reservation.id)}
-                      >
-                        {reservation.paiement === 'payé' ? 'Payer à nouveau' : 'Payez'}
-                      </button>
-                      
-                      <div className="payment-security">
-                        <span className="security-icon">🔒</span>
-                        <span className="security-text">Paiement sécurisé</span>
-                      </div>
-                    </div>
+                    )}
                     
-                    {reservation.paiement === 'payé' && (
-                      <div className="payment-success">
-                        <div className="success-icon">✅</div>
-                        <div className="success-content">
-                          <span className="success-title">Paiement confirmé</span>
-                          <span className="success-desc">Votre réservation est validée</span>
-                        </div>
+                    {reservation.paiement_statut === 'Payé' && (
+                      <div className="payment-success" style={{
+                        textAlign: 'center',
+                        padding: '8px',
+                        backgroundColor: '#d4edda',
+                        borderRadius: '4px',
+                        margin: '8px 0'
+                      }}>
+                        <span style={{color: '#155724', fontSize: '13px', fontWeight: 'bold'}}>
+                          Paiement confirmé
+                        </span>
                       </div>
                     )}
                   </div>
