@@ -197,6 +197,17 @@ const MemberLogin = ({ history }) => {
           <p className="signup-text">
             {isMember ? "Don't have account?" : "Vous n'avez pas de réservation?"} <a href={isMember ? "/signup" : "/location-salle"} className="signup-link" onClick={isMember ? handleNavigateToSignup : undefined}>{isMember ? 'Sign up!' : 'Faire une réservation'}</a>
           </p>
+          
+          {/* Bouton retour au site */}
+          <div className="back-to-site">
+            <button 
+              className="back-to-site-btn"
+              onClick={() => window.location.href = '/'}
+              disabled={loading}
+            >
+              🏠 Retour au site vitrine
+            </button>
+          </div>
         </div>
 
         <footer className="login-footer">

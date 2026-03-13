@@ -94,49 +94,14 @@ const NonMemberDashboard = () => {
     try {
       console.log('🔍 Chargement des réservations pour:', email);
       
-      // Debug: Vérifier le contenu du localStorage
-      const nonMemberData = localStorage.getItem('non-member');
-      console.log('📦 Contenu brut du localStorage:', nonMemberData);
+      // Pour les non-membres, on envoie seulement l'email
+      // Les autres champs ne sont plus nécessaires car le statut est "en attente"
+      const userData = {
+        email: email
+      };
       
-      let userData;
-      
-      if (nonMemberData) {
-        try {
-          const parsed = JSON.parse(nonMemberData);
-          console.log('📦 Données parsées du localStorage:', parsed);
-          userData = {
-            email: email,
-            nom: parsed.nom || '',
-            prenom: parsed.prenom || '',
-            numero_carte_identite: parsed.numero_carte_identite || parsed.numero_carte || '', // Utiliser les deux noms possibles
-            numero_telephone: parsed.numero_telephone || parsed.telephone || '' // Utiliser les deux noms possibles
-          };
-          console.log('📋 Données du localStorage utilisées:', userData);
-        } catch (parseError) {
-          console.error('❌ Erreur parsing localStorage:', parseError);
-          // En cas d'erreur de parsing, utiliser des valeurs par défaut
-          userData = {
-            email: email,
-            nom: '',
-            prenom: '',
-            numero_carte_identite: '',
-            numero_telephone: ''
-          };
-          console.log('📋 Utilisation valeurs par défaut (erreur parsing):', userData);
-        }
-      } else {
-        // Si aucune donnée dans localStorage, créer un objet avec des chaînes vides
-        userData = {
-          email: email,
-          nom: '',
-          prenom: '',
-          numero_carte_identite: '',
-          numero_telephone: ''
-        };
-        console.log('📋 Aucune donnée dans localStorage, utilisation valeurs par défaut:', userData);
-      }
-      
-      console.log('📤 Données envoyées au backend:', userData);
+      console.log('� Données envoyées au backend (brut JSON):', JSON.stringify(userData));
+      console.log('📤 Données envoyées au backend (formaté):', userData);
       
       // Utiliser la route de login pour les non-membres (avec mot de passe par défaut)
       const response = await fetch(`http://localhost:8000/api/member/auth/login`, {
@@ -151,10 +116,7 @@ const NonMemberDashboard = () => {
         })
       });
 
-      console.log('� Données envoyées au backend (brut JSON):', JSON.stringify(userData));
-      console.log('📤 Données envoyées au backend (formaté):', userData);
-
-      console.log('�� Status de la réponse:', response.status);
+      console.log('⚡ Status de la réponse:', response.status);
 
       if (!response.ok) {
         throw new Error(`Erreur HTTP: ${response.status}`);
@@ -436,6 +398,20 @@ const NonMemberDashboard = () => {
     navigate('/location-salle');
   };
 
+  // Fonction de déconnexion
+  const handleLogout = () => {
+    // Nettoyer localStorage
+    localStorage.removeItem('non-member');
+    localStorage.removeItem('token');
+    
+    // Réinitialiser les états
+    setUser(null);
+    setReservations([]);
+    
+    // Rediriger vers la page de login
+    navigate('/login');
+  };
+
   if (loading) {
     return (
       <div className="non-member-dashboard">
@@ -463,11 +439,16 @@ const NonMemberDashboard = () => {
       {/* Header moderne */}
       <header className="header">
         <div className="user-welcome">
-          <h1>Bonjour, {user?.email?.split('@')[0]}</h1>
+          <h1>Bonjour, {user?.email ? user.email.split('@')[0] : 'Utilisateur'}</h1>
         </div>
-        <button className="btn-book" onClick={handleNewReservation}>
-          <span>+</span> Réserver une salle
-        </button>
+        <div className="header-actions">
+          <button className="btn-book" onClick={handleNewReservation}>
+            <span>+</span> Réserver une salle
+          </button>
+          <button className="btn-logout" onClick={handleLogout}>
+            🚪 Déconnexion
+          </button>
+        </div>
       </header>
 
       {/* Contenu principal */}
@@ -491,14 +472,25 @@ const NonMemberDashboard = () => {
           <div className="stat-card">
             <div className="stat-icon">✅</div>
             <div className="stat-info">
-              <h3>{reservations.filter(r => r.paiement === 'payé').length}</h3>
+              <h3>{reservations.filter(r => r.paiement === 'payé' || r.paiement_statut === 'Payé').length > 0 ? '1' : '0'}</h3>
               <p>Confirmées</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon">💰</div>
+            <div className="stat-info">
+              <h3>{reservations
+                .filter(r => r.paiement === 'en attente')
+                .reduce((sum, r) => sum + r.montant_restant, 0)
+                .toLocaleString()} Ar
+              </h3>
+              <p>Total Dû</p>
             </div>
           </div>
         </div>
 
-        {/* Section réservations */}
-        <section className="bookings-section">
+      {/* Section réservations */}
+      <section className="bookings-section">
           <div className="section-header">
             <h2>Mes réservations</h2>
             <button className="btn-view-all">Voir tout</button>
@@ -552,10 +544,8 @@ const NonMemberDashboard = () => {
                   <div className="payment-card">
                     <div className="payment-header">
                       <h4>💳 Paiement</h4>
-                      <span className={`payment-status ${reservation.paiement_statut === 'Payé' ? 'paid' : reservation.paiement_statut === 'en_attente_validation' ? 'pending' : 'unpaid'}`}>
-                        {reservation.paiement_statut === 'Payé' ? 'Payé' : 
-                         reservation.paiement_statut === 'en_attente_validation' ? '⏳ En attente de validation' : 
-                         '💰 Non payé'}
+                      <span className={`payment-status ${reservation.paiement_statut === 'Payé' ? 'paid' : 'pending'}`}>
+                        {reservation.paiement_statut === 'Payé' ? '✅ Payé' : '⏳ En attente'}
                       </span>
                     </div>
                     
@@ -564,8 +554,8 @@ const NonMemberDashboard = () => {
                       <span className="amount-value">{parseFloat(reservation.prix_total).toLocaleString()} Ar</span>
                     </div>
                     
-                    {/* Méthodes de paiement - SEULEMENT SI NON PAYÉ */}
-                    {reservation.paiement_statut !== 'Payé' && reservation.paiement_statut !== 'en_attente_validation' && (
+                    {/* Méthodes de paiement - données de la base de données avec design actuel */}
+                    {reservation.paiement_statut !== 'en_attente_validation' && reservation.paiement_statut !== 'Payé' && (
                       <div className="payment-methods-simple">
                         <span className="simple-title">Comment payer ?</span>
                         
@@ -639,8 +629,8 @@ const NonMemberDashboard = () => {
                       </div>
                     )}
                     
-                    {/* Champ de saisie et bouton Payez - SEULEMENT SI NON PAYÉ */}
-                    {reservation.paiement_statut !== 'Payé' && reservation.paiement_statut !== 'en_attente_validation' && (
+                    {/* Champ de saisie et bouton Payez - seulement si pas en attente de validation et pas payé */}
+                    {reservation.paiement_statut !== 'en_attente_validation' && reservation.paiement_statut !== 'Payé' && (
                       <div className="payment-actions">
                         {/* Champ de saisie du montant */}
                         <div className="payment-input-section">
@@ -672,17 +662,24 @@ const NonMemberDashboard = () => {
                       </div>
                     )}
                     
+                    {/* Message pour les réservations en attente de validation */}
+                    {reservation.paiement_statut === 'en_attente_validation' && (
+                      <div className="validation-pending">
+                        <div className="pending-icon">⏳</div>
+                        <div className="pending-content">
+                          <span className="pending-desc">Votre réservation est en cours de traitement</span>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Message pour les réservations payées */}
                     {reservation.paiement_statut === 'Payé' && (
-                      <div className="payment-success" style={{
-                        textAlign: 'center',
-                        padding: '8px',
-                        backgroundColor: '#d4edda',
-                        borderRadius: '4px',
-                        margin: '8px 0'
-                      }}>
-                        <span style={{color: '#155724', fontSize: '13px', fontWeight: 'bold'}}>
-                          Paiement confirmé
-                        </span>
+                      <div className="payment-success">
+                        <div className="success-icon">✅</div>
+                        <div className="success-content">
+                          <span className="success-title">Votre paiement est fait</span>
+                          <span className="success-desc">Votre réservation est validée</span>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -707,6 +704,7 @@ const NonMemberDashboard = () => {
             </div>
           </div>
         </section>
+    
       </div>
     </div>
   );

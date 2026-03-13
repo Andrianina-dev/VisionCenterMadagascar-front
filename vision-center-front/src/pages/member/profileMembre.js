@@ -19,8 +19,8 @@ const ProfileMembre = () => {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [conversations, setConversations] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // Formater les messages du backend pour l'affichage dans la liste
   const formatMessagesForList = (backendMessages) => {
@@ -164,7 +164,6 @@ const ProfileMembre = () => {
     const fetchMessages = async () => {
       if (!currentUser?.id) return;
       
-      setLoading(true);
       try {
         // Essayer d'abord l'API principale
         let response = await fetch(`http://localhost:8000/api/public/messages/member?member_id=${currentUser.id}`, {
@@ -517,13 +516,7 @@ const ProfileMembre = () => {
             )}
             {activeTab === 'bookings' && (
               <div className="messages-content">
-                {loading ? (
-                  <div className="loading-messages">
-                    <div className="loading-spinner"></div>
-                    <p>Chargement des messages...</p>
-                  </div>
-                ) : (
-                  <div className="messages-container">
+                <div className="messages-container">
                     {/* Liste des messages */}
                     <div className="messages-list">
                       <h3>Messages</h3>
@@ -607,7 +600,6 @@ const ProfileMembre = () => {
                       </div>
                     )}
                   </div>
-                )}
               </div>
             )}
 

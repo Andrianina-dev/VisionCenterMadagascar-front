@@ -162,7 +162,7 @@ const MadagascarMap = () => {
     return (
       <div className="madagascar-map-wrapper">
         <div className="loading-container">
-          <div className="loading-spinner">Chargement des activités...</div>
+          <div className="loading-spinner">Chargement de la carte...</div>
         </div>
       </div>
     );
@@ -172,7 +172,8 @@ const MadagascarMap = () => {
     return (
       <div className="madagascar-map-wrapper">
         <div className="error-container">
-          <div className="error-message">{error}</div>
+          <h2>Erreur</h2>
+          <p>{error}</p>
         </div>
       </div>
     );

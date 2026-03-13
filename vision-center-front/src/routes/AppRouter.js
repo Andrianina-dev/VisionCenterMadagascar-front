@@ -90,6 +90,12 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
+        <Route path="/paiement" element={
+          <ProtectedRoute>
+            <PaymentPage />
+          </ProtectedRoute>
+        } />
+
         {/* SITE VITRINE - PAGE D'ACCUEIL UNIQUE */}
         <Route path="/" element={
           <AccueilVitrine />

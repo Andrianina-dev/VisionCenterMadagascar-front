@@ -43,11 +43,23 @@ const LocationSalle = () => {
   // État pour le résultat de réservation (étape 3)
   const [reservationResult, setReservationResult] = useState(null);
   
-  // État pour la popup de confirmation
+  // État pour les notifications
+  const [notification, setNotification] = useState(null);
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+
+  // Fonction pour afficher une notification
+  const showNotification = (message, type = 'warning') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000); // Disparaît après 3 secondes
+  };
 
   // Fonction pour afficher la popup de confirmation
   const handleConfirmReservation = () => {
+    // Vérifier si la salle sélectionnée est occupée
+    if (selectedSalle && selectedSalle.disponibilite === 'occupée') {
+      showNotification('Impossible de réserver une salle occupée', 'warning');
+      return; // Bloquer l'accès à la réservation
+    }
     setShowConfirmPopup(true);
   };
 
@@ -115,11 +127,13 @@ const LocationSalle = () => {
         console.log('validationData complet:', validationData);
         setReservationResult(validationData);
         
-        // Rediriger vers la page de succès
-        navigate('/reservation-success', { 
+        // Rediriger directement vers le paiement après l'étape 3
+        navigate('/paiement', { 
           state: { 
             reservation: result.data, 
-            salle: selectedSalle 
+            salle: selectedSalle,
+            member: memberInfo,
+            fromStep3: true // Indiquer que ça vient de l'étape 3
           } 
         });
       } else {
@@ -390,6 +404,13 @@ const LocationSalle = () => {
   };
 
   const handleSalleClick = (salle) => {
+    // Vérifier si la salle est occupée
+    if (salle.disponibilite === 'occupée') {
+      showNotification('Cette salle est actuellement occupée', 'warning');
+      return; // Bloquer la sélection - ne pas setSelectedSalle
+    }
+    
+    // Si la salle n'est pas occupée, permettre la sélection
     setSelectedSalle(salle);
     setFormData(prev => ({
       ...prev,
@@ -419,6 +440,16 @@ const LocationSalle = () => {
       {/* Header via NavigationSiteVitrine */}
       <NavigationSiteVitrine scrollToSection={scrollToSection} />
       
+      {/* Composant de notification */}
+      {notification && (
+        <div className={`notification notification-${notification.type}`}>
+          <span className="notification-icon">
+            {notification.type === 'warning' ? '⚠️' : '✅'}
+          </span>
+          <span className="notification-message">{notification.message}</span>
+        </div>
+      )}
+      
       {/* Contenu Location Salle */}
       <div className="location-salle-content">
         {/* Header spécifique à Location Salle */}
@@ -428,17 +459,6 @@ const LocationSalle = () => {
             <p>Réservez une salle pour vos activités spirituelles et réunions</p>
           </div>
         </header>
-
-        {/* Section Suivi Location - Bouton visible */}
-        <div className="suivi-location-section">
-          <div className="suivi-content">
-            <h3>📋 Vous avez déjà une réservation ?</h3>
-            <p>Suivez l'état de votre location de salle et vos paiements</p>
-            <button onClick={() => navigate('/acces-non-membre')} className="btn-outline btn-medium">
-              <span>📋 Suivre ma location de salle</span>
-            </button>
-          </div>
-        </div>
 
         {/* Affichage détaillé de la salle sélectionnée */}
         {selectedSalle ? (
@@ -1047,13 +1067,13 @@ const LocationSalle = () => {
               {filteredSalles.map((salle, index) => (
                 <div
                   key={`${salle.id}-${index}`}
-                  className="salle-card"
+                  className={`salle-card ${salle.disponibilite === 'occupée' ? 'occupied' : ''}`}
                   onClick={() => handleSalleClick(salle)}
                 >
                   <div className="salle-image">
                     <img src={salle.image} alt={salle.nom} />
                     <div className={`salle-status ${salle.disponibilite.toLowerCase()}`}>
-                      {salle.disponibilite}
+                      {salle.disponibilite === 'occupée' ? '🚫 Occupée' : salle.disponibilite}
                     </div>
                   </div>
                   

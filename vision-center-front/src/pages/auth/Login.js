@@ -173,6 +173,17 @@ const Login = ({ history, isAdmin = false }) => {
               Looking for member access? <a href="/login#membres" className="member-login-link">Member Login</a>
             </p>
           )}
+          
+          {/* Bouton retour au site */}
+          <div className="back-to-site">
+            <button 
+              className="back-to-site-btn"
+              onClick={() => window.location.href = '/'}
+              disabled={loading}
+            >
+              🏠 Retour au site vitrine
+            </button>
+          </div>
         </div>
 
         <footer className="login-footer">
