@@ -48,6 +48,89 @@ const Home = () => {
   const [registrationCache, setRegistrationCache] = useState({});
   const [participantsCache, setParticipantsCache] = useState({});
 
+  // États pour le popup de paiement
+  const [showPaymentPopup, setShowPaymentPopup] = useState(false);
+  const [selectedActivite, setSelectedActivite] = useState(null);
+  const [methodesPaiement, setMethodesPaiement] = useState([]);
+  const [showMobileMoneyOptions, setShowMobileMoneyOptions] = useState(false);
+  const [selectedMethodePaiement, setSelectedMethodePaiement] = useState('Mobile Money'); // 🆕 État pour la méthode sélectionnée
+
+
+
+  // Charger les méthodes de paiement depuis l'API
+  const loadMethodesPaiement = async () => {
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+      const response = await fetch(`${apiUrl}/methodes-paiement`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          // Regrouper les méthodes mobile money
+          const methodesGroup = groupMethodesPaiement(data.data);
+          setMethodesPaiement(methodesGroup);
+          console.log('Méthodes de paiement groupées:', methodesGroup);
+        }
+      }
+    } catch (error) {
+      console.error('Erreur chargement méthodes de paiement:', error);
+      // En cas d'erreur, utiliser des méthodes par défaut
+      setMethodesPaiement([
+        { id: 'mobile_money', nom: 'Mobile Money', displayIcon: '📱', types: ['MVola', 'Airtel Money', 'Orange Money'] },
+        { id: 'espece', nom: 'Espèce', displayIcon: '�' }
+      ]);
+    }
+  };
+
+  // Regrouper les méthodes de paiement (mobile money groupé)
+  const groupMethodesPaiement = (methodes) => {
+    const mobileMoneyMethods = [];
+    const otherMethods = [];
+    
+    methodes.forEach(methode => {
+      const lowerNom = methode.nom.toLowerCase();
+      if (lowerNom.includes('mvola') || lowerNom.includes('airtel') || lowerNom.includes('orange')) {
+        mobileMoneyMethods.push(methode.nom);
+      } else {
+        otherMethods.push({
+          ...methode,
+          displayIcon: getIconForMethode(methode.nom)
+        });
+      }
+    });
+    
+    // Créer le groupe Mobile Money s'il y a des méthodes
+    const result = [];
+    if (mobileMoneyMethods.length > 0) {
+      result.push({
+        id: 'mobile_money',
+        nom: 'Mobile Money',
+        displayIcon: '�',
+        types: mobileMoneyMethods
+      });
+    }
+    
+    // Ajouter les autres méthodes
+    result.push(...otherMethods);
+    
+    return result;
+  };
+
+  // Fonction pour mapper les noms vers des emojis
+  const getIconForMethode = (nom) => {
+    const lowerNom = nom.toLowerCase();
+    
+    // Mobile money pour MVola, Airtel Money, Orange Money
+    if (lowerNom.includes('mvola') || lowerNom.includes('airtel') || lowerNom.includes('orange')) return '📱';
+    // Espèce
+    if (lowerNom.includes('espece')) return '💵';
+    // Carte bancaire
+    if (lowerNom.includes('carte')) return '💳';
+    
+    // Icône par défaut
+    return '💳';
+  };
+
 
 
   // Récupérer les informations de l'utilisateur connecté
@@ -259,6 +342,7 @@ const Home = () => {
   useEffect(() => {
 
     loadActivites();
+    loadMethodesPaiement(); // Charger les méthodes de paiement depuis la base de données
 
   }, []);
 
@@ -312,31 +396,6 @@ const Home = () => {
   }));
 
 
-
-  // Utiliser les vraies activités ouvertes pour les nouveaux packages
-
-  const newPackages = activitesOuvertes.slice(0, 4).map((activite, index) => ({
-
-    id: activite.id_activite,
-
-    price: activite.capacite ? `${activite.nombre_participants || 0}/${activite.capacite}` : "Illimité",
-
-    image: activite.image_url || improvedImageBase64,
-
-    titre: activite.titre_activite,
-
-    date: activite.date_heure_activite,
-
-    isBase64: true, // Toujours true car on utilise base64
-
-    isRegistered: activite.isRegistered || false,
-
-    nombre_participants: activite.nombre_participants || 0
-
-  }));
-
-
-
   const infoGuide = [
 
     { icon: "💰", title: "Inscription Gratuite" },
@@ -366,6 +425,66 @@ const Home = () => {
   // Gérer l'inscription directe
 
   const handleParticiper = async (activiteId) => {
+
+    // Trouver l'activité pour vérifier si c'est une formation
+
+    const activite = activitesOuvertes.find(a => a.id_activite === activiteId);
+
+
+
+    // Si c'est une formation (TYP-1), afficher le popup de paiement
+
+    if (activite && activite.id_type === 'TYP-1') {
+
+      console.log('Formation détectée - Affichage du popup de paiement');
+      
+      // Afficher l'ID utilisateur dès l'ouverture du popup
+      const auth = localStorage.getItem('auth') || sessionStorage.getItem('auth');
+      if (auth) {
+        try {
+          const authData = JSON.parse(auth);
+          console.log('=== ID UTILISATEUR À L\'OUVERTURE DU POPUP ===');
+          console.log('AuthData:', authData);
+          
+          let utilisateurConnecte = null;
+          if (authData.utilisateur) {
+            utilisateurConnecte = authData.utilisateur;
+          } else if (authData.user) {
+            utilisateurConnecte = authData.user;
+          } else if (authData.data && authData.data.user) {
+            utilisateurConnecte = authData.data.user;
+          }
+          
+          if (utilisateurConnecte) {
+            console.log('Utilisateur trouvé à l\'ouverture:', utilisateurConnecte);
+            console.log('ID utilisateur à l\'ouverture:', utilisateurConnecte.id_utilisateur);
+            
+            // Chercher l'ID dans toutes les propriétés si null
+            if (!utilisateurConnecte.id_utilisateur) {
+              for (const key in utilisateurConnecte) {
+                if (typeof utilisateurConnecte[key] === 'string' && utilisateurConnecte[key].includes('usr-')) {
+                  console.log(`ID trouvé à l'ouverture dans '${key}':`, utilisateurConnecte[key]);
+                  break;
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Erreur parsing auth à l\'ouverture:', error);
+        }
+      }
+
+      setShowPaymentPopup(true);
+
+      setSelectedActivite(activite);
+
+      return;
+
+    }
+
+
+
+    // Pour les autres activités, procéder normalement
 
     // Vérifier si l'utilisateur est connecté
 
@@ -927,6 +1046,271 @@ const Home = () => {
 
 
 
+  // Gérer le clic sur une méthode de paiement
+  const handleMethodeClick = (methode) => {
+    console.log('Design popup - Méthode cliquée:', methode.id, methode.nom);
+    
+    if (methode.id === 'mobile_money') {
+      // Si c'est Mobile Money, afficher les options détaillées pour choisir UN opérateur
+      console.log('Design popup - Clic sur Mobile Money, affichage des opérateurs pour choix unique');
+      setTimeout(() => setShowMobileMoneyOptions(true), 100);
+    } else {
+      // Pour les autres méthodes (Espèce, etc.), sélection directe sans Mobile Money
+      console.log('Design popup - Méthode choisie (pas Mobile Money):', methode.nom);
+      
+      // 🆕 Stocker la méthode de paiement sélectionnée
+      setSelectedMethodePaiement(methode.nom);
+      
+      // S'assurer que les options Mobile Money sont fermées
+      setShowMobileMoneyOptions(false);
+      
+      // Réinitialiser tous les autres boutons
+      const allBtns = document.querySelectorAll('.payment-method-btn');
+      allBtns.forEach(btn => {
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+        btn.style.border = '2px solid #e2e8f0';
+        const methodeName = btn.querySelector('span:last-child')?.textContent || '';
+        const methodeIcon = btn.querySelector('span:first-child')?.textContent || '💳';
+        btn.innerHTML = `<span>${methodeIcon}</span><span>${methodeName}</span>`;
+      });
+      
+      // Mettre en surbrillance le bouton sélectionné
+      const selectedBtn = document.querySelector(`.payment-method-btn[key="${methode.id}"]`);
+      if (selectedBtn) {
+        selectedBtn.style.background = 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)';
+        selectedBtn.style.color = 'white';
+        selectedBtn.style.borderColor = '#1d4ed8';
+        selectedBtn.innerHTML = `<span>${methode.displayIcon || '💳'}</span><span>${methode.nom} ✓</span>`;
+        
+        // Garder le bouton en état sélectionné (pas de réinitialisation)
+        // L'utilisateur verra que son choix est bien enregistré
+      }
+    }
+  };
+
+  // Gérer le choix d'un opérateur mobile money
+  const handleMobileMoneyChoice = (operator) => {
+    console.log('Design popup - Opérateur choisi:', operator);
+    
+    // 🆕 Stocker l'opérateur mobile money choisi
+    setSelectedMethodePaiement(operator);
+    
+    // Réinitialiser tous les autres boutons d'opérateurs
+    const allOperatorBtns = document.querySelectorAll('.mobile-money-operator-btn');
+    allOperatorBtns.forEach(btn => {
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+      btn.style.border = '2px solid #0ea5e9';
+      const operatorName = btn.querySelector('span:last-child')?.textContent || '';
+      btn.innerHTML = `<span>📱</span><span>${operatorName}</span>`;
+    });
+    
+    // Mettre en surbrillance le bouton sélectionné
+    const selectedBtn = document.querySelector(`.mobile-money-operator-btn:nth-child(${methodesPaiement.find(m => m.id === 'mobile_money')?.types?.indexOf(operator) + 1})`);
+    if (selectedBtn) {
+      selectedBtn.style.background = 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)';
+      selectedBtn.style.color = 'white';
+      selectedBtn.style.borderColor = '#0284c7';
+      selectedBtn.innerHTML = `<span>📱</span><span>${operator} ✓</span>`;
+    }
+    
+    // Ne fermer que si le paiement est vraiment effectué
+    // Pour l'instant, juste garder le popup ouvert avec le choix visible
+    // handlePayment(selectedActivite, operator);
+    // setShowMobileMoneyOptions(false);
+    // setShowPaymentPopup(false);
+    // setSelectedActivite(null);
+  };
+
+  // Gérer le paiement pour les formations
+  const handlePayment = async (activite, methodePaiement = 'Mobile Money') => {
+    try {
+      console.log('=== CLIC SUR PAYER MAINTENANT ===');
+      
+      // Afficher l'ID utilisateur connecté simplement
+      const auth = localStorage.getItem('auth') || sessionStorage.getItem('auth');
+      const member = localStorage.getItem('member') || sessionStorage.getItem('member');
+      
+      console.log('=== DONNÉES BRUTES DE STOCKAGE ===');
+      console.log('localStorage.auth:', localStorage.getItem('auth'));
+      console.log('sessionStorage.auth:', sessionStorage.getItem('auth'));
+      console.log('localStorage.member:', localStorage.getItem('member'));
+      console.log('sessionStorage.member:', sessionStorage.getItem('member'));
+      console.log('Auth brut choisi:', auth);
+      console.log('Member brut choisi:', member);
+      
+      let utilisateurConnecte = null;
+      let idUtilisateurTrouve = null;
+      
+      // Priorité aux données member (où se trouvent vraiment les infos utilisateur)
+      let dataSource = null;
+      if (member) {
+        dataSource = member;
+        console.log('Source utilisée: member');
+      } else if (auth) {
+        dataSource = auth;
+        console.log('Source utilisée: auth');
+      }
+      
+      if (dataSource) {
+        try {
+          const userData = JSON.parse(dataSource);
+          console.log('=== ID UTILISATEUR CONNECTÉ ===');
+          console.log('UserData complet:', userData);
+          console.log('Type de UserData:', typeof userData);
+          console.log('Clés de UserData:', Object.keys(userData));
+          
+          // userData contient directement l'utilisateur
+          utilisateurConnecte = userData;
+          console.log('Utilisateur connecté:', utilisateurConnecte);
+          console.log('Type de utilisateurConnecte:', typeof utilisateurConnecte);
+          console.log('Clés de utilisateurConnecte:', Object.keys(utilisateurConnecte));
+          
+          // Chercher l'ID dans id_utilisateur d'abord
+          if (utilisateurConnecte.id_utilisateur) {
+            idUtilisateurTrouve = utilisateurConnecte.id_utilisateur;
+            console.log('ID utilisateur trouvé (id_utilisateur):', idUtilisateurTrouve);
+          } else if (utilisateurConnecte.id) {
+            idUtilisateurTrouve = utilisateurConnecte.id;
+            console.log('ID utilisateur trouvé (id):', idUtilisateurTrouve);
+          } else {
+            // Chercher dans d'autres propriétés
+            const possibleIds = ['user_id', 'userId', 'id_user'];
+            for (const prop of possibleIds) {
+              if (utilisateurConnecte[prop]) {
+                idUtilisateurTrouve = utilisateurConnecte[prop];
+                console.log(`ID utilisateur trouvé (${prop}):`, idUtilisateurTrouve);
+                break;
+              }
+            }
+            
+            // Si toujours pas trouvé, chercher partout
+            if (!idUtilisateurTrouve) {
+              for (const key in utilisateurConnecte) {
+                if (utilisateurConnecte[key] && typeof utilisateurConnecte[key] === 'string' && (utilisateurConnecte[key].includes('usr-') || utilisateurConnecte[key].includes('USR-'))) {
+                  idUtilisateurTrouve = utilisateurConnecte[key];
+                  console.log(`ID utilisateur trouvé (${key}):`, idUtilisateurTrouve);
+                  break;
+                }
+              }
+            }
+          }
+          
+          console.log('=== RÉSULTAT FINAL ===');
+          console.log('ID utilisateur connecté:', idUtilisateurTrouve);
+          
+          // Assigner l'ID pour le paiement
+          if (idUtilisateurTrouve) {
+            utilisateurConnecte.id_utilisateur = idUtilisateurTrouve;
+          }
+        } catch (error) {
+          console.error('Erreur parsing des données utilisateur:', error);
+        }
+      } else {
+        console.error('Aucune donnée utilisateur trouvée dans localStorage ou sessionStorage');
+      }
+
+      if (!utilisateurConnecte || !utilisateurConnecte.id_utilisateur) {
+        console.error('ID utilisateur non trouvé');
+        alert('Erreur: ID utilisateur non trouvé. Veuillez vous reconnecter.');
+        return;
+      }
+
+      console.log('Activité:', activite);
+      console.log('Utilisateur final pour paiement:', utilisateurConnecte);
+      console.log('ID utilisé pour paiement:', utilisateurConnecte.id_utilisateur);
+
+      // Étape 1: Créer le paiement D'ABORD avec l'ID utilisateur
+      console.log('Création du paiement en premier...');
+      
+      // Validation de l'ID utilisateur
+      console.log('=== DÉBUGGING ID UTILISATEUR ===');
+      console.log('utilisateurConnecte complet:', JSON.stringify(utilisateurConnecte, null, 2));
+      console.log('utilisateurConnecte.id_utilisateur:', utilisateurConnecte.id_utilisateur);
+      console.log('Type de utilisateurConnecte.id_utilisateur:', typeof utilisateurConnecte.id_utilisateur);
+      console.log('utilisateurConnecte.id:', utilisateurConnecte.id);
+      console.log('Type de utilisateurConnecte.id:', typeof utilisateurConnecte.id);
+      
+      if (!utilisateurConnecte.id_utilisateur && !utilisateurConnecte.id) {
+        console.error('Aucun ID trouvé dans id_utilisateur ni id');
+        console.log('Propriétés disponibles:', Object.keys(utilisateurConnecte));
+        
+        // Chercher manuellement l'ID
+        for (const key in utilisateurConnecte) {
+          const value = utilisateurConnecte[key];
+          console.log(`Propriété ${key}:`, value, `(type: ${typeof value})`);
+          if (typeof value === 'string' && (value.includes('USR-') || value.includes('usr-'))) {
+            console.log(`ID TROUVÉ dans ${key}:`, value);
+            utilisateurConnecte.id_utilisateur = value;
+            break;
+          }
+        }
+      }
+      
+      if (!utilisateurConnecte.id_utilisateur) {
+        console.error('ID utilisateur toujours manquant après recherche');
+        console.error('utilisateurConnecte après recherche:', utilisateurConnecte);
+        alert('Erreur: ID utilisateur non trouvé. Veuillez vous reconnecter.');
+        return;
+      }
+      
+      const paiementData = {
+        id_utilisateur: utilisateurConnecte.id_utilisateur,
+        id_activite: activite.id_activite,
+        montant: activite.prix || activite.montant_a_payer || 0,
+        description: `Paiement formation: ${activite.titre_activite}`,
+        methode_paiement: methodePaiement, // 🆕 Ajout de la méthode de paiement
+        reference_paiement: `REF-${Date.now()}` // 🆕 Référence automatique
+      };
+
+      console.log('=== DONNÉES ENVOYÉES AU BACKEND ===');
+      console.log('paiementData complet:', JSON.stringify(paiementData, null, 2));
+      console.log('id_utilisateur envoyé:', paiementData.id_utilisateur);
+      console.log('Type id_utilisateur envoyé:', typeof paiementData.id_utilisateur);
+      console.log('id_activite envoyé:', paiementData.id_activite);
+      console.log('Type id_activite envoyé:', typeof paiementData.id_activite);
+
+      const paiementResponse = await fetch(`${process.env.REACT_APP_API_URL}/public/formation/paiement`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${utilisateurConnecte.token || ''}`
+        },
+        body: JSON.stringify(paiementData)
+      });
+
+      const paiementResult = await paiementResponse.json();
+      console.log('Réponse paiement:', paiementResult);
+
+      if (!paiementResult.success) {
+        console.error('Erreur lors du paiement:', paiementResult.message);
+        alert(`Erreur: ${paiementResult.message}`);
+        return;
+      }
+
+      console.log('Paiement créé avec succès:', paiementResult.data);
+
+      // Succès - le backend a déjà créé l'inscription automatiquement
+      alert(`Paiement de ${paiementData.montant} ${activite.devise || 'MGA'} et inscription réussis!`);
+      
+      // Fermer le popup
+      setShowPaymentPopup(false);
+      setShowMobileMoneyOptions(false);
+      setSelectedActivite(null);
+      
+      // Optionnel: recharger les données
+      // window.location.reload();
+
+    } catch (error) {
+      console.error('Erreur lors du paiement:', error);
+      alert('Erreur: Une erreur est survenue lors du paiement');
+    }
+  };
+
+
   return (
     <div className="home-container">
       {/* Header complet via NavigationMembre */}
@@ -947,37 +1331,6 @@ const Home = () => {
             />
             <button className="search-btn">Rechercher</button>
           </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section className="services-section">
-        <div className="section-header">
-          <h2>Nos Services</h2>
-          <a href="#" className="see-all">Voir tout</a>
-        </div>
-        
-        <div className="services-grid">
-          {destinations.map(dest => (
-            <div key={dest.id} className="service-card" onClick={() => handleActiviteClick(dest.id)}>
-              <div className="service-image">
-                {dest.image ? (
-                  dest.isBase64 ? (
-                    <img src={dest.image} alt={dest.name} className="service-img" />
-                  ) : (
-                    <img src={activiteService.getImageUrl(dest.image)} alt={dest.name} className="service-img" />
-                  )
-                ) : (
-                  <div className="service-fallback">🏨</div>
-                )}
-              </div>
-              <div className="service-content">
-                <h3>{dest.name}</h3>
-                <p className="service-price">{dest.price || 'Gratuit'}</p>
-                <p className="service-location">📍 {dest.lieu || 'En ligne'}</p>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -1063,7 +1416,37 @@ const Home = () => {
                   <h3>{pkg.name}</h3>
                   <p className="activity-price">{pkg.price}</p>
                   <p className="activity-location">📍 {pkg.lieu}</p>
-                  <button className="activity-btn">Voir détails</button>
+                  <div className="activity-actions">
+                    <button 
+                      className={`participer-btn-small ${pkg.isRegistered ? 'registered' : ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (pkg.isRegistered) {
+                          handleDesinscrire(pkg.id);
+                        } else {
+                          handleParticiper(pkg.id);
+                        }
+                      }}
+                      disabled={submittingId === pkg.id}
+                    >
+                      {submittingId === pkg.id ? '⏳ Chargement...' : (pkg.isRegistered ? '✅ Inscrit' : '🎯 Participer')}
+                    </button>
+                    
+                    <div className="action-buttons-row">
+                      <button 
+                        className="see-map-btn-small" 
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleActiviteClick(pkg.id); }}
+                      >
+                        📋 Détails
+                      </button>
+                      <button 
+                        className="see-map-btn-small" 
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
+                      >
+                        🗺️ Carte
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -1161,116 +1544,6 @@ const Home = () => {
 
 
 
-      {/* New Packages Section */}
-
-      <section className="new-packages-section">
-
-        <div className="section-header">
-
-          <h2>Nouveaux services ajoutés</h2>
-
-          <a href="#" className="see-all">Voir tout</a>
-
-        </div>
-
-
-
-        <div className="new-packages-grid">
-
-          {newPackages.map(pkg => (
-
-            <div key={pkg.id} className="new-package-card">
-
-              <div className="new-package-image">
-
-                {pkg.image ? (
-
-                  pkg.isBase64 ? (
-
-                    <img src={pkg.image} alt={pkg.titre} className="activity-image-small" />
-
-                  ) : (
-
-                    <img src={activiteService.getImageUrl(pkg.image)} alt={pkg.titre} className="activity-image-small" />
-
-                  )
-
-                ) : (
-
-                  pkg.image || "🎯"
-
-                )}
-
-              </div>
-
-              <p className="new-package-price">{pkg.price}</p>
-
-              <p className="new-package-title">{pkg.titre}</p>
-
-              <p className="new-package-date">
-
-                📅 {activiteService.formatDateShort(pkg.date)}
-
-              </p>
-
-              <p className="new-package-participants">
-
-                👥 {pkg.nombre_participants} participant{pkg.nombre_participants > 1 ? 's' : ''}
-
-              </p>
-
-              <div className="new-package-actions">
-
-                <button 
-
-                  className={`participer-btn-small ${pkg.isRegistered ? 'registered' : ''}`}
-
-                  onClick={() => {
-
-                    if (pkg.isRegistered) {
-
-                      handleDesinscrire(pkg.id);
-
-                    } else {
-
-                      handleParticiper(pkg.id);
-
-                    }
-
-                  }}
-
-                  disabled={submittingId === pkg.id}
-
-                >
-
-                  {submittingId === pkg.id ? 'Inscription...' : (pkg.isRegistered ? 'Vous êtes participant' : 'Participez')}
-
-                </button>
-
-                <button 
-
-                  className="see-map-btn-small" 
-
-                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
-
-                >
-
-                  🗺️ Voir sur la carte
-
-                </button>
-
-              </div>
-
-            </div>
-
-          ))}
-
-        </div>
-
-      </section>
-
-
-
       {/* Information & Guide Section */}
 
       <section className="info-guide-section">
@@ -1300,6 +1573,109 @@ const Home = () => {
       {/* Map Section with Search Results */}
 
       {/* Moved to MapSearch page */}
+
+      {/* Popup de paiement pour les formations */}
+      {showPaymentPopup && selectedActivite && (
+        <div className="payment-popup-overlay">
+          <div className="payment-popup">
+            <div className="payment-popup-header">
+              <h3>💳 Paiement requis</h3>
+              <button 
+                className="close-popup-btn" 
+                onClick={() => {
+                  setShowPaymentPopup(false);
+                  setSelectedActivite(null);
+                  setShowMobileMoneyOptions(false);
+                }}
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="payment-popup-content">
+              <div className="formation-info">
+                <h4>{selectedActivite.titre_activite}</h4>
+                <p className="formation-description">{selectedActivite.description}</p>
+              </div>
+              
+              <div className="price-info">
+                <div className="price-row">
+                  <span>Prix de la formation:</span>
+                  <span className="price-amount">
+                    {selectedActivite.prix ? `${selectedActivite.prix} ${selectedActivite.devise || 'MGA'}` : selectedActivite.prix_formate || `${selectedActivite.montant_a_payer || 0} ${selectedActivite.devise || 'MGA'}`}
+                  </span>
+                </div>
+                {selectedActivite.description_prix && (
+                  <p className="price-description">{selectedActivite.description_prix}</p>
+                )}
+              </div>
+              
+              {/* Méthodes de paiement en haut */}
+              <div className="payment-methods">
+                <h4>Méthodes de paiement disponibles:</h4>
+                <div className="payment-options">
+                  {methodesPaiement.map((methode) => (
+                    <button 
+                      key={methode.id} 
+                      className="payment-method-btn"
+                      onClick={() => handleMethodeClick(methode)}
+                    >
+                      <span>{methode.displayIcon || '💳'}</span>
+                      <span>{methode.nom}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Options Mobile Money détaillées */}
+              {showMobileMoneyOptions && (
+                <div className="mobile-money-options">
+
+                  <h5>Sélectionnez votre opérateur Mobile Money</h5>
+                  <div className="mobile-money-operators">
+                    {methodesPaiement.find(m => m.id === 'mobile_money')?.types?.map((operator, index) => (
+                      <button 
+                        key={index}
+                        className="mobile-money-operator-btn"
+                        onClick={() => handleMobileMoneyChoice(operator)}
+                      >
+                        <span>📱</span>
+                        <span>{operator}</span>
+                      </button>
+                    ))}
+                    <button 
+                      className="mobile-money-back-btn"
+                      onClick={() => setShowMobileMoneyOptions(false)}
+                    >
+                      <span></span>
+                      <span>Retour aux méthodes de paiement</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              <div className="payment-actions">
+                <button 
+                  className="cancel-btn"
+                  onClick={() => {
+                    setShowPaymentPopup(false);
+                    setSelectedActivite(null);
+                    setShowMobileMoneyOptions(false);
+                  }}
+                >
+                  Annuler
+                </button>
+                <button 
+                  className="pay-btn"
+                  onClick={() => handlePayment(selectedActivite, selectedMethodePaiement)}
+                >
+                  Payer maintenant
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
 

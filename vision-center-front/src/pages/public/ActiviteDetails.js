@@ -90,11 +90,172 @@ const ActiviteDetails = () => {
 
   const [showVideoPopup, setShowVideoPopup] = useState(false);
 
+  const [isUserRegistered, setIsUserRegistered] = useState(false);
+
 
 
   // Image améliorée pour Vision Center Madagascar
 
   const improvedImageBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjNjY3ZWVhIi8+PC9zdmc+";
+
+
+
+  // Vérifier si l'utilisateur est inscrit à l'activité
+  const checkUserRegistration = async (activiteId) => {
+    try {
+      // Récupérer l'ID utilisateur depuis localStorage/sessionStorage
+      const member = localStorage.getItem('member') || sessionStorage.getItem('member');
+      const memberData = member ? JSON.parse(member) : null;
+      
+      if (!memberData || !memberData.id) {
+        console.log('Utilisateur non connecté');
+        return;
+      }
+
+      let utilisateurId = memberData.id;
+      
+      // Fallback: essayer de récupérer depuis les autres propriétés
+      if (!utilisateurId && memberData) {
+        if (memberData.member?.id) {
+          utilisateurId = memberData.member.id;
+        } else if (memberData.id_utilisateur) {
+          utilisateurId = memberData.id_utilisateur;
+        } else if (memberData.email) {
+          // Extraire l'ID depuis l'email (format: USR-X)
+          const emailMatch = memberData.email.match(/USR-(\d+)/);
+          if (emailMatch) {
+            utilisateurId = 'USR-' + emailMatch[1];
+          }
+        }
+      }
+
+      if (!utilisateurId) {
+        console.log('ID utilisateur non trouvé');
+        return;
+      }
+
+      // Appeler l'API pour vérifier l'inscription
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/public/inscriptions/verifier/${activiteId}/${utilisateurId}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        setIsUserRegistered(data.isRegistered);
+        console.log(`Utilisateur ${data.isRegistered ? 'INSCRIT' : 'NON INSCRIT'} à l'activité ${activiteId}`);
+      } else {
+        console.error('Erreur vérification inscription:', response.status);
+        setIsUserRegistered(false);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la vérification d\'inscription:', error);
+      setIsUserRegistered(false);
+    }
+  };
+
+
+
+  // Charger les exigences pour un type d'activité
+  const loadExigencesForType = async (idType) => {
+    try {
+      setLoadingExigences(true);
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/public/exigences/type/${idType}`);
+      
+      if (response.ok) {
+        const exigencesData = await response.json();
+        setExigences(exigencesData);
+        console.log(`Exigences pour l'activité de type ${idType}:`, exigencesData);
+      } else {
+        console.error('Erreur chargement exigences:', response.status);
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement des exigences:', error);
+    } finally {
+      setLoadingExigences(false);
+    }
+  };
+
+
+
+  // Charger les ressources (documents et vidéos) pour une activité
+  const loadRessourcesForActivite = async (activiteId) => {
+    try {
+      setLoadingRessources(true);
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+      
+      // DONNÉES DE TEST - Pour voir le design dans le front
+      console.log('🧪 Utilisation des données de test pour les ressources');
+      
+      // Documents de test selon le type d'activité
+      const testDocuments = [
+        {
+          id: 1,
+          titre: "Guide de Prière Quotidienne",
+          taille: "PDF - 2.3 MB",
+          url: "https://example.com/guide-priere.pdf",
+          type: "guide"
+        },
+        {
+          id: 2,
+          titre: "Paroles Bibliques du Jour",
+          taille: "PDF - 1.5 MB", 
+          url: "https://example.com/paroles-bibliques.pdf",
+          type: "lecture"
+        },
+        {
+          id: 3,
+          titre: "Exercices de Méditation",
+          taille: "PDF - 3.1 MB",
+          url: "https://example.com/exercices-meditation.pdf", 
+          type: "exercice"
+        }
+      ];
+      
+      // Vidéos de test selon le type d'activité - VIDÉOS EN LIGNE RÉELLES
+      const testVideos = [
+        {
+          id: 1,
+          titre: "Introduction à la Prière Chrétienne",
+          duree: "15 min",
+          url: "https://www.youtube.com/watch?v=O9xK4JhQv0", // Vidéo réelle de prière
+          type: "introduction"
+        },
+        {
+          id: 2,
+          titre: "Méditation Guidée - Paix Intérieure",
+          duree: "30 min",
+          url: "https://www.youtube.com/watch?v=6p_62X2J3E", // Méditation chrétienne
+          type: "meditation"
+        },
+        {
+          id: 3,
+          titre: "Étude Biblique - La Foi et l'Espérance",
+          duree: "45 min",
+          url: "https://www.youtube.com/watch?v=XH8r5kYk9o", // Étude biblique
+          type: "etude"
+        }
+      ];
+      
+      // Simuler un délai de chargement pour voir l'effet
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Appliquer les données de test pour voir dans le front
+      setDocuments(testDocuments);
+      setVideos(testVideos);
+      
+      console.log(`📚 Documents de test chargés:`, testDocuments);
+      console.log(`🎥 Vidéos de test chargées:`, testVideos);
+      console.log(`🔍 Nombre de documents:`, testDocuments.length);
+      console.log(`🔍 Nombre de vidéos:`, testVideos.length);
+      
+    } catch (error) {
+      console.error('Erreur chargement ressources:', error);
+      setDocuments([]);
+      setVideos([]);
+    } finally {
+      setLoadingRessources(false);
+    }
+  };
 
 
 
@@ -152,6 +313,12 @@ const ActiviteDetails = () => {
 
         
 
+        // Vérifier si l'utilisateur est inscrit à l'activité
+
+        checkUserRegistration(activiteData.id_activite);
+
+        
+
       } catch (err) {
 
         setError("Erreur lors du chargement des détails de l'activité");
@@ -174,262 +341,8 @@ const ActiviteDetails = () => {
 
 
 
-  // Charger les exigences pour un type d'activité
-
-  const loadExigencesForType = async (idType) => {
-
-    try {
-
-      setLoadingExigences(true);
-
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-
-      const response = await fetch(`${apiUrl}/public/exigences/type/${idType}`);
-
-      
-
-      if (response.ok) {
-
-        const exigencesData = await response.json();
-
-        setExigences(exigencesData);
-
-        console.log(`Exigences pour l'activité de type ${idType}:`, exigencesData);
-
-      } else {
-
-        console.error('Erreur chargement exigences:', response.status);
-
-      }
-
-    } catch (error) {
-
-      console.error('Erreur lors du chargement des exigences:', error);
-
-    } finally {
-
-      setLoadingExigences(false);
-
-    }
-
-  };
-
-
-
-  // Charger les ressources (documents et vidéos) pour une activité
-
-  const loadRessourcesForActivite = async (activiteId) => {
-
-    try {
-
-      setLoadingRessources(true);
-
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-
-      
-
-      // DONNÉES DE TEST - Pour voir le design dans le front
-
-      console.log('🧪 Utilisation des données de test pour les ressources');
-
-      
-
-      // Documents de test selon le type d'activité
-
-      const testDocuments = [
-
-        {
-
-          id: 1,
-
-          titre: "Guide de Prière Quotidienne",
-
-          taille: "PDF - 2.3 MB",
-
-          url: "https://example.com/guide-priere.pdf",
-
-          type: "guide"
-
-        },
-
-        {
-
-          id: 2,
-
-          titre: "Paroles Bibliques du Jour",
-
-          taille: "PDF - 1.5 MB", 
-
-          url: "https://example.com/paroles-bibliques.pdf",
-
-          type: "lecture"
-
-        },
-
-        {
-
-          id: 3,
-
-          titre: "Exercices de Méditation",
-
-          taille: "PDF - 3.1 MB",
-
-          url: "https://example.com/exercices-meditation.pdf", 
-
-          type: "exercice"
-
-        }
-
-      ];
-
-      
-
-      // Vidéos de test selon le type d'activité - VIDÉOS EN LIGNE RÉELLES
-
-      const testVideos = [
-
-        {
-
-          id: 1,
-
-          titre: "Introduction à la Prière Chrétienne",
-
-          duree: "15 min",
-
-          url: "https://www.youtube.com/watch?v=O9xK4JhQv0", // Vidéo réelle de prière
-
-          type: "introduction"
-
-        },
-
-        {
-
-          id: 2,
-
-          titre: "Méditation Guidée - Paix Intérieure",
-
-          duree: "30 min",
-
-          url: "https://www.youtube.com/watch?v=6p_62X2J3E", // Méditation chrétienne
-
-          type: "meditation"
-
-        },
-
-        {
-
-          id: 3,
-
-          titre: "Étude Biblique - La Foi et l'Espérance",
-
-          duree: "45 min",
-
-          url: "https://www.youtube.com/watch?v=XH8r5kYk9o", // Étude biblique
-
-          type: "etude"
-
-        }
-
-      ];
-
-      
-
-      // Simuler un délai de chargement pour voir l'effet
-
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      
-
-      // Appliquer les données de test pour voir dans le front
-
-      setDocuments(testDocuments);
-
-      setVideos(testVideos);
-
-      
-
-      console.log(`📚 Documents de test chargés:`, testDocuments);
-
-      console.log(`🎥 Vidéos de test chargées:`, testVideos);
-
-      console.log(`🔍 Nombre de documents:`, testDocuments.length);
-
-      console.log(`🔍 Nombre de vidéos:`, testVideos.length);
-
-      
-
-      // API RÉELLE - À décommenter quand l'API est prête
-
-      /*
-
-       // Charger les documents
-
-       const documentsResponse = await fetch(`${apiUrl}/public/activites/${activiteId}/documents`);
-
-       if (documentsResponse.ok) {
-
-         const documentsData = await documentsResponse.json();
-
-         setDocuments(documentsData);
-
-         console.log(`Documents pour l'activité ${activiteId}:`, documentsData);
-
-       } else {
-
-         console.log('Aucun document trouvé ou erreur:', documentsResponse.status);
-
-         setDocuments([]);
-
-       }
-
-       
-
-       // Charger les vidéos
-
-       const videosResponse = await fetch(`${apiUrl}/public/activites/${activiteId}/videos`);
-
-       if (videosResponse.ok) {
-
-         const videosData = await videosResponse.json();
-
-         setVideos(videosData);
-
-         console.log(`Vidéos pour l'activité ${activiteId}:`, videosData);
-
-       } else {
-
-         console.log('Aucune vidéo trouvée ou erreur:', videosResponse.status);
-
-         setVideos([]);
-
-       }
-
-       */
-
-      
-
-    } catch (error) {
-
-      console.error('Erreur chargement ressources:', error);
-
-      setDocuments([]);
-
-      setVideos([]);
-
-    } finally {
-
-      setLoadingRessources(false);
-
-    }
-
-  };
-
-
-
   const handleInscription = () => {
-
     navigate(`/inscription/${id}`);
-
   };
 
 
@@ -880,9 +793,62 @@ const ActiviteDetails = () => {
 
 
 
+          {/* Description - TOUJOURS visible */}
+
+          <div className="activite-details-description">
+
+            <h2>Description</h2>
+
+            <p>{activite.description}</p>
+
+          </div>
+
+
+
+          {/* Message pour les formations non inscrites */}
+
+          {typesActivites.find(t => t.id === activite.id_type)?.libelle_type?.toLowerCase() === 'formation' && !isUserRegistered && (
+
+            <div className="formation-access-message" style={{background: '#fff3cd', padding: '20px', margin: '20px 0', borderRadius: '8px', border: '2px solid #ffc107', textAlign: 'center'}}>
+
+              <h3 style={{color: '#856404', marginBottom: '10px'}}>🔒 Accès Restreint</h3>
+
+              <p style={{color: '#856404', fontSize: '16px', marginBottom: '15px'}}>
+
+                Vous devez être inscrit à cette formation pour accéder aux ressources (vidéos, documents, objectifs).
+
+              </p>
+
+              <div style={{marginTop: '15px'}}>
+
+                <button 
+
+                  onClick={() => navigate(`/inscription/${id}`)} 
+
+                  className="btn btn-primary btn-large"
+
+                  style={{background: '#ffc107', color: '#000', border: 'none', padding: '12px 24px'}}
+
+                >
+
+                  S'inscrire à la formation
+
+                </button>
+
+              </div>
+
+            </div>
+
+          )}
+
+
+
+          
+
+
           {/* Sections spécifiques selon le type d'activité */}
 
-          {typesActivites.find(t => t.id === activite.id_type)?.libelle_type?.toLowerCase() === 'formation' && (
+          {typesActivites.find(t => t.id === activite.id_type)?.libelle_type?.toLowerCase() === 'formation' && isUserRegistered && (
 
             <div className="activite-details-formation">
 
@@ -1002,545 +968,15 @@ const ActiviteDetails = () => {
 
 
 
-          {typesActivites.find(t => t.id === activite.id_type)?.libelle_type?.toLowerCase() === 'rencontre' && (
+          
 
-            <div className="activite-details-rencontre">
 
-              <h2>🙏 Détails de la Rencontre Spirituelle</h2>
+          
 
-              <div className="rencontre-content">
 
-                <div className="rencontre-lieu">
+          {/* Objectifs - SEULEMENT pour les formations */}
 
-                  <h3>📍 Lieu de Rencontre</h3>
-
-                  <div className="lieu-details">
-
-                    <div className="lieu-info">
-
-                      <p className="lieu-nom">{activite.lieu_activite}</p>
-
-                      <p className="lieu-adresse">Adresse complète du lieu</p>
-
-                      <p className="lieu-horaires">Ouverture: 30 min avant</p>
-
-                    </div>
-
-                    <button className="voir-carte-btn">🗺️ Voir sur la carte</button>
-
-                  </div>
-
-                </div>
-
-                <div className="rencontre-programme">
-
-                  <h3>📅 Programme Spirituel</h3>
-
-                  <div className="programme-items">
-
-                    <div className="programme-item">
-
-                      <span className="time">14:00</span>
-
-                      <div className="programme-content">
-
-                        <h4>Accueil et prière d'ouverture</h4>
-
-                        <p>Moment de recueillement et bienvenue</p>
-
-                      </div>
-
-                    </div>
-
-                    <div className="programme-item">
-
-                      <span className="time">14:30</span>
-
-                      <div className="programme-content">
-
-                        <h4>Partage spirituel</h4>
-
-                        <p>Thème: La foi et la persévérance</p>
-
-                      </div>
-
-                    </div>
-
-                    <div className="programme-item">
-
-                      <span className="time">15:30</span>
-
-                      <div className="programme-content">
-
-                        <h4>Méditation guidée</h4>
-
-                        <p>Session de méditation collective</p>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-                <div className="rencontre-recommandations">
-
-                  <h3>💡 Recommandations</h3>
-
-                  <div className="recommandations-list">
-
-                    <div className="recommandation-item">
-
-                      <span className="rec-icon">👕</span>
-
-                      <p>Tenue vestimentaire modeste et respectueuse</p>
-
-                    </div>
-
-                    <div className="recommandation-item">
-
-                      <span className="rec-icon">📿</span>
-
-                      <p>Apporter votre Bible ou livre spirituel</p>
-
-                    </div>
-
-                    <div className="recommandation-item">
-
-                      <span className="rec-icon">🙏</span>
-
-                      <p>Venir avec un cœur ouvert et humble</p>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-                
-
-                {/* Ressources pour les rencontres */}
-
-                {(documents.length > 0 || videos.length > 0) && (
-
-                  <div className="rencontre-ressources">
-
-                    <h3>📚 Ressources Spirituelles</h3>
-
-                    {videos.length > 0 && (
-
-                      <div className="resource-section">
-
-                        <h4>🎥 Vidéos de Méditation</h4>
-
-                        <div className="videos-grid">
-
-                          {videos.map((video, index) => (
-
-                            <div key={index} className="video-item">
-
-                              <div className="video-thumbnail">
-
-                                <span className="play-icon">▶️</span>
-
-                              </div>
-
-                              <div className="video-info">
-
-                                <h4>{video.titre || `Méditation ${index + 1}`}</h4>
-
-                                <p className="video-duration">{video.duree || 'Durée non spécifiée'}</p>
-
-                                {video.url && (
-
-                                  <a href={video.url} target="_blank" rel="noopener noreferrer" className="video-link">
-
-                                    Regarder
-
-                                  </a>
-
-                                )}
-
-                              </div>
-
-                            </div>
-
-                          ))}
-
-                        </div>
-
-                      </div>
-
-                    )}
-
-                    {documents.length > 0 && (
-
-                      <div className="resource-section">
-
-                        <h4>📄 Documents de Prière</h4>
-
-                        <div className="documents-list">
-
-                          {documents.map((doc, index) => (
-
-                            <div key={index} className="document-item">
-
-                              <span className="doc-icon">📄</span>
-
-                              <div className="doc-info">
-
-                                <h4>{doc.titre || `Document ${index + 1}`}</h4>
-
-                                <p className="doc-size">{doc.taille || 'PDF'}</p>
-
-                              </div>
-
-                              {doc.url && (
-
-                                <a href={doc.url} target="_blank" rel="noopener noreferrer" className="download-btn">
-
-                                  Télécharger
-
-                                </a>
-
-                              )}
-
-                            </div>
-
-                          ))}
-
-                        </div>
-
-                      </div>
-
-                    )}
-
-                  </div>
-
-                )}
-
-              </div>
-
-            </div>
-
-          )}
-
-
-
-          {typesActivites.find(t => t.id === activite.id_type)?.libelle_type?.toLowerCase() === 'evenement' && (
-
-            <div className="activite-details-evenement">
-
-              <h2>🎉 Détails de l'Événement</h2>
-
-              <div className="evenement-content">
-
-                <div className="evenement-lieu">
-
-                  <h3>📍 Lieu de l'Événement</h3>
-
-                  <div className="lieu-details">
-
-                    <div className="lieu-info">
-
-                      <p className="lieu-nom">{activite.lieu_activite}</p>
-
-                      <p className="lieu-adresse">Adresse complète de l'événement</p>
-
-                      <p className="lieu-acces">Accès: Transport public disponible</p>
-
-                    </div>
-
-                    <button className="voir-carte-btn">🗺️ Voir sur la carte</button>
-
-                  </div>
-
-                </div>
-
-                <div className="evenement-activites">
-
-                  <h3>🎯 Ce qu'on ferait</h3>
-
-                  <div className="activites-list">
-
-                    <div className="activite-item">
-
-                      <span className="activite-icon">🎵</span>
-
-                      <div className="activite-content">
-
-                        <h4>Musique et chants</h4>
-
-                        <p>Session de louange et adoration</p>
-
-                      </div>
-
-                    </div>
-
-                    <div className="activite-item">
-
-                      <span className="activite-icon">🍽️</span>
-
-                      <div className="activite-content">
-
-                        <h4>Partage de repas</h4>
-
-                        <p>Moment de communion et fraternité</p>
-
-                      </div>
-
-                    </div>
-
-                    <div className="activite-item">
-
-                      <span className="activite-icon">🎪</span>
-
-                      <div className="activite-content">
-
-                        <h4>Activités pour enfants</h4>
-
-                        <p>Programme spécial pour les plus jeunes</p>
-
-                      </div>
-
-                    </div>
-
-                    <div className="activite-item">
-
-                      <span className="activite-icon">🎁</span>
-
-                      <div className="activite-content">
-
-                        <h4>Distribution de cadeaux</h4>
-
-                        <p>Partage de bénédictions matérielles</p>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-                <div className="evenement-suggestions">
-
-                  <h3>💡 Ce qu'on devrait y mettre</h3>
-
-                  <div className="suggestions-list">
-
-                    <div className="suggestion-item">
-
-                      <span className="sug-icon">📸</span>
-
-                      <p>Zone photo pour immortaliser les moments</p>
-
-                    </div>
-
-                    <div className="suggestion-item">
-
-                      <span className="sug-icon">💺</span>
-
-                      <p>Sièges confortables pour tous</p>
-
-                    </div>
-
-                    <div className="suggestion-item">
-
-                      <span className="sug-icon">🎤</span>
-
-                      <p>Système sonore de qualité</p>
-
-                    </div>
-
-                    <div className="suggestion-item">
-
-                      <span className="sug-icon">🚻</span>
-
-                      <p>Installations sanitaires propres</p>
-
-                    </div>
-
-                    <div className="suggestion-item">
-
-                      <span className="sug-icon">♿️</span>
-
-                      <p>Accès pour personnes à mobilité réduite</p>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          )}
-
-
-
-          {/* SECTION PAR DÉFAUT - Ressources pour TOUS les types d'activités */}
-
-          {(documents.length > 0 || videos.length > 0) && (
-
-            <div className="activite-details-ressources">
-
-              <h2>📚 Ressources de l'Activité</h2>
-
-              
-
-              {/* Debug info */}
-
-              <div style={{background: '#f0f0f0', padding: '10px', margin: '10px 0', borderRadius: '5px'}}>
-
-                <p>🔍 Debug - Documents: {documents.length}, Vidéos: {videos.length}</p>
-
-                <p>📄 Premier document: {documents[0]?.titre}</p>
-
-                <p>🎥 Première vidéo: {videos[0]?.titre}</p>
-
-              </div>
-
-              
-
-              {/* Section Vidéos */}
-
-              {videos.length > 0 && (
-
-                <div className="resource-section">
-
-                  <h3>🎥 Vidéos Disponibles</h3>
-
-                  {loadingRessources ? (
-
-                    <div className="loading-ressources">Chargement des vidéos...</div>
-
-                  ) : (
-
-                    <div className="videos-grid">
-
-                      {videos.map((video, index) => (
-
-                        <div key={index} className="video-item" onClick={() => handleVideoClick(video)}>
-
-                          <div className="video-thumbnail">
-
-                            <span className="play-icon">▶️</span>
-
-                          </div>
-
-                          <div className="video-info">
-
-                            <h4>{video.titre || `Vidéo ${index + 1}`}</h4>
-
-                            <p className="video-duration">{video.duree || 'Durée non spécifiée'}</p>
-
-                            
-
-                            {/* Lien YouTube au lieu du lecteur intégré */}
-
-                            {video.url && (
-
-                              <a href={video.url} target="_blank" rel="noopener noreferrer" className="video-link" onClick={(e) => e.stopPropagation()}>
-
-                                Regarder sur YouTube
-
-                              </a>
-
-                            )}
-
-                          </div>
-
-                        </div>
-
-                      ))}
-
-                    </div>
-
-                  )}
-
-                </div>
-
-              )}
-
-              
-
-              {/* Section Documents */}
-
-              {documents.length > 0 && (
-
-                <div className="resource-section">
-
-                  <h3>📄 Documents à Télécharger</h3>
-
-                  {loadingRessources ? (
-
-                    <div className="loading-ressources">Chargement des documents...</div>
-
-                  ) : (
-
-                    <div className="documents-list">
-
-                      {documents.map((doc, index) => (
-
-                        <div key={index} className="document-item">
-
-                          <span className="doc-icon">📄</span>
-
-                          <div className="doc-info">
-
-                            <h4>{doc.titre || `Document ${index + 1}`}</h4>
-
-                            <p className="doc-size">{doc.taille || 'PDF'}</p>
-
-                          </div>
-
-                          {doc.url && (
-
-                            <a href={doc.url} target="_blank" rel="noopener noreferrer" className="download-btn">
-
-                              Télécharger
-
-                            </a>
-
-                          )}
-
-                        </div>
-
-                      ))}
-
-                    </div>
-
-                  )}
-
-                </div>
-
-              )}
-
-            </div>
-
-          )}
-
-
-
-          {/* Description */}
-
-          <div className="activite-details-description">
-
-            <h2>Description</h2>
-
-            <p>{activite.description}</p>
-
-          </div>
-
-
-
-          {/* Objectifs */}
-
-          {activite.objectifs && (
+          {typesActivites.find(t => t.id === activite.id_type)?.libelle_type?.toLowerCase() === 'formation' && isUserRegistered && activite.objectifs && (
 
             <div className="activite-details-objectifs">
 
@@ -1561,132 +997,6 @@ const ActiviteDetails = () => {
                 ))}
 
               </ul>
-
-            </div>
-
-          )}
-
-
-
-          {/* Exigences par type d'activité */}
-
-          <div className="activite-details-exigences">
-
-            <div className="exigences-header">
-
-              <h2>📋 Exigences pour cette activité</h2>
-
-              <button 
-
-                className="toggle-exigences-btn"
-
-                onClick={() => setShowExigences(!showExigences)}
-
-              >
-
-                {showExigences ? 'Masquer' : 'Afficher'} les exigences
-
-              </button>
-
-            </div>
-
-
-
-            {showExigences && (
-
-              <div className="exigences-content">
-
-                {loadingExigences ? (
-
-                  <div className="loading-exigences">
-
-                    <div className="loading-spinner">Chargement des exigences...</div>
-
-                  </div>
-
-                ) : exigences.length > 0 ? (
-
-                  <div className="exigences-grid">
-
-                    {exigences.map(exigence => (
-
-                      <div key={exigence.id_exigence} className="exigence-card">
-
-                        <div className="exigence-header">
-
-                          <div className="exigence-type">
-
-                            <span className={`type-badge ${exigence.type_exigence}`}>
-
-                              {exigence.type_exigence === 'document' ? '📄' : 
-
-                               exigence.type_exigence === 'materiel' ? '🔧' :
-
-                               exigence.type_exigence === 'information' ? 'ℹ️' : '📋'}
-
-                              {exigence.type_exigence}
-
-                            </span>
-
-                            <span className={`status-badge ${exigence.obligatoire ? 'obligatoire' : 'optionnel'}`}>
-
-                              {exigence.obligatoire ? '🔴 Obligatoire' : '🟡 Optionnel'}
-
-                            </span>
-
-                          </div>
-
-                        </div>
-
-                        <div className="exigence-content">
-
-                          <h4>{exigence.libelle_exigence}</h4>
-
-                          <p className="exigence-description">
-
-                            {exigence.description_exigence || 'Aucune description détaillée disponible.'}
-
-                          </p>
-
-                        </div>
-
-                      </div>
-
-                    ))}
-
-                  </div>
-
-                ) : (
-
-                  <div className="no-exigences-message">
-
-                    <div className="no-exigences-icon">📋</div>
-
-                    <h3>Aucune exigence spécifique</h3>
-
-                    <p>Cette activité ne nécessite aucune exigence particulière.</p>
-
-                  </div>
-
-                )}
-
-              </div>
-
-            )}
-
-          </div>
-
-
-
-          {/* Prérequis */}
-
-          {activite.prerequis && (
-
-            <div className="activite-details-prerequis">
-
-              <h2>Prérequis</h2>
-
-              <p>{activite.prerequis}</p>
 
             </div>
 
