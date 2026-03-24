@@ -181,7 +181,7 @@ const LocationSalle = () => {
           nom: salle.nom,
           capacite: salle.capacite,
           prix: `${salle.prix.toLocaleString()} Ar/jour`,
-          image: salle.image || 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop&auto=format',
+          image: salle.image_url || salle.image || 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop&auto=format',
           disponibilite: salle.disponibilite,
           equipements: salle.equipements || []
         }));

@@ -1336,6 +1336,135 @@ const Home = () => {
 
 
 
+      {/* Formation M.E.DI.A Section */}
+      <section className="packages-section">
+        <div className="section-header">
+          <h2>🎨 Formation M.E.DI.A</h2>
+          <div className="header-actions">
+            <span className="section-subtitle">Multimedia, Electronics, Digital Art</span>
+            <a href="#" className="see-all" onClick={(e) => { e.preventDefault(); }}>Voir tout</a>
+          </div>
+        </div>
+
+        <div className="packages-grid">
+          {/* Formation 1: Introduction à la 3D */}
+          <div className="activity-card" onClick={() => handleActiviteClick('media-3d')}>
+            <div className="activity-image">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23764ba2;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23grad1)'/%3E%3Ctext x='200' y='150' font-family='Arial' font-size='24' fill='white' text-anchor='middle'%3E%3Ctspan x='200' dy='-20'%3E%F0%9F%8E%A8%3C/tspan%3E%3Ctspan x='200' dy='40'%3EIntroduction%3C/tspan%3E%3Ctspan x='200' dy='30'%3E%C3%A0 la 3D%3C/tspan%3E%3C/text%3E%3C/svg%3E" alt="Introduction à la 3D" className="activity-img" />
+            </div>
+            <div className="activity-content">
+              <h3>Introduction à la 3D</h3>
+              <p className="activity-price">💰 50 000 MGA</p>
+              <p className="activity-location">📍 Lab Digital - Ankorondrano</p>
+              <div className="activity-actions">
+                <button 
+                  className="participer-btn-small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleParticiper('media-3d');
+                  }}
+                >
+                  🎯 Participer
+                </button>
+                
+                <div className="action-buttons-row">
+                  <button 
+                    className="see-map-btn-small" 
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleActiviteClick('media-3d'); }}
+                  >
+                    📋 Détails
+                  </button>
+                  <button 
+                    className="see-map-btn-small" 
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
+                  >
+                    🗺️ Carte
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Formation 2: Électronique de base */}
+          <div className="activity-card" onClick={() => handleActiviteClick('media-electronique')}>
+            <div className="activity-image">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Cdefs%3E%3ClinearGradient id='grad2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f59e0b;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23d97706;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23grad2)'/%3E%3Ctext x='200' y='150' font-family='Arial' font-size='24' fill='white' text-anchor='middle'%3E%3Ctspan x='200' dy='-20'%3E%F0%9F%94%8C%3C/tspan%3E%3Ctspan x='200' dy='40'%3E%C3%89lectronique%3C/tspan%3E%3Ctspan x='200' dy='30'%3Ede base%3C/tspan%3E%3C/text%3E%3C/svg%3E" alt="Électronique de base" className="activity-img" />
+            </div>
+            <div className="activity-content">
+              <h3>Électronique de base</h3>
+              <p className="activity-price">💰 45 000 MGA</p>
+              <p className="activity-location">📍 Lab Tech - Itaosy</p>
+              <div className="activity-actions">
+                <button 
+                  className="participer-btn-small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleParticiper('media-electronique');
+                  }}
+                >
+                  🎯 Participer
+                </button>
+                
+                <div className="action-buttons-row">
+                  <button 
+                    className="see-map-btn-small" 
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleActiviteClick('media-electronique'); }}
+                  >
+                    📋 Détails
+                  </button>
+                  <button 
+                    className="see-map-btn-small" 
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
+                  >
+                    🗺️ Carte
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Formation 3: Art Digital Créatif */}
+          <div className="activity-card" onClick={() => handleActiviteClick('media-art')}>
+            <div className="activity-image">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Cdefs%3E%3ClinearGradient id='grad3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ec4899;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23be185d;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23grad3)'/%3E%3Ctext x='200' y='150' font-family='Arial' font-size='24' fill='white' text-anchor='middle'%3E%3Ctspan x='200' dy='-20'%3E%F0%9F%8E%A8%3C/tspan%3E%3Ctspan x='200' dy='40'%3EArt Digital%3C/tspan%3E%3Ctspan x='200' dy='30'%3ECr%C3%A9atif%3C/tspan%3E%3C/text%3E%3C/svg%3E" alt="Art Digital Créatif" className="activity-img" />
+            </div>
+            <div className="activity-content">
+              <h3>Art Digital Créatif</h3>
+              <p className="activity-price">💰 60 000 MGA</p>
+              <p className="activity-location">📍 Studio Art - Mahamasina</p>
+              <div className="activity-actions">
+                <button 
+                  className="participer-btn-small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleParticiper('media-art');
+                  }}
+                >
+                  🎯 Participer
+                </button>
+                
+                <div className="action-buttons-row">
+                  <button 
+                    className="see-map-btn-small" 
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleActiviteClick('media-art'); }}
+                  >
+                    📋 Détails
+                  </button>
+                  <button 
+                    className="see-map-btn-small" 
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
+                  >
+                    🗺️ Carte
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
       {/* Packages Section - Activités Populaires */}
 
       <section className="packages-section">

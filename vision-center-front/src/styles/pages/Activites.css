@@ -1,3 +1,221 @@
+/* Formation M.E.DI.A Section */
+.media-section {
+  margin-bottom: 3rem;
+}
+
+.media-section .section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.media-section .section-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.media-section .section-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0;
+}
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.media-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
+}
+
+.media-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.media-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.media-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.media-card:hover .media-image img {
+  transform: scale(1.1);
+}
+
+.media-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.status-badge.available {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: #28a745;
+  color: white;
+}
+
+.media-content {
+  padding: 25px;
+}
+
+.media-content h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 10px 0;
+}
+
+.media-subtitle {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+.media-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.media-info .info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.media-info .info-item i {
+  width: 20px;
+  text-align: center;
+  color: #667eea;
+}
+
+.media-footer {
+  padding: 20px 0 0 0;
+  border-top: 1px solid #f0f0f0;
+}
+
+.price-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price {
+  font-weight: 700;
+  color: #28a745;
+  font-size: 1.1rem;
+}
+
+.level {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.media-actions {
+  padding: 20px 25px;
+  display: flex;
+  gap: 10px;
+  background: #f8f9fa;
+}
+
+.btn-action {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.btn-action.primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.btn-action.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-action.secondary {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-action.secondary:hover {
+  background: #667eea;
+  color: white;
+}
+
+/* Responsive pour M.E.DI.A */
+@media (max-width: 768px) {
+  .media-section .section-header h2 {
+    font-size: 2rem;
+  }
+  
+  .media-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .media-actions {
+    flex-direction: column;
+  }
+  
+  .btn-action {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .media-content {
+    padding: 20px;
+  }
+  
+  .media-actions {
+    padding: 15px 20px;
+  }
+}
+
 /* Page Activités pour les membres */
 .member-layout {
   display: flex;
