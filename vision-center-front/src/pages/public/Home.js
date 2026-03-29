@@ -10,6 +10,197 @@ import AuthService from "../../services/auth.service";
 
 import NavigationMembre from "../../components/NavigationMembre";
 
+// Styles CSS pour la section M.E.DI.A
+const mediaStyles = `
+  .section-title-centered {
+    text-align: center;
+    margin: 2rem 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .media-activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .media-activity-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border: 1px solid #e1e8ed;
+  }
+
+  .media-activity-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    border-color: #d1d9e0;
+  }
+
+  .media-activity-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #f8f9fa;
+  }
+
+  .media-activity-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .media-activity-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+  }
+
+  .media-activity-content {
+    padding: 1.5rem;
+  }
+
+  .media-activity-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: #2c3e50;
+    line-height: 1.4;
+  }
+
+  .media-activity-price-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .media-activity-price {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #28a745;
+    margin: 0;
+  }
+
+  .media-price-badge {
+    background: #6c757d;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 16px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .media-activity-location {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .media-activity-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .media-participer-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+  }
+
+  .media-participer-btn:hover:not(:disabled) {
+    background: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+  }
+
+  .media-participer-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #6c757d;
+  }
+
+  .media-participer-btn.registered {
+    background: #28a745;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
+  }
+
+  .media-participer-btn.registered:hover:not(:disabled) {
+    background: #1e7e34;
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+  }
+
+  .media-secondary-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .media-secondary-btn {
+    flex: 1;
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .media-secondary-btn:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+    color: #495057;
+  }
+
+  @media (max-width: 768px) {
+    .media-activities-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding: 0.5rem;
+    }
+
+    .media-activity-content {
+      padding: 1rem;
+    }
+
+    .media-secondary-buttons {
+      flex-direction: column;
+    }
+
+    .section-title-centered {
+      font-size: 1.5rem;
+      margin: 1.5rem 0;
+    }
+  }
+`;
+
 
 
 const Home = () => {
@@ -43,6 +234,8 @@ const Home = () => {
   const [exigencesByType, setExigencesByType] = useState({});
 
   const [showExigences, setShowExigences] = useState(false);
+
+  const [mediaActivities, setMediaActivities] = useState([]);
 
   // Cache pour éviter les appels répétés
   const [registrationCache, setRegistrationCache] = useState({});
@@ -277,19 +470,47 @@ const Home = () => {
       setLoading(true);
       
       // Charger tout en parallèle pour optimiser le temps de chargement
-      const [activitesOuvertes, activitesPopulaires, typesResponse] = await Promise.all([
+      const [activitesOuvertes, activitesPopulaires, typesResponse, mediaResponse] = await Promise.all([
         activiteService.getActivitesOuvertes(),
         activiteService.getActivitesPopulaires(),
-        fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/public/types-activites`)
+        fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/public/types-activites`),
+        fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/admin/ressources/activites-media-only`)
       ]);
       
       // Traiter les types d'activités
+      let typesData = [];
       if (typesResponse.ok) {
-        const typesData = await typesResponse.json();
+        typesData = await typesResponse.json();
         setTypesActivites(typesData);
         console.log('Types d\'activités chargés:', typesData);
       } else {
         console.error('Erreur chargement types:', typesResponse.status, typesResponse.statusText);
+      }
+      
+      // Traiter les activités M.E.D.I.A depuis le nouvel endpoint dédié
+      if (mediaResponse.ok) {
+        const mediaData = await mediaResponse.json();
+        // Ajouter les statuts d'inscription aux activités M.E.D.I.A
+        const mediaActivitiesWithStatus = await Promise.all(
+          mediaData.map(async (activite) => {
+            const [isRegistered, participantsCount] = await Promise.all([
+              checkIfAlreadyRegistered(activite.id_activite),
+              countParticipants(activite.id_activite)
+            ]);
+            
+            return {
+              ...activite,
+              isRegistered,
+              nombre_participants: participantsCount
+            };
+          })
+        );
+        
+        setMediaActivities(mediaActivitiesWithStatus);
+        console.log('✅ Activités M.E.DI.A depuis endpoint dédié:', mediaActivitiesWithStatus);
+      } else {
+        console.error('Erreur chargement activités M.E.DI.A:', mediaResponse.status, mediaResponse.statusText);
+        setMediaActivities([]);
       }
       
       // Limiter le nombre d'activités à traiter pour accélérer le chargement initial
@@ -426,17 +647,16 @@ const Home = () => {
 
   const handleParticiper = async (activiteId) => {
 
-    // Trouver l'activité pour vérifier si c'est une formation
+    // Trouver l'activité pour vérifier si c'est payante
+    // Chercher d'abord dans les activités M.E.DI.A, puis dans les autres
+    let activite = mediaActivities.find(a => a.id_activite === activiteId);
+    if (!activite) {
+      activite = activitesOuvertes.find(a => a.id_activite === activiteId);
+    }
 
-    const activite = activitesOuvertes.find(a => a.id_activite === activiteId);
-
-
-
-    // Si c'est une formation (TYP-1), afficher le popup de paiement
-
-    if (activite && activite.id_type === 'TYP-1') {
-
-      console.log('Formation détectée - Affichage du popup de paiement');
+    // Si l'activité est payante (est_payante: true), afficher le popup de paiement
+    if (activite && activite.est_payante === true) {
+      console.log('Activité payante détectée - Affichage du popup de paiement');
       
       // Afficher l'ID utilisateur dès l'ouverture du popup
       const auth = localStorage.getItem('auth') || sessionStorage.getItem('auth');
@@ -475,11 +695,8 @@ const Home = () => {
       }
 
       setShowPaymentPopup(true);
-
       setSelectedActivite(activite);
-
       return;
-
     }
 
 
@@ -1339,127 +1556,72 @@ const Home = () => {
       {/* Formation M.E.DI.A Section */}
       <section className="packages-section">
         <div className="section-header">
-          <h2>🎨 Formation M.E.DI.A</h2>
+          <h2 className="section-title-centered">🎨 Formation M.E.DI.A</h2>
           <div className="header-actions">
             <span className="section-subtitle">Multimedia, Electronics, Digital Art</span>
             <a href="#" className="see-all" onClick={(e) => { e.preventDefault(); }}>Voir tout</a>
           </div>
         </div>
 
-        <div className="packages-grid">
-          {/* Formation 1: Introduction à la 3D */}
-          <div className="activity-card" onClick={() => handleActiviteClick('media-3d')}>
-            <div className="activity-image">
-              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23764ba2;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23grad1)'/%3E%3Ctext x='200' y='150' font-family='Arial' font-size='24' fill='white' text-anchor='middle'%3E%3Ctspan x='200' dy='-20'%3E%F0%9F%8E%A8%3C/tspan%3E%3Ctspan x='200' dy='40'%3EIntroduction%3C/tspan%3E%3Ctspan x='200' dy='30'%3E%C3%A0 la 3D%3C/tspan%3E%3C/text%3E%3C/svg%3E" alt="Introduction à la 3D" className="activity-img" />
-            </div>
-            <div className="activity-content">
-              <h3>Introduction à la 3D</h3>
-              <p className="activity-price">💰 50 000 MGA</p>
-              <p className="activity-location">📍 Lab Digital - Ankorondrano</p>
-              <div className="activity-actions">
-                <button 
-                  className="participer-btn-small"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleParticiper('media-3d');
-                  }}
-                >
-                  🎯 Participer
-                </button>
-                
-                <div className="action-buttons-row">
-                  <button 
-                    className="see-map-btn-small" 
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleActiviteClick('media-3d'); }}
-                  >
-                    📋 Détails
-                  </button>
-                  <button 
-                    className="see-map-btn-small" 
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
-                  >
-                    🗺️ Carte
-                  </button>
+        <div className="media-activities-grid">
+          {mediaActivities.length > 0 ? (
+            mediaActivities.map((activite) => (
+              <div key={activite.id_activite} className="media-activity-card" onClick={() => handleActiviteClick(activite.id_activite)}>
+                <div className="media-activity-image">
+                  {activite.image_url ? (
+                    <img src={activiteService.getImageUrl(activite.image_url)} alt={activite.titre_activite} className="media-activity-img" />
+                  ) : (
+                    <div className="media-activity-fallback">🎨</div>
+                  )}
+                </div>
+                <div className="media-activity-content">
+                  <h3 className="media-activity-title">{activite.titre_activite}</h3>
+                  <div className="media-activity-price-section">
+                    <p className="media-activity-price">💰 {activite.prix ? `${activite.prix} ${activite.devise || 'MGA'}` : 'Gratuit'}</p>
+                    {activite.est_payante && (
+                      <span className="media-price-badge">Payant</span>
+                    )}
+                  </div>
+                  <p className="media-activity-location">📍 {activite.lieu_activite}</p>
+                  <div className="media-activity-actions">
+                    <button 
+                      className={`media-participer-btn ${activite.isRegistered ? 'registered' : ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (activite.isRegistered) {
+                          handleDesinscrire(activite.id_activite);
+                        } else {
+                          handleParticiper(activite.id_activite);
+                        }
+                      }}
+                      disabled={submittingId === activite.id_activite}
+                    >
+                      {submittingId === activite.id_activite ? 'Chargement...' : (activite.isRegistered ? 'Inscrit' : 'Participer')}
+                    </button>
+                    
+                    <div className="media-secondary-buttons">
+                      <button 
+                        className="media-secondary-btn" 
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleActiviteClick(activite.id_activite); }}
+                      >
+                        Détails
+                      </button>
+                      <button 
+                        className="media-secondary-btn" 
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
+                      >
+                        Carte
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="no-activities">
+              <p>Aucune activité M.E.DI.A disponible pour le moment.</p>
             </div>
-          </div>
-
-          {/* Formation 2: Électronique de base */}
-          <div className="activity-card" onClick={() => handleActiviteClick('media-electronique')}>
-            <div className="activity-image">
-              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Cdefs%3E%3ClinearGradient id='grad2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f59e0b;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23d97706;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23grad2)'/%3E%3Ctext x='200' y='150' font-family='Arial' font-size='24' fill='white' text-anchor='middle'%3E%3Ctspan x='200' dy='-20'%3E%F0%9F%94%8C%3C/tspan%3E%3Ctspan x='200' dy='40'%3E%C3%89lectronique%3C/tspan%3E%3Ctspan x='200' dy='30'%3Ede base%3C/tspan%3E%3C/text%3E%3C/svg%3E" alt="Électronique de base" className="activity-img" />
-            </div>
-            <div className="activity-content">
-              <h3>Électronique de base</h3>
-              <p className="activity-price">💰 45 000 MGA</p>
-              <p className="activity-location">📍 Lab Tech - Itaosy</p>
-              <div className="activity-actions">
-                <button 
-                  className="participer-btn-small"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleParticiper('media-electronique');
-                  }}
-                >
-                  🎯 Participer
-                </button>
-                
-                <div className="action-buttons-row">
-                  <button 
-                    className="see-map-btn-small" 
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleActiviteClick('media-electronique'); }}
-                  >
-                    📋 Détails
-                  </button>
-                  <button 
-                    className="see-map-btn-small" 
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
-                  >
-                    🗺️ Carte
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Formation 3: Art Digital Créatif */}
-          <div className="activity-card" onClick={() => handleActiviteClick('media-art')}>
-            <div className="activity-image">
-              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Cdefs%3E%3ClinearGradient id='grad3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ec4899;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23be185d;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23grad3)'/%3E%3Ctext x='200' y='150' font-family='Arial' font-size='24' fill='white' text-anchor='middle'%3E%3Ctspan x='200' dy='-20'%3E%F0%9F%8E%A8%3C/tspan%3E%3Ctspan x='200' dy='40'%3EArt Digital%3C/tspan%3E%3Ctspan x='200' dy='30'%3ECr%C3%A9atif%3C/tspan%3E%3C/text%3E%3C/svg%3E" alt="Art Digital Créatif" className="activity-img" />
-            </div>
-            <div className="activity-content">
-              <h3>Art Digital Créatif</h3>
-              <p className="activity-price">💰 60 000 MGA</p>
-              <p className="activity-location">📍 Studio Art - Mahamasina</p>
-              <div className="activity-actions">
-                <button 
-                  className="participer-btn-small"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleParticiper('media-art');
-                  }}
-                >
-                  🎯 Participer
-                </button>
-                
-                <div className="action-buttons-row">
-                  <button 
-                    className="see-map-btn-small" 
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleActiviteClick('media-art'); }}
-                  >
-                    📋 Détails
-                  </button>
-                  <button 
-                    className="see-map-btn-small" 
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
-                  >
-                    🗺️ Carte
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -1471,7 +1633,7 @@ const Home = () => {
 
         <div className="section-header">
 
-          <h2>Activités Populaires</h2>
+          <h2 className="section-title-centered">Activités Populaires</h2>
 
           <div className="header-actions">
 
@@ -1523,31 +1685,34 @@ const Home = () => {
 
 
 
-        <div className="packages-grid">
+        <div className="media-activities-grid">
 
           {packages.length > 0 ? (
 
             packages.map(pkg => (
 
-              <div key={pkg.id} className="activity-card" onClick={() => handleActiviteClick(pkg.id)}>
-                <div className="activity-image">
+              <div key={pkg.id} className="media-activity-card" onClick={() => handleActiviteClick(pkg.id)}>
+                <div className="media-activity-image">
                   {pkg.image ? (
                     pkg.isBase64 ? (
-                      <img src={pkg.image} alt={pkg.name} className="activity-img" />
+                      <img src={pkg.image} alt={pkg.name} className="media-activity-img" />
                     ) : (
-                      <img src={activiteService.getImageUrl(pkg.image)} alt={pkg.name} className="activity-img" />
+                      <img src={activiteService.getImageUrl(pkg.image)} alt={pkg.name} className="media-activity-img" />
                     )
                   ) : (
-                    <div className="activity-fallback">🏨</div>
+                    <div className="media-activity-fallback">🏨</div>
                   )}
                 </div>
-                <div className="activity-content">
-                  <h3>{pkg.name}</h3>
-                  <p className="activity-price">{pkg.price}</p>
-                  <p className="activity-location">📍 {pkg.lieu}</p>
-                  <div className="activity-actions">
+                <div className="media-activity-content">
+                  <h3 className="media-activity-title">{pkg.name}</h3>
+                  <div className="media-activity-price-section">
+                    <p className="media-activity-price">{pkg.price}</p>
+                    <span className="media-price-badge">Populaire</span>
+                  </div>
+                  <p className="media-activity-location">📍 {pkg.lieu}</p>
+                  <div className="media-activity-actions">
                     <button 
-                      className={`participer-btn-small ${pkg.isRegistered ? 'registered' : ''}`}
+                      className={`media-participer-btn ${pkg.isRegistered ? 'registered' : ''}`}
                       onClick={(e) => {
                         e.stopPropagation();
                         if (pkg.isRegistered) {
@@ -1558,21 +1723,21 @@ const Home = () => {
                       }}
                       disabled={submittingId === pkg.id}
                     >
-                      {submittingId === pkg.id ? '⏳ Chargement...' : (pkg.isRegistered ? '✅ Inscrit' : '🎯 Participer')}
+                      {submittingId === pkg.id ? 'Chargement...' : (pkg.isRegistered ? 'Inscrit' : 'Participer')}
                     </button>
                     
-                    <div className="action-buttons-row">
+                    <div className="media-secondary-buttons">
                       <button 
-                        className="see-map-btn-small" 
+                        className="media-secondary-btn" 
                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleActiviteClick(pkg.id); }}
                       >
-                        📋 Détails
+                        Détails
                       </button>
                       <button 
-                        className="see-map-btn-small" 
+                        className="media-secondary-btn" 
                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
                       >
-                        🗺️ Carte
+                        Carte
                       </button>
                     </div>
                   </div>
@@ -1812,7 +1977,12 @@ const Home = () => {
 
 };
 
-
+// Injecter les styles CSS pour la section M.E.DI.A
+if (typeof document !== 'undefined') {
+  const styleElement = document.createElement('style');
+  styleElement.textContent = mediaStyles;
+  document.head.appendChild(styleElement);
+}
 
 export default Home;
 

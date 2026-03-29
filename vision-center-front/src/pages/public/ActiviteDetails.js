@@ -14,8 +14,6 @@ const getActiviteById = async (id) => {
 
   try {
 
-    // Correction de l'URL pour éviter le double /api/
-
     const baseUrl = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
 
     const apiUrl = baseUrl.endsWith('/api') ? `${baseUrl.replace('/api', '')}/api/public/activites/${id}` : `${baseUrl}/api/public/activites/${id}`;
@@ -183,70 +181,30 @@ const ActiviteDetails = () => {
       setLoadingRessources(true);
       const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
       
-      // DONNÉES DE TEST - Pour voir le design dans le front
-      console.log('🧪 Utilisation des données de test pour les ressources');
+      console.log(`🔄 Chargement des ressources réelles pour l'activité ${activiteId}`);
       
-      // Documents de test selon le type d'activité
-      const testDocuments = [
-        {
-          id: 1,
-          titre: "Guide de Prière Quotidienne",
-          taille: "PDF - 2.3 MB",
-          url: "https://example.com/guide-priere.pdf",
-          type: "guide"
-        },
-        {
-          id: 2,
-          titre: "Paroles Bibliques du Jour",
-          taille: "PDF - 1.5 MB", 
-          url: "https://example.com/paroles-bibliques.pdf",
-          type: "lecture"
-        },
-        {
-          id: 3,
-          titre: "Exercices de Méditation",
-          taille: "PDF - 3.1 MB",
-          url: "https://example.com/exercices-meditation.pdf", 
-          type: "exercice"
-        }
-      ];
+      // Appel API réel pour récupérer les ressources
+      const response = await fetch(`${apiUrl}/admin/ressources/activite/${activiteId}`);
       
-      // Vidéos de test selon le type d'activité - VIDÉOS EN LIGNE RÉELLES
-      const testVideos = [
-        {
-          id: 1,
-          titre: "Introduction à la Prière Chrétienne",
-          duree: "15 min",
-          url: "https://www.youtube.com/watch?v=O9xK4JhQv0", // Vidéo réelle de prière
-          type: "introduction"
-        },
-        {
-          id: 2,
-          titre: "Méditation Guidée - Paix Intérieure",
-          duree: "30 min",
-          url: "https://www.youtube.com/watch?v=6p_62X2J3E", // Méditation chrétienne
-          type: "meditation"
-        },
-        {
-          id: 3,
-          titre: "Étude Biblique - La Foi et l'Espérance",
-          duree: "45 min",
-          url: "https://www.youtube.com/watch?v=XH8r5kYk9o", // Étude biblique
-          type: "etude"
-        }
-      ];
+      if (!response.ok) {
+        console.error('Erreur API ressources:', response.status);
+        setDocuments([]);
+        setVideos([]);
+        return;
+      }
       
-      // Simuler un délai de chargement pour voir l'effet
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const ressourcesData = await response.json();
+      console.log('📚 Ressources reçues de l\'API:', ressourcesData);
       
-      // Appliquer les données de test pour voir dans le front
-      setDocuments(testDocuments);
-      setVideos(testVideos);
+      // Séparer les documents et les vidéos
+      const documents = ressourcesData.filter(r => r.type === 'document');
+      const videos = ressourcesData.filter(r => r.type === 'video');
       
-      console.log(`📚 Documents de test chargés:`, testDocuments);
-      console.log(`🎥 Vidéos de test chargées:`, testVideos);
-      console.log(`🔍 Nombre de documents:`, testDocuments.length);
-      console.log(`🔍 Nombre de vidéos:`, testVideos.length);
+      console.log(`� Documents filtrés (${documents.length}):`, documents);
+      console.log(`🎥 Vidéos filtrées (${videos.length}):`, videos);
+      
+      setDocuments(documents);
+      setVideos(videos);
       
     } catch (error) {
       console.error('Erreur chargement ressources:', error);
@@ -867,39 +825,35 @@ const ActiviteDetails = () => {
                   ) : videos.length > 0 ? (
 
                     <div className="videos-grid">
-
                       {videos.map((video, index) => (
-
-                        <div key={index} className="video-item">
-
+                        <div key={video.id || index} className="video-item">
                           <div className="video-thumbnail">
-
-                            <span className="play-icon">▶️</span>
-
-                          </div>
-
-                          <div className="video-info">
-
-                            <h4>{video.titre || `Vidéo ${index + 1}`}</h4>
-
-                            <p className="video-duration">{video.duree || 'Durée non spécifiée'}</p>
-
-                            {video.url && (
-
-                              <a href={video.url} target="_blank" rel="noopener noreferrer" className="video-link">
-
-                                Regarder la vidéo
-
-                              </a>
-
+                            {video.url && video.url.includes('youtube.com') ? (
+                              <img 
+                                src={`https://img.youtube.com/vi/${video.url.split('v=')[1]?.split('&')[0]}/default.jpg`}
+                                alt={video.titre}
+                                className="video-thumbnail-img"
+                              />
+                            ) : (
+                              <div className="video-thumbnail-placeholder">
+                                <span className="play-icon">▶️</span>
+                              </div>
                             )}
-
                           </div>
-
+                          <div className="video-info">
+                            <h4>{video.titre || `Vidéo ${index + 1}`}</h4>
+                            <p className="video-duration">{video.duree || 'Durée non spécifiée'}</p>
+                            {video.url && (
+                              <button 
+                                onClick={() => handleVideoClick(video)}
+                                className="video-link"
+                              >
+                                Regarder la vidéo
+                              </button>
+                            )}
+                          </div>
                         </div>
-
                       ))}
-
                     </div>
 
                   ) : (
@@ -921,35 +875,23 @@ const ActiviteDetails = () => {
                   ) : documents.length > 0 ? (
 
                     <div className="documents-list">
-
                       {documents.map((doc, index) => (
-
-                        <div key={index} className="document-item">
-
+                        <div key={doc.id || index} className="document-item">
                           <span className="doc-icon">📄</span>
-
                           <div className="doc-info">
-
                             <h4>{doc.titre || `Document ${index + 1}`}</h4>
-
-                            <p className="doc-size">{doc.taille || 'PDF'}</p>
-
+                            <p className="doc-size">
+                              {doc.type_fichier ? doc.type_fichier.toUpperCase() : 'PDF'} - 
+                              {doc.date_ajout ? new Date(doc.date_ajout).toLocaleDateString() : 'Date inconnue'}
+                            </p>
                           </div>
-
                           {doc.url && (
-
                             <a href={doc.url} target="_blank" rel="noopener noreferrer" className="download-btn">
-
                               Télécharger
-
                             </a>
-
                           )}
-
                         </div>
-
                       ))}
-
                     </div>
 
                   ) : (
@@ -1125,29 +1067,28 @@ const ActiviteDetails = () => {
             <div className="video-popup-content">
 
               {selectedVideo.url && selectedVideo.url.includes('youtube.com') ? (
-
                 <iframe
-
                   className="video-popup-player"
-
-                  src={selectedVideo.url.replace('watch?v=', 'embed/')}
-
+                  src={`${selectedVideo.url.replace('watch?v=', 'embed/')}?autoplay=1&rel=0&modestbranding=1&controls=1&showinfo=0`}
                   title={selectedVideo.titre}
-
                   frameBorder="0"
-
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
-
                 />
-
+              ) : selectedVideo.url && selectedVideo.url.includes('youtu.be') ? (
+                <iframe
+                  className="video-popup-player"
+                  src={`https://www.youtube.com/embed/${selectedVideo.url.split('youtu.be/')[1]?.split('?')[0]}?autoplay=1&rel=0&modestbranding=1&controls=1&showinfo=0`}
+                  title={selectedVideo.titre}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
               ) : selectedVideo.url ? (
 
                 <video className="video-popup-player" controls autoPlay>
 
                   <source src={selectedVideo.url} type="video/mp4" />
-
                   Votre navigateur ne supporte pas la lecture vidéo.
 
                 </video>
