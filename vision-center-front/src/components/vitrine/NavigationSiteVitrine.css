@@ -5,18 +5,19 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.95); /* Changé à blanc semi-transparent */
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
   transition: all 0.3s ease;
-  border-bottom: 1px solid rgba(127, 254, 244, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 0.5rem 0;
   height: 60px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .header.scrolled {
-  background: rgba(255, 255, 255, 0.98); /* Blanc légèrement plus opaque */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Ombre plus subtile */
-  border-bottom: 1px solid rgba(127, 254, 244, 0.1);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .container {
@@ -61,7 +62,7 @@
 }
 
 .logo-text h1 {
-  color: #ffffff;
+  color: #1e293b;
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
@@ -69,7 +70,7 @@
 }
 
 .logo-text .tagline {
-  color: #7FFEF4;
+  color: #3b82f6;
   font-size: 0.875rem;
   font-weight: 500;
   display: block;
@@ -91,7 +92,7 @@
 }
 
 .nav-links a {
-  color: #b0b0b0;
+  color: #475569;
   text-decoration: none;
   font-weight: 500;
   font-size: 0.95rem;
@@ -107,7 +108,7 @@
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, #7FFEF4, #4FD1C5);
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
   transition: width 0.3s ease;
 }
 
@@ -116,12 +117,12 @@
 }
 
 .nav-links a:hover {
-  color: #7FFEF4;
+  color: #3b82f6;
   transform: translateY(-2px);
 }
 
 .nav-links a.active {
-  color: #7FFEF4;
+  color: #3b82f6;
 }
 
 .nav-links a.active::after {

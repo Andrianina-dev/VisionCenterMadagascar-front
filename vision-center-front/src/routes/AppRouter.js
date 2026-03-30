@@ -21,6 +21,10 @@ import AdminMessages from "../pages/admin/AdminMessages";
 import FloatingMessenger from "../component/FloatingMessenger/FloatingMessenger";
 import { MessengerProvider, useMessenger } from "../contexts/MessengerContext";
 
+// ✅ AJOUT ICI
+import AccueilVitrineSimple from "../layouts/vitrine/AccueilVitrineSimple";
+import AccueilVitrine from "../layouts/vitrine/SiteVitrine";
+
 // Pages non-membre
 import AccesNonMembre from "../pages/non-member/AccesNonMembre";
 import MesReservations from "../pages/non-member/MesReservations";
@@ -31,7 +35,6 @@ import AuthLayout from "../layouts/AuthLayout";
 import MainLayout from "../layouts/MainLayout";
 import MemberLayout from "../layouts/MemberLayout";
 import AdminLayout from "../layouts/AdminLayout";
-import AccueilVitrine from "../layouts/vitrine/AccueilVitrine";
 import ProtectedRoute from "../component/ProtectedRoute";
 
 const AppRouterContent = () => {
@@ -96,12 +99,17 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        {/* SITE VITRINE - PAGE D'ACCUEIL UNIQUE */}
+        {/* PAGE D'ACCUEIL */}
         <Route path="/" element={
           <AccueilVitrine />
         } />
-
-        {/* PAGE GALERIE */}
+        
+        {/* PAGE ACCUEIL SIMPLE */}
+        <Route path="/accueil" element={
+          <AccueilVitrineSimple />
+        } />
+      
+        {/* GALERIE */}
         <Route path="/galerie" element={
           <Galerie />
         } />
@@ -115,7 +123,7 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        {/* MAP SEARCH PAGE */}
+        {/* MAP */}
         <Route path="/map" element={
           <ProtectedRoute>
             <MainLayout>
@@ -124,7 +132,7 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        {/* ACTIVITIES LIST PAGE */}
+        {/* ACTIVITES */}
         <Route path="/activites" element={
           <ProtectedRoute>
             <MainLayout>
@@ -133,8 +141,7 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        
-        {/* MEMBER DASHBOARD */}
+        {/* MEMBER */}
         <Route path="/member/dashboard" element={
           <ProtectedRoute>
             <MemberLayout activeNav="dashboard">
@@ -143,7 +150,6 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        {/* MEMBER MESSAGES PAGE */}
         <Route path="/member/messages" element={
           <ProtectedRoute>
             <MemberLayout activeNav="messages">
@@ -152,42 +158,37 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        {/* MEMBER LOCATION SALLE PAGE */}
         <Route path="/location-salle" element={
           <ProtectedRoute>
             <LocationSalle />
           </ProtectedRoute>
         } />
 
-        {/* RESERVATION VALIDATION PAGE */}
         <Route path="/reservation-validation" element={
           <ProtectedRoute>
             <ReservationValidation />
           </ProtectedRoute>
         } />
 
-        {/* RESERVATION SUCCESS PAGE */}
         <Route path="/reservation-success" element={
           <ProtectedRoute>
             <ReservationSuccess />
           </ProtectedRoute>
         } />
 
-        {/* MEMBER ACCOUNT PAGE */}
         <Route path="/member/account" element={
           <ProtectedRoute>
             <ProfileMembre />
           </ProtectedRoute>
         } />
 
-        {/* PROFILE PAGE */}
         <Route path="/profile" element={
           <ProtectedRoute>
             <ProfileMembre />
           </ProtectedRoute>
         } />
 
-        {/* ACTIVITY DETAILS PAGE */}
+        {/* DETAILS ACTIVITE */}
         <Route path="/activite/:id" element={
           <ProtectedRoute>
             <MainLayout>
@@ -196,7 +197,7 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        {/* INSCRIPTION PAGE */}
+        {/* INSCRIPTION */}
         <Route path="/inscription/:activiteId" element={
           <ProtectedRoute>
             <MainLayout>
@@ -205,8 +206,7 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        
-        {/* ADMIN ROUTES */}
+        {/* ADMIN */}
         <Route path="/admin" element={
           <ProtectedRoute>
             <AdminLayout activeNav="dashboard">
@@ -215,7 +215,6 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        {/* ADMIN DASHBOARD SÉPARÉ */}
         <Route path="/admin/dashboard" element={
           <ProtectedRoute>
             <AdminLayout activeNav="dashboard">
@@ -224,7 +223,6 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        {/* ADMIN STATISTICS */}
         <Route path="/admin/statistics" element={
           <ProtectedRoute>
             <AdminLayout activeNav="statistics">
@@ -233,7 +231,6 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        {/* ADMIN MESSAGES */}
         <Route path="/admin/messages" element={
           <ProtectedRoute>
             <AdminLayout activeNav="messages">
@@ -242,6 +239,7 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
       </Routes>
+
       {showMessenger && <FloatingMessenger />}
     </>
   );

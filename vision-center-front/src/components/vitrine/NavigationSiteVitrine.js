@@ -57,6 +57,15 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
           <ul className="nav-links">
             <li>
               <a 
+                href="/accueil" 
+                onClick={() => navigate('/accueil')} 
+                className={location.pathname === '/accueil' ? 'active' : ''}
+              >
+                Accueil
+              </a>
+            </li>
+            <li>
+              <a 
                 href="#features" 
                 onClick={(e) => handleNavClick(e, 'features')} 
                 className={isActive('features') ? 'active' : ''}
@@ -93,7 +102,7 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
             </li>
             <li>
               <button onClick={() => navigate('/login')} className="btn-primary btn-member">
-                Espace Membre
+                Se connecter
               </button>
             </li>
           </ul>

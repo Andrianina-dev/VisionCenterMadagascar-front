@@ -4,7 +4,7 @@ import NavigationSiteVitrine from '../../components/vitrine/NavigationSiteVitrin
 import FooterSiteVitrine from '../../components/vitrine/FooterSiteVitrine';
 import './accueilVitrine.css';
 
-function AccueilVitrine() {
+function SiteVitrine() {
   const navigate = useNavigate();
 
   const scrollToSection = (sectionId) => {
@@ -303,4 +303,4 @@ function AccueilVitrine() {
   );
 }
 
-export default AccueilVitrine;
+export default SiteVitrine;
