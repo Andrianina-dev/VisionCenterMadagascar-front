@@ -17,6 +17,17 @@ const NavigationMembre = () => {
 
   const displayName = currentUser ? `${currentUser.prenom} ${currentUser.nom}` : 'Membre';
 
+  const handleLogout = () => {
+    // Arrêter la session
+    AuthService.logout();
+    
+    // Déclencher un événement pour notifier les autres composants
+    window.dispatchEvent(new Event('user-logged-out'));
+    
+    // Rediriger vers l'accueil du site vitrine
+    navigate('/');
+  };
+
   return (
     <header className="navigation-header">
       <div className="header-container">
@@ -76,7 +87,7 @@ const NavigationMembre = () => {
                 <span className="dropdown-badge">3</span>
               </button>
               <div className="dropdown-divider"></div>
-              <button onClick={() => navigate('/login')} className="dropdown-item logout-item">
+              <button onClick={handleLogout} className="dropdown-item logout-item">
                 <span className="dropdown-icon">🚪</span>
                 Déconnexion
               </button>

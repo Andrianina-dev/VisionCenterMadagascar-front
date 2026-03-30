@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import "./Login.css";
 import "../../styles/components/couleur/couleur.css";
 import logoVisionCenter from "../../assets/images/logo/logo vision center.png";
@@ -184,6 +185,17 @@ const Login = () => {
           <p className="signup">
             Don't have account? <a href="#" onClick={handleSignupClick}>Sign-up!</a>
           </p>
+
+          {/* Bouton retour vers le site vitrine */}
+          <div className="back-to-site">
+            <button 
+              className="back-to-site-btn"
+              onClick={() => navigate('/')}
+              disabled={loading}
+            >
+              <FiArrowLeft />
+            </button>
+          </div>
         </div>
       </div>
     </div>

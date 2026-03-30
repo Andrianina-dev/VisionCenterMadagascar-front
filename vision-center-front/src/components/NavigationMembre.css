@@ -148,3 +148,28 @@
   border-radius: 50%;
   object-fit: cover;
 }
+
+/* Focus et Active states pour que le hover reste au clic dans Home.js */
+.profile-menu:focus,
+.profile-menu:active {
+  background: var(--blanc);
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+  transform: translateY(-2px);
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.profile-menu:focus .profile-avatar,
+.profile-menu:active .profile-avatar {
+  border-color: var(--primary);
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
+}
+
+.profile-menu:focus .profile-dropdown,
+.profile-menu:active .profile-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}

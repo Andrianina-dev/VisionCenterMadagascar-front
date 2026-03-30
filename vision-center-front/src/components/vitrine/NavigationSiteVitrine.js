@@ -40,10 +40,17 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
       setUser(localUser);
     };
     
+    // Écouter l'événement de déconnexion
+    const handleLogoutEvent = () => {
+      setUser(null);
+    };
+    
     window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('user-logged-out', handleLogoutEvent);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('user-logged-out', handleLogoutEvent);
     };
   }, []);
 
@@ -80,6 +87,23 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
 
   const isActive = (section) => {
     return location.pathname === '/' && activeSection === section;
+  };
+
+  const handleLogout = () => {
+    // Déconnecter immédiatement
+    AuthService.logout();
+    
+    // Mettre à jour l'état local immédiatement
+    setUser(null);
+    
+    // Nettoyer le localStorage
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    
+    // Rediriger après un court délai pour assurer la mise à jour
+    setTimeout(() => {
+      navigate('/login');
+    }, 50);
   };
 
   return (
@@ -162,7 +186,7 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
               </>
             )}
             <li>
-              {user ? (
+              {user && user.role === 'membre' ? (
                 <div className="user-profile">
                   <div className="profile-avatar">
                     <img 
@@ -197,6 +221,52 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
                        user.role === 'non-membre' ? 'Non-membre' :
                        user.role || 'Utilisateur'}
                     </span>
+                  </div>
+                  <div className="profile-dropdown">
+                    <div className="dropdown-header">
+                      <div className="dropdown-avatar">
+                        <img 
+                          src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                            (user.prenom_utilisateur || user.prenom || user.firstName || '') + ' ' + 
+                            (user.nom_utilisateur || user.nom || user.name || '')
+                          )}&background=random&color=fff&size=60`} 
+                          alt="Profile" 
+                        />
+                      </div>
+                      <div className="dropdown-info">
+                        <div className="dropdown-name">
+                          {(() => {
+                            const prenom = user.prenom_utilisateur || user.prenom || user.firstName || '';
+                            const nom = user.nom_utilisateur || user.nom || user.name || '';
+                            
+                            if (prenom && nom) {
+                              return `${prenom.charAt(0).toUpperCase() + prenom.slice(1)} ${nom.charAt(0).toUpperCase() + nom.slice(1)}`;
+                            } else {
+                              const fallbackName = prenom || nom || user.email?.split('@')[0] || 'Utilisateur';
+                              return fallbackName;
+                            }
+                          })()}
+                        </div>
+                        <div className="dropdown-email">{user.email || 'membre@visioncenter.mg'}</div>
+                      </div>
+                    </div>
+                    <div className="dropdown-divider"></div>
+                    <button onClick={() => navigate('/profile')} className="dropdown-item">
+                      Profil
+                    </button>
+                    <button onClick={() => navigate('/settings')} className="dropdown-item">
+                      Paramètres
+                    </button>
+                    <button onClick={() => navigate('/espace-membre')} className="dropdown-item">
+                      Espace Membre
+                    </button>
+                    <button onClick={() => navigate('/member/messages')} className="dropdown-item">
+                      Messages
+                    </button>
+                    <div className="dropdown-divider"></div>
+                    <button onClick={handleLogout} className="dropdown-item logout-item">
+                      Déconnexion
+                    </button>
                   </div>
                 </div>
               ) : (
