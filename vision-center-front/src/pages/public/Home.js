@@ -32,8 +32,6 @@ const Home = () => {
 
   const [packagesData, setPackagesData] = useState([]);
 
-  const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState(null);
 
   const [typesActivites, setTypesActivites] = useState([]);
@@ -280,7 +278,6 @@ const Home = () => {
   // Charger les activités depuis l'API (optimisé)
   const loadActivites = async () => {
     try {
-      setLoading(true);
       
       // Charger tout en parallèle pour optimiser le temps de chargement
       const [activitesOuvertes, activitesPopulaires, typesResponse, mediaResponse] = await Promise.all([
@@ -366,8 +363,6 @@ const Home = () => {
       
     } catch (err) {
       setError(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -1000,80 +995,12 @@ const Home = () => {
 
     }
 
-  };
-
-
-
-  // Gérer le clic sur un type d'activité pour voir les exigences
-
+  }
+  
+  // Gérer le clic sur un type pour afficher les exigences
   const handleTypeClick = (typeId) => {
-
-    if (typeId === 'all') return;
-
-    
-
-    // Charger les exigences si pas encore chargées
-
-    if (!exigencesByType[typeId]) {
-
-      loadExigencesForType(typeId);
-
-    }
-
-    
-
-    // Basculer l'affichage des exigences
-
     setShowExigences(prev => !prev);
-
   };
-
-
-
-  if (loading) {
-
-    return (
-
-      <div className="home-container">
-
-        <div className="loading-container">
-
-          <div className="loading-spinner">Chargement des activités...</div>
-
-        </div>
-
-      </div>
-
-    );
-
-  }
-
-
-
-  if (error) {
-
-    return (
-
-      <div className="home-container">
-
-        <div className="error-container">
-
-          <div className="error-message">{error}</div>
-
-          <button onClick={() => window.location.reload()} className="retry-btn">
-
-            Réessayer
-
-          </button>
-
-        </div>
-
-      </div>
-
-    );
-
-  }
-
 
 
   // Gérer le clic sur une méthode de paiement
@@ -1343,26 +1270,50 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      {/* Header complet via NavigationMembre */}
-      <NavigationMembre />
-
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
-          <h1>Votre Santé Visuelle, Notre Priorité</h1>
-          <p>Découvrez nos services et activités pour une meilleure vision</p>
+          <h1>Destination Madagascar</h1>
+          <p>Escape at your fingertips</p>
           
           <div className="search-bar">
             <input 
               type="text" 
-              placeholder="Rechercher une activité..."
+              placeholder="Where are you headed?"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button className="search-btn">Rechercher</button>
+            <button className="search-btn">Search</button>
+          </div>
+
+          {/* Catégories */}
+          <div className="hero-categories">
+            <div className="category-item">
+              <span className="category-icon">🏖️</span>
+              <span className="category-label">Beaches</span>
+            </div>
+            <div className="category-item">
+              <span className="category-icon">💑</span>
+              <span className="category-label">Honeymoon</span>
+            </div>
+            <div className="category-item">
+              <span className="category-icon">🥾</span>
+              <span className="category-label">Hiking</span>
+            </div>
+            <div className="category-item">
+              <span className="category-icon">🦁</span>
+              <span className="category-label">Animal</span>
+            </div>
+            <div className="category-item">
+              <span className="category-icon">⚽</span>
+              <span className="category-label">Sport</span>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* NavigationMembre juste après la section hero */}
+      <NavigationMembre />
 
 
 
@@ -1788,7 +1739,7 @@ const Home = () => {
 
   );
 
-};
+}
 
 export default Home;
 

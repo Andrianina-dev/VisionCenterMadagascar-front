@@ -5,16 +5,18 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(26, 26, 46, 0.95);
+  background: rgba(255, 255, 255, 0.95); /* Changé à blanc semi-transparent */
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   border-bottom: 1px solid rgba(127, 254, 244, 0.1);
+  padding: 0.5rem 0;
+  height: 60px;
 }
 
 .header.scrolled {
-  background: rgba(26, 26, 46, 0.98);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid rgba(127, 254, 244, 0.3);
+  background: rgba(255, 255, 255, 0.98); /* Blanc légèrement plus opaque */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Ombre plus subtile */
+  border-bottom: 1px solid rgba(127, 254, 244, 0.1);
 }
 
 .container {
@@ -27,7 +29,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 20px;
+  padding: 0.5rem 20px; /* Réduit de 1rem à 0.5rem */
 }
 
 .logo {
@@ -43,15 +45,14 @@
 }
 
 .logo-icon {
-  width: 40px;
-  height: 40px;
+  width: 32px; /* Réduit de 40px à 32px */
+  height: 32px; /* Réduit de 40px à 32px */
   background: linear-gradient(135deg, #7FFEF4, #4FD1C5);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  animation: pulse 2s infinite;
+  font-size: 1rem; /* Réduit de 1.2rem à 1rem */
 }
 
 @keyframes pulse {

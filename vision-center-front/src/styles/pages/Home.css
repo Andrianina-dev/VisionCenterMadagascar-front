@@ -5,34 +5,13 @@
   min-height: 100vh;
   background: linear-gradient(135deg, var(--cyan-clair) 0%, var(--cyan-fonce) 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
-/* Loading et Error */
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 60vh;
-  background: transparent;
-}
-
-.loading-spinner {
-  background: var(--surface);
-  border-radius: 20px;
-  padding: 2rem 3rem;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: var(--blanc);
-  font-size: 1.1rem;
-  font-weight: 500;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
+/* Error */
 .error-container {
   display: flex;
   justify-content: center;
@@ -1606,15 +1585,69 @@
 /* Hero Section */
 .hero {
   background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-  padding: 4rem 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   color: var(--blanc);
+  padding: 0;
+  margin: 0;
+  position: relative;
+  margin-top: -8px; /* Compensation pour l'espace par défaut du navigateur */
 }
 
 .hero-content {
   max-width: 800px;
   margin: 0 auto;
   padding: 0 2rem;
+}
+
+/* Catégories de la hero section */
+.hero-categories {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.category-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.category-icon {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+  width: 64px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-label {
+  color: var(--blanc);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .hero h1 {
@@ -2923,14 +2956,6 @@
 .download-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-}
-
-.loading-ressources {
-  text-align: center;
-  padding: 3rem;
-  color: var(--gray);
-  font-size: 1.1rem;
-  font-weight: 500;
 }
 
 /* Styles pour la popup vidéo - Design amélioré */
