@@ -1,221 +1,188 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthService from "../../services/auth.service";
 import "./Login.css";
+import "../../styles/components/couleur/couleur.css";
+import logoVisionCenter from "../../assets/images/logo/logo vision center.png";
+import CustomInput from "../../components/CustomInput";
+import UserTypeToggle from "../../components/UserTypeToggle";
+import AuthService from "../../services/auth.service";
 
-const MemberLogin = ({ history }) => {
-  const navigate = useNavigate();
+const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [userType, setUserType] = useState(null);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [isMember, setIsMember] = useState(true); // Toggle pour membre/non-membre
+  const navigate = useNavigate();
 
-  const handleNavigateToSignup = (e) => {
+  const handleSignupClick = (e) => {
     e.preventDefault();
-    const wrapper = document.querySelector('.login-wrapper');
-    wrapper.classList.add('transitioning');
-    
-    setTimeout(() => {
-      navigate('/signup');
-    }, 600);
+    navigate('/signup');
   };
 
-  const handleNavigateToAdmin = (e) => {
-    e.preventDefault();
-    const wrapper = document.querySelector('.login-wrapper');
-    wrapper.classList.add('transitioning');
-    
-    setTimeout(() => {
-      navigate('/admin/login');
-    }, 600);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log('Field changed', { name, value });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setError('');
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
+    
+    console.log('Form submitted', { formData, userType });
+    
+    // Validation basique
+    if (!formData.email || !formData.password) {
+      console.log('Missing email or password');
+      setError('Veuillez remplir tous les champs');
+      return;
+    }
+    
+    if (!userType) {
+      setError('Veuillez sélectionner un type d\'utilisateur');
+      return;
+    }
+    
+    console.log('Validation passed, using AuthService...');
     setLoading(true);
-
+    setError('');
+    
     try {
-      if (isMember) {
-        // Connexion membre existante
-        const response = await AuthService.login(email, password);
+      // Utiliser AuthService pour la connexion
+      const result = await AuthService.login(formData.email, formData.password);
+      
+      if (result.success) {
+        console.log('✅ Succès - Utilisateur trouvé:', result.member);
         
-        if (response.success) {
-          // Redirection vers le dashboard membre
-          navigate('/member/dashboard');
+        // Stocker selon le type d'utilisateur
+        if (userType === 'membre') {
+          localStorage.setItem('member', JSON.stringify(result.member));
+        } else if (userType === 'non-membre') {
+          localStorage.setItem('non-member', JSON.stringify(result.member));
         } else {
-          throw new Error(response.error || 'Erreur de connexion membre');
+          localStorage.setItem('user', JSON.stringify(result.member));
         }
-      } else {
-        // Connexion non-membre - vérifier dans la base de données
-        const response = await fetch('http://localhost:8000/auth/non-member/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password
-          })
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          // Stocker les informations du non-membre dans localStorage
-          localStorage.setItem('non-member', JSON.stringify(data.data.user));
-          localStorage.setItem('auth', 'true');
-          
-          // Redirection vers le dashboard non-membre
+        
+        // Ajouter le token pour compatibilité
+        localStorage.setItem('token', 'simple_token_' + Date.now());
+        
+        // Rediriger selon le type d'utilisateur
+        if (userType === 'membre') {
+          navigate('/member/dashboard');
+        } else if (userType === 'non-membre') {
           navigate('/non-member/dashboard');
         } else {
-          throw new Error(data.message || 'Erreur de connexion non-membre');
+          navigate('/dashboard');  // Home.js par défaut
         }
+      } else {
+        setError(result.error || 'Email et/ou mot de passe incorrect');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 
-                        error.message || 
-                        (isMember ? "Erreur de connexion membre" : "Erreur de connexion non-membre");
-      setError(errorMessage);
+      console.error('💥 Erreur complète:', error);
+      setError('Une erreur est survenue. Veuillez réessayer.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-wrapper">
-      <div className="login-left">
-        <div className="vision-logo">
-          <div className="logo-circle">
-            <svg viewBox="0 0 200 200" width="150" height="150">
-              <circle cx="100" cy="100" r="95" fill="#E6F3FF"/>
-              <text x="100" y="75" fontSize="36" fontWeight="bold" textAnchor="middle" fill="#000">VISION</text>
-              <text x="100" y="120" fontSize="36" fontWeight="bold" textAnchor="middle" fill="#000">CENTER</text>
-              <text x="100" y="145" fontSize="16" textAnchor="middle" fill="#666" fontStyle="italic">Madagascar</text>
-              <g opacity="0.8">
-                <rect x="85" y="35" width="30" height="8" fill="#FBBF24" rx="2"/>
-                <rect x="75" y="45" width="50" height="6" fill="#FBBF24" rx="1"/>
-                <rect x="80" y="53" width="40" height="4" fill="#FBBF24" rx="1"/>
-              </g>
-            </svg>
-          </div>
+    <div className="login-container">
+      {/* PANEL GAUCHE - Vision Center */}
+      <div className="left-panel">
+        <div className="brand">
+          <img src={logoVisionCenter} alt="Vision Center Logo" className="brand-logo" />
         </div>
       </div>
 
-      <div className="login-right">
-        <div className="login-form-container">
-          <h1>Member Sign in</h1>
-          
-          {error && <div className="error-message">{error}</div>}
-          
+      {/* PANEL DROIT - Formulaire */}
+      <div className="right-panel">
+        <div className="form-card">
+          <h1 className="signin-title">Sign in</h1>
+
           <form onSubmit={handleLogin}>
-            <div className="form-group">
-              <input 
+            {error && (
+              <div style={{ 
+                color: '#e74c3c', 
+                fontSize: '14px', 
+                marginBottom: '15px', 
+                padding: '10px', 
+                backgroundColor: '#fdf2f2', 
+                border: '1px solid #f5c6cb', 
+                borderRadius: '5px',
+                textAlign: 'center'
+              }}>
+                {error}
+              </div>
+            )}
+            
+            <div className="input-group">
+              <CustomInput 
                 type="email" 
-                placeholder="Email"
-                className="input-field"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
-                required
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email" 
               />
             </div>
 
-            <div className="form-group">
+            <div className="input-group">
               <div className="password-wrapper">
-                <input 
+                <CustomInput
                   type={showPassword ? "text" : "password"}
-                  placeholder={isMember ? "Password" : "Password (optionnel)"}
-                  className="input-field"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  disabled={loading}
-                  required={isMember}  // Requis seulement pour les membres
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Password"
                 />
-                {isMember && (
-                  <button 
-                    type="button"
-                    className="password-toggle"
-                    onClick={() => setShowPassword(!showPassword)}
-                    disabled={loading}
-                  >
-                    👁️
-                  </button>
-                )}
+                <button
+                  type="button"
+                  className="eye-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  👁️
+                </button>
               </div>
             </div>
 
-            {/* Toggle Membre/Non-membre - Vraie toggle avec slider */}
-            <div className="member-type-toggle">
-              <div className="toggle-switch">
-                <button 
-                  type="button"
-                  className={`toggle-option ${isMember ? 'active' : ''}`}
-                  onClick={() => setIsMember(true)}
-                  disabled={loading}
-                >
-                  Membre
-                </button>
-                <button 
-                  type="button"
-                  className={`toggle-option ${!isMember ? 'active' : ''}`}
-                  onClick={() => setIsMember(false)}
-                  disabled={loading}
-                >
-                  Non-membre
-                </button>
-                <div className={`toggle-slider ${isMember ? '' : 'non-member'}`}></div>
-              </div>
+            <UserTypeToggle 
+              userType={userType} 
+              onChange={setUserType} 
+            />
+
+            <div className="forgot-row">
+              <a href="#">Forgot Password?</a>
             </div>
 
-            <a href="#" className="forgot-password">Forgot Password?</a>
-
-            <button 
-              type="submit" 
-              className="login-button"
-              disabled={loading}
-            >
-              {loading ? 'Connexion en cours...' : (isMember ? 'Log in as Member' : 'Log in as Non-Member')}
+            <button type="submit" className="login-btn" disabled={loading}>
+              {loading ? 'Connexion en cours...' : 'Log In'}
             </button>
           </form>
 
           <div className="divider">Or log in with</div>
 
-          <div className="social-login">
-            <button className="social-btn apple" disabled={loading}>🍎</button>
-            <button className="social-btn google" disabled={loading}>🔍</button>
+          <div className="social-row">
+            <button className="social-circle">G</button>
           </div>
 
-          <p className="terms-text">
-            Log in means you agree our <a href="#">terms & conditions</a> and <a href="#">Privacy Policy</a> of Centre de Vision
+          <p className="legal">
+            Login means you agree our terms & conditions and Privacy Policy of
+            Handeha Voyages
           </p>
 
-          <p className="signup-text">
-            {isMember ? "Don't have account?" : "Vous n'avez pas de réservation?"} <a href={isMember ? "/signup" : "/location-salle"} className="signup-link" onClick={isMember ? handleNavigateToSignup : undefined}>{isMember ? 'Sign up!' : 'Faire une réservation'}</a>
+          <p className="signup">
+            Don't have account? <a href="#" onClick={handleSignupClick}>Sign-up!</a>
           </p>
-          
-          {/* Bouton retour au site */}
-          <div className="back-to-site">
-            <button 
-              className="back-to-site-btn"
-              onClick={() => window.location.href = '/'}
-              disabled={loading}
-            >
-              🏠 Retour au site vitrine
-            </button>
-          </div>
         </div>
-
-        <footer className="login-footer">
-          © 2023 Centre de Vision. All Rights Reserved.
-        </footer>
       </div>
     </div>
   );
 };
 
-export default MemberLogin;
+export default Login;

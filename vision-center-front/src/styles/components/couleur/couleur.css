@@ -1,0 +1,38 @@
+/* Variables de couleurs pour Vision Center */
+:root {
+  /* Couleurs de base - Noms sémantiques */
+  --cyan-clair: #a7feeb;
+  --jaune-doux: #f6f868;
+  --bleu-gris-fonce: #2f3e46;
+  --gris-clair: #f2f2f2;
+  --cyan-fonce: #32cfc9;
+  --blanc: #ffffff;
+  --gris-moyen: #666666;
+  --gris-bordure: #e0e0e0;
+  
+  /* Couleurs du dégradé */
+  --cyan-tres-clair: #8fefe9;
+  --rose-pale: #d4f1f4;
+
+  /* Usage des couleurs */
+  --background: var(--gris-clair);
+  --surface: var(--blanc);
+  --primary: var(--cyan-clair);
+  --accent: var(--jaune-doux);
+  --text: var(--bleu-gris-fonce);
+  --text-secondary: var(--gris-moyen);
+  --border: var(--gris-bordure);
+  --secondary: var(--cyan-fonce);
+}
+
+/* Classes utilitaires pour les couleurs */
+.bg-background { background-color: var(--background); }
+.bg-surface { background-color: var(--surface); }
+.bg-primary { background-color: var(--primary); }
+.bg-accent { background-color: var(--accent); }
+
+.text-primary { color: var(--text); }
+.text-secondary { color: var(--text-secondary); }
+.text-accent { color: var(--accent); }
+
+.border-custom { border-color: var(--border); }

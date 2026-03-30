@@ -1,8 +1,11 @@
+/* Admin Dashboard - Utilise les couleurs de couleur.css */
+@import "../../styles/components/couleur/couleur.css";
+
 .admin-dashboard {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  background: #f8f9fa;
+  background: var(--background);
   min-height: 100vh;
 }
 
@@ -10,21 +13,21 @@
   text-align: center;
   margin-bottom: 40px;
   padding: 30px;
-  background: white;
+  background: var(--background);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard-header h1 {
   font-size: 2.5rem;
-  color: #2c3e50;
+  color: var(--text);
   margin-bottom: 10px;
   font-weight: 700;
 }
 
 .dashboard-header p {
   font-size: 1.1rem;
-  color: #6c757d;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -35,30 +38,30 @@
   align-items: center;
   justify-content: center;
   min-height: 400px;
-  background: white;
+  background: var(--background);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .loading h2 {
-  color: #3498db;
+  color: var(--primary);
   font-size: 1.5rem;
 }
 
 .error h2 {
-  color: #e74c3c;
+  color: var(--danger);
   font-size: 1.5rem;
   margin-bottom: 20px;
 }
 
 .error p {
-  color: #721c24;
+  color: var(--danger);
   margin-bottom: 20px;
 }
 
 .error button {
-  background: #e74c3c;
-  color: white;
+  background: var(--danger);
+  color: var(--blanc);
   border: none;
   padding: 12px 24px;
   border-radius: 8px;
@@ -68,7 +71,7 @@
 }
 
 .error button:hover {
-  background: #c0392b;
+  background: var(--text);
 }
 
 .stats-cards {
@@ -79,7 +82,7 @@
 }
 
 .stat-card {
-  background: white;
+  background: var(--background);
   border-radius: 16px;
   padding: 25px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -89,7 +92,7 @@
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
-  border-left: 4px solid #3498db;
+  border-left: 4px solid var(--primary);
 }
 
 .stat-card:hover {
@@ -104,7 +107,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   border-radius: 20px;
   flex-shrink: 0;
 }
@@ -112,18 +115,18 @@
 .stat-content h3 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2c3e50;
+  color: var(--text);
   margin: 0 0 5px 0;
 }
 
 .stat-content p {
   font-size: 1rem;
-  color: #6c757d;
+  color: var(--text-secondary);
   margin: 0;
 }
 
 .section {
-  background: white;
+  background: var(--background);
   border-radius: 12px;
   padding: 30px;
   margin-bottom: 30px;
@@ -132,10 +135,10 @@
 
 .section h2 {
   font-size: 1.8rem;
-  color: #2c3e50;
+  color: var(--text);
   margin-bottom: 25px;
   font-weight: 600;
-  border-bottom: 2px solid #e9ecef;
+  border-bottom: 2px solid var(--border);
   padding-bottom: 10px;
 }
 
@@ -155,8 +158,8 @@
 
 .activity-item,
 .evolution-item {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
+  background: var(--background);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 20px;
   transition:
@@ -173,8 +176,8 @@
 .activity-rank {
   font-size: 2rem;
   font-weight: 700;
-  color: #3498db;
-  background: #e3f2fd;
+  color: var(--primary);
+  background: var(--accent);
   width: 50px;
   height: 50px;
   display: flex;
@@ -187,7 +190,7 @@
 .activity-info h4,
 .evolution-item h4 {
   font-size: 1.2rem;
-  color: #2c3e50;
+  color: var(--text);
   margin: 0 0 10px 0;
   font-weight: 600;
 }
@@ -195,7 +198,7 @@
 .activity-info p,
 .evolution-item p {
   font-size: 0.95rem;
-  color: #6c757d;
+  color: var(--text-secondary);
   margin: 5px 0;
   line-height: 1.4;
 }

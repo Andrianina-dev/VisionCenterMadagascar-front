@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SignUp.css';
+import '../../styles/components/couleur/couleur.css';
 
 const SignUp = () => {
   const navigate = useNavigate();

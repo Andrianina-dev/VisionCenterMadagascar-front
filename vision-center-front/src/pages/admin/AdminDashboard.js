@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './AdminDashboard.css';
+import "../../styles/components/couleur/couleur.css";
 
 const AdminDashboard = () => {
   const [statistics, setStatistics] = useState({

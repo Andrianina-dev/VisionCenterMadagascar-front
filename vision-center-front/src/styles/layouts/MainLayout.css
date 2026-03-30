@@ -1,4 +1,5 @@
 /* Main Layout Styles - Dashboard simple avec fond pleine largeur */
+
 .main-layout {
   display: flex !important;
   flex-direction: column !important;
@@ -6,7 +7,7 @@
   width: 100vw !important;
   max-width: none !important;
   min-width: 100vw !important;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) !important;
   position: relative !important;
   overflow: hidden !important;
   margin: 0 !important;
@@ -66,7 +67,7 @@
 .header-title {
   font-size: 32px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--blanc);
   margin: 0 0 8px 0;
   letter-spacing: -1px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

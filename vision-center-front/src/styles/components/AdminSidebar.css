@@ -1,8 +1,9 @@
-/* Admin Sidebar - Styles professionnels et autoritaires */
+/* Admin Sidebar - Utilise les couleurs de couleur.css */
+
 .admin-sidebar {
   width: 350px;
-  background: linear-gradient(180deg, #1a202c 0%, #2d3748 50%, #4a5568 100%);
-  color: #ffffff;
+  background: linear-gradient(180deg, var(--text) 0%, var(--secondary) 50%, var(--primary) 100%);
+  color: var(--blanc);
   padding: 50px 40px;
   display: flex;
   flex-direction: column;
@@ -84,8 +85,8 @@
   right: -5px;
   width: 30px;
   height: 30px;
-  background: #ffd700;
-  border: 3px solid #ffffff;
+  background: var(--accent);
+  border: 3px solid var(--blanc);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -97,7 +98,7 @@
 .admin-name {
   font-size: 20px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--blanc);
   margin: 0 0 5px 0;
   letter-spacing: 0.5px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -131,7 +132,7 @@
 .nav-section-title {
   font-size: 11px;
   font-weight: 600;
-  color: #888888;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 0 0 5px 0;
@@ -141,7 +142,7 @@
 .admin-nav-item {
   background: rgba(255, 255, 255, 0.05);
   border: none;
-  color: #cccccc;
+  color: var(--text-secondary);
   font-size: 15px;
   font-weight: 500;
   padding: 16px 20px;
@@ -157,13 +158,13 @@
 
 .admin-nav-item:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  color: var(--blanc);
   transform: translateX(5px);
 }
 
 .admin-nav-item.active {
-  background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--secondary), #ff8e53);
+  color: var(--blanc);
   transform: translateX(3px);
   box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 }
@@ -181,7 +182,7 @@
 }
 
 .nav-badge {
-  background: #ff6b6b;
+  background: var(--secondary);
   color: white;
   font-size: 11px;
   font-weight: 600;
@@ -198,7 +199,7 @@
 }
 
 .admin-sign-out-btn {
-  background: linear-gradient(135deg, #dc3545, #c82333);
+  background: linear-gradient(135deg, var(--danger), var(--text));
   border: none;
   color: white;
   font-size: 15px;
@@ -215,7 +216,7 @@
 }
 
 .admin-sign-out-btn:hover {
-  background: linear-gradient(135deg, #c82333, #bd2130);
+  background: linear-gradient(135deg, var(--text), #bd2130);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
 }
@@ -238,7 +239,7 @@
 
 .footer-text {
   font-size: 12px;
-  color: #888888;
+  color: var(--text-secondary);
   margin: 0 0 5px 0;
   font-weight: 600;
 }

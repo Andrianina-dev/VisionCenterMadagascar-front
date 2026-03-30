@@ -1,8 +1,9 @@
-/* Member Sidebar - Styles modernes et accueillants */
+/* Member Sidebar - Utilise les couleurs de couleur.css */
+
 .member-sidebar {
   width: 350px;
-  background: linear-gradient(180deg, #667eea 0%, #764ba2 50%, #5a67d8 100%);
-  color: #ffffff;
+  background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 50%, var(--text) 100%);
+  color: var(--blanc);
   padding: 50px 40px;
   display: flex;
   flex-direction: column;
@@ -84,7 +85,7 @@
 .member-name {
   font-size: 24px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--blanc);
   margin: 0 0 8px 0;
   letter-spacing: 0.5px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -115,7 +116,7 @@
 .member-nav-item {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  color: var(--blanc);
   font-size: 16px;
   font-weight: 600;
   padding: 20px 24px;
@@ -150,7 +151,7 @@
 
 .member-nav-item:hover {
   background: rgba(255, 255, 255, 0.25);
-  color: #ffffff;
+  color: var(--blanc);
   transform: translateX(8px) translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   border-color: rgba(255, 255, 255, 0.4);
@@ -158,7 +159,7 @@
 
 .member-nav-item.active {
   background: rgba(255, 255, 255, 0.3);
-  color: #ffffff;
+  color: var(--blanc);
   border-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
   transform: translateX(4px);
@@ -173,7 +174,7 @@
   transform: translateY(-50%);
   width: 8px;
   height: 8px;
-  background: #ffffff;
+  background: var(--blanc);
   border-radius: 50%;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }

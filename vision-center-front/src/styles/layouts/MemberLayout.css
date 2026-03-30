@@ -1,23 +1,5 @@
 /* MemberLayout Styles */
 
-:root {
-  --primary: #2563eb;
-  --primary-dark: #1e40af;
-  --secondary: #64748b;
-  --accent: #f59e0b;
-  --light: #f8fafc;
-  --white: #ffffff;
-  --gray: #f1f5f9;
-  --gray-dark: #e2e8f0;
-  --text: #1e293b;
-  --text-light: #64748b;
-  --text-lighter: #94a3b8;
-  --border: #e2e8f0;
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
-  --transition: all 0.3s ease;
-}
-
 .member-layout {
   min-height: 100vh;
   background: var(--light);

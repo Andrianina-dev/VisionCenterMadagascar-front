@@ -10,196 +10,9 @@ import AuthService from "../../services/auth.service";
 
 import NavigationMembre from "../../components/NavigationMembre";
 
-// Styles CSS pour la section M.E.DI.A
-const mediaStyles = `
-  .section-title-centered {
-    text-align: center;
-    margin: 2rem 0;
-    font-size: 2rem;
-    font-weight: 600;
-    color: #2c3e50;
-  }
+import "../../styles/pages/Home.css";
 
-  .media-activities-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
-    padding: 1rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .media-activity-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    border: 1px solid #e1e8ed;
-  }
-
-  .media-activity-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    border-color: #d1d9e0;
-  }
-
-  .media-activity-image {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-    background: #f8f9fa;
-  }
-
-  .media-activity-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .media-activity-fallback {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-    color: white;
-  }
-
-  .media-activity-content {
-    padding: 1.5rem;
-  }
-
-  .media-activity-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin: 0 0 1rem 0;
-    color: #2c3e50;
-    line-height: 1.4;
-  }
-
-  .media-activity-price-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
-
-  .media-activity-price {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #28a745;
-    margin: 0;
-  }
-
-  .media-price-badge {
-    background: #6c757d;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 16px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .media-activity-location {
-    font-size: 0.9rem;
-    color: #6c757d;
-    margin: 0 0 1.5rem 0;
-  }
-
-  .media-activity-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .media-participer-btn {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
-  }
-
-  .media-participer-btn:hover:not(:disabled) {
-    background: #0056b3;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
-  }
-
-  .media-participer-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background: #6c757d;
-  }
-
-  .media-participer-btn.registered {
-    background: #28a745;
-    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
-  }
-
-  .media-participer-btn.registered:hover:not(:disabled) {
-    background: #1e7e34;
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
-  }
-
-  .media-secondary-buttons {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .media-secondary-btn {
-    flex: 1;
-    background: #f8f9fa;
-    color: #495057;
-    border: 1px solid #dee2e6;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-  }
-
-  .media-secondary-btn:hover {
-    background: #e9ecef;
-    border-color: #adb5bd;
-    color: #495057;
-  }
-
-  @media (max-width: 768px) {
-    .media-activities-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-      padding: 0.5rem;
-    }
-
-    .media-activity-content {
-      padding: 1rem;
-    }
-
-    .media-secondary-buttons {
-      flex-direction: column;
-    }
-
-    .section-title-centered {
-      font-size: 1.5rem;
-      margin: 1.5rem 0;
-    }
-  }
-`;
+import "../../styles/components/couleur/couleur.css";
 
 
 
@@ -1296,9 +1109,9 @@ const Home = () => {
       // Mettre en surbrillance le bouton sélectionné
       const selectedBtn = document.querySelector(`.payment-method-btn[key="${methode.id}"]`);
       if (selectedBtn) {
-        selectedBtn.style.background = 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)';
-        selectedBtn.style.color = 'white';
-        selectedBtn.style.borderColor = '#1d4ed8';
+        selectedBtn.style.background = 'linear-gradient(135deg, var(--cyan-clair) 0%, var(--cyan-fonce) 100%)';
+        selectedBtn.style.color = 'var(--blanc)';
+        selectedBtn.style.borderColor = 'var(--cyan-fonce)';
         selectedBtn.innerHTML = `<span>${methode.displayIcon || '💳'}</span><span>${methode.nom} ✓</span>`;
         
         // Garder le bouton en état sélectionné (pas de réinitialisation)
@@ -1328,9 +1141,9 @@ const Home = () => {
     // Mettre en surbrillance le bouton sélectionné
     const selectedBtn = document.querySelector(`.mobile-money-operator-btn:nth-child(${methodesPaiement.find(m => m.id === 'mobile_money')?.types?.indexOf(operator) + 1})`);
     if (selectedBtn) {
-      selectedBtn.style.background = 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)';
-      selectedBtn.style.color = 'white';
-      selectedBtn.style.borderColor = '#0284c7';
+      selectedBtn.style.background = 'linear-gradient(135deg, var(--secondary) 0%, var(--text) 100%)';
+      selectedBtn.style.color = 'var(--blanc)';
+      selectedBtn.style.borderColor = 'var(--text)';
       selectedBtn.innerHTML = `<span>📱</span><span>${operator} ✓</span>`;
     }
     
@@ -1976,13 +1789,6 @@ const Home = () => {
   );
 
 };
-
-// Injecter les styles CSS pour la section M.E.DI.A
-if (typeof document !== 'undefined') {
-  const styleElement = document.createElement('style');
-  styleElement.textContent = mediaStyles;
-  document.head.appendChild(styleElement);
-}
 
 export default Home;
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/components/MemberLayout.css';
+import "../styles/components/couleur/couleur.css";
 
 const MemberLayout = ({ children }) => {
   return (
