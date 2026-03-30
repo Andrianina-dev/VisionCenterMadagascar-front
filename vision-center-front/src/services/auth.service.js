@@ -104,14 +104,70 @@ class AuthService {
            (localStorage.getItem('member') || localStorage.getItem('admin'));
   }
 
-  getCurrentMember() {
-    const member = localStorage.getItem('member');
-    return member ? JSON.parse(member) : null;
+  getCurrentUser() {
+    try {
+      // Vérifier tous les types d'utilisateurs connectés
+      const adminData = localStorage.getItem('admin');
+      const memberData = localStorage.getItem('member');
+      const nonMemberData = localStorage.getItem('non-member');
+      const userData = localStorage.getItem('user');
+
+      if (adminData) {
+        return { ...JSON.parse(adminData), role: 'admin' };
+      } else if (memberData) {
+        return { ...JSON.parse(memberData), role: 'membre' };
+      } else if (nonMemberData) {
+        return { ...JSON.parse(nonMemberData), role: 'non-membre' };
+      } else if (userData) {
+        return { ...JSON.parse(userData), role: 'utilisateur' };
+      }
+      return null;
+    } catch (error) {
+      console.error('Erreur getCurrentUser:', error);
+      return null;
+    }
   }
 
-  getCurrentAdmin() {
-    const admin = localStorage.getItem('admin');
-    return admin ? JSON.parse(admin) : null;
+  async getCurrentUserFromAPI() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/member/me`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.user) {
+          // Ajouter le rôle depuis les données utilisateur
+          const userWithRole = {
+            ...data.user,
+            role: this.detectRole(data.user)
+          };
+          return userWithRole;
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error('Erreur getCurrentUserFromAPI:', error);
+      return null;
+    }
+  }
+
+  detectRole(user) {
+    // Détecter le rôle selon les propriétés de l'utilisateur
+    if (user.type === 'admin' || user.role === 'admin') {
+      return 'admin';
+    } else if (user.type === 'membre' || user.role === 'membre') {
+      return 'membre';
+    } else if (user.type === 'non-membre' || user.role === 'non-membre') {
+      return 'non-membre';
+    }
+    return 'utilisateur';
   }
 
   getRole() {

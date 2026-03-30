@@ -6,7 +6,7 @@ class MessageService {
   // Récupérer tous les messages envoyés par l'admin pour le membre connecté
   async getAdminMessages() {
     try {
-      const member = AuthService.getCurrentMember();
+      const member = AuthService.getCurrentUser();
       if (!member) {
         throw new Error('Membre non connecté');
       }
@@ -34,7 +34,7 @@ class MessageService {
   // Marquer un message comme lu
   async markAsRead(messageId) {
     try {
-      const member = AuthService.getCurrentMember();
+      const member = AuthService.getCurrentUser();
       if (!member) {
         throw new Error('Membre non connecté');
       }
@@ -63,7 +63,7 @@ class MessageService {
   // Récupérer le nombre de messages non lus
   async getUnreadCount() {
     try {
-      const member = AuthService.getCurrentMember();
+      const member = AuthService.getCurrentUser();
       if (!member) {
         throw new Error('Membre non connecté');
       }

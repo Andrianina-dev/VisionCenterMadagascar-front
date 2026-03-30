@@ -12,7 +12,7 @@ const MemberSidebar = ({ activeNav }) => {
 
   useEffect(() => {
     // Récupérer les informations du membre connecté
-    const member = AuthService.getCurrentMember();
+    const member = AuthService.getCurrentUser();
     if (member) {
       setCurrentUser(member);
     }

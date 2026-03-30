@@ -12,7 +12,7 @@ const Messages = () => {
 
   useEffect(() => {
     // Vérifier si l'utilisateur est connecté
-    const member = AuthService.getCurrentMember();
+    const member = AuthService.getCurrentUser();
     if (!member) {
       navigate('/login');
       return;
@@ -27,7 +27,7 @@ const Messages = () => {
       const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
       
       // Récupérer les infos du membre connecté
-      const member = AuthService.getCurrentMember();
+      const member = AuthService.getCurrentUser();
       if (!member) {
         navigate('/login');
         return;

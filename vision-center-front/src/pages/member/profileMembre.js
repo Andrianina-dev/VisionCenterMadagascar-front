@@ -6,7 +6,7 @@ import '../../styles/pages/profileMembre.css';
 const ProfileMembre = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('account');
-  const [currentUser, setCurrentUser] = useState(AuthService.getCurrentMember());
+  const [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
   
   const [formData, setFormData] = useState({
     title: currentUser?.civilite || 'M.',

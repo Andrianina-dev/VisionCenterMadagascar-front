@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "../pages/auth/Login";
 import SignUp from "../pages/auth/SignUp";
 import MemberLogin from "../pages/auth/MemberLogin";
-import AdminLogin from "../pages/auth/AdminLogin";
 import CodeVerification from "../pages/auth/CodeVerification";
 import Home from "../pages/public/Home";
 import Inscription from "../pages/public/Inscription";
@@ -16,8 +15,6 @@ import ProfileMembre from "../pages/member/profileMembre";
 import LocationSalle from "../pages/member/LocationSalle";
 import ReservationValidation from "../pages/ReservationValidation";
 import ReservationSuccess from "../pages/ReservationSuccess";
-import AdminStatistics from "../pages/admin/AdminStatistics";
-import AdminMessages from "../pages/admin/AdminMessages";
 import FloatingMessenger from "../component/FloatingMessenger/FloatingMessenger";
 import { MessengerProvider, useMessenger } from "../contexts/MessengerContext";
 
@@ -26,7 +23,6 @@ import AccueilVitrineSimple from "../layouts/vitrine/AccueilVitrineSimple";
 import AccueilVitrine from "../layouts/vitrine/SiteVitrine";
 
 // Pages non-membre
-import AccesNonMembre from "../pages/non-member/AccesNonMembre";
 import MesReservations from "../pages/non-member/MesReservations";
 import NonMemberDashboard from "../pages/non-member/NonMemberDashboard";
 import PaymentPage from "../pages/non-member/PaymentPage";
@@ -34,7 +30,6 @@ import PaymentPage from "../pages/non-member/PaymentPage";
 import AuthLayout from "../layouts/AuthLayout";
 import MainLayout from "../layouts/MainLayout";
 import MemberLayout from "../layouts/MemberLayout";
-import AdminLayout from "../layouts/AdminLayout";
 import ProtectedRoute from "../component/ProtectedRoute";
 
 const AppRouterContent = () => {
@@ -56,25 +51,13 @@ const AppRouterContent = () => {
           </AuthLayout>
         } />
         
-        <Route path="/admin/login" element={
-          <AuthLayout>
-            <AdminLogin />
-          </AuthLayout>
-        } />
-        
-        <Route path="/admin/code" element={
-          <AuthLayout>
-            <CodeVerification />
-          </AuthLayout>
+        {/* NON-MEMBRES */}
+        <Route path="/reservations" element={
+          <ProtectedRoute>
+            <NonMemberDashboard />
+          </ProtectedRoute>
         } />
 
-        {/* NON-MEMBRES */}
-        <Route path="/acces-non-membre" element={
-          <AuthLayout>
-            <AccesNonMembre />
-          </AuthLayout>
-        } />
-        
         <Route path="/mes-reservations" element={
           <AuthLayout>
             <MesReservations />
@@ -206,38 +189,6 @@ const AppRouterContent = () => {
           </ProtectedRoute>
         } />
 
-        {/* ADMIN */}
-        <Route path="/admin" element={
-          <ProtectedRoute>
-            <AdminLayout activeNav="dashboard">
-              <AdminStatistics />
-            </AdminLayout>
-          </ProtectedRoute>
-        } />
-
-        <Route path="/admin/dashboard" element={
-          <ProtectedRoute>
-            <AdminLayout activeNav="dashboard">
-              <AdminStatistics />
-            </AdminLayout>
-          </ProtectedRoute>
-        } />
-
-        <Route path="/admin/statistics" element={
-          <ProtectedRoute>
-            <AdminLayout activeNav="statistics">
-              <AdminStatistics />
-            </AdminLayout>
-          </ProtectedRoute>
-        } />
-
-        <Route path="/admin/messages" element={
-          <ProtectedRoute>
-            <AdminLayout activeNav="messages">
-              <AdminMessages />
-            </AdminLayout>
-          </ProtectedRoute>
-        } />
       </Routes>
 
       {showMessenger && <FloatingMessenger />}

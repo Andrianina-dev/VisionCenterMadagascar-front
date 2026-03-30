@@ -9,7 +9,7 @@ const Sidebar = ({ activeNav }) => {
 
   useEffect(() => {
     // Récupérer les informations de l'utilisateur connecté
-    const member = AuthService.getCurrentMember();
+    const member = AuthService.getCurrentUser();
     if (member) {
       setCurrentUser(member);
     }

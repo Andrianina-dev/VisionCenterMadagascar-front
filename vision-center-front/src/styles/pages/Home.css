@@ -1142,7 +1142,7 @@
 .home-header {
   background: var(--blanc);
   border-bottom: 1px solid var(--border);
-  position: sticky;
+  position: fixed; /* Changé en fixed pour éviter le conflit */
   top: 0;
   z-index: 1000;
   box-shadow: var(--shadow);
@@ -1441,7 +1441,7 @@
 .profile-name {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--text);
+  color: #000000 !important; /* Noir forcé pour Home.js */
   line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;

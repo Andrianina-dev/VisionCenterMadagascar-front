@@ -141,11 +141,11 @@ const Home = () => {
 
   useEffect(() => {
 
-    const member = AuthService.getCurrentMember();
+    const user = AuthService.getCurrentUser();
 
-    if (member) {
+    if (user) {
 
-      setCurrentUser(member);
+      setCurrentUser(user);
 
     }
 
@@ -155,7 +155,7 @@ const Home = () => {
 
   // Créer le nom d'affichage
 
-  const displayName = currentUser ? `${currentUser.prenom} ${currentUser.nom.charAt(0)}.` : 'Membre';
+  const displayName = currentUser ? `${currentUser.prenom_utilisateur || currentUser.prenom} ${currentUser.nom_utilisateur?.charAt(0) || currentUser.nom?.charAt(0) || ''}.` : 'Membre';
 
   
 
@@ -1270,8 +1270,11 @@ const Home = () => {
 
   return (
     <div className="home-container">
+      {/* NavigationMembre en haut */}
+      <NavigationMembre />
+      
       {/* Hero Section */}
-      <section className="hero">
+      <section className="hero" id="hero">
         <div className="hero-content">
           <h1>Destination Madagascar</h1>
           <p>Escape at your fingertips</p>
@@ -1311,11 +1314,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-      {/* NavigationMembre juste après la section hero */}
-      <NavigationMembre />
-
-
 
       {/* Formation M.E.DI.A Section */}
       <section className="packages-section">

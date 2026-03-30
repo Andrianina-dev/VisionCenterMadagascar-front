@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../services/auth.service';
+import './NavigationMembre.css';
 
 const NavigationMembre = () => {
   const navigate = useNavigate();
@@ -8,7 +9,7 @@ const NavigationMembre = () => {
 
   useEffect(() => {
     // Récupérer les informations du membre connecté
-    const member = AuthService.getCurrentMember();
+    const member = AuthService.getCurrentUser();
     if (member) {
       setCurrentUser(member);
     }
@@ -17,7 +18,7 @@ const NavigationMembre = () => {
   const displayName = currentUser ? `${currentUser.prenom} ${currentUser.nom}` : 'Membre';
 
   return (
-    <header className="home-header">
+    <header className="navigation-header">
       <div className="header-container">
         {/* Logo */}
         <div className="header-logo">
