@@ -143,8 +143,8 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
               <>
                 <li>
                   <a 
-                    href="/dashboard" 
-                    onClick={() => navigate('/dashboard')} 
+                    href="/espace-membre" 
+                    onClick={() => navigate('/espace-membre')} 
                     className="nav-link"
                   >
                     Espace membre

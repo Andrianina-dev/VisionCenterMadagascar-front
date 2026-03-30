@@ -97,8 +97,8 @@ const AppRouterContent = () => {
           <Galerie />
         } />
 
-        {/* DASHBOARD */}
-        <Route path="/dashboard" element={
+        {/* ESPACE MEMBRE */}
+        <Route path="/espace-membre" element={
           <ProtectedRoute>
             <MainLayout>
               <Home />
