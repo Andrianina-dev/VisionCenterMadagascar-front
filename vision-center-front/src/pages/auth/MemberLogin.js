@@ -54,18 +54,20 @@ const Login = () => {
       
       if (result.success) {
         console.log('✅ Succès - Utilisateur trouvé:', result.member);
+        console.log('🔍 Rôle brut reçu:', result.member.role);
+        console.log('🔍 Rôle nom_role reçu:', result.member.role?.nom_role);
         
         // Détecter automatiquement le rôle de l'utilisateur
-        const userRole = result.member.role || result.member.type || 'membre'; // Par défaut: membre
+        const userRole = result.member.role?.nom_role || result.member.role || result.member.type || 'membre'; // Par défaut: membre
         console.log('🎯 Rôle détecté automatiquement:', userRole);
         
         // Stocker l'utilisateur selon son rôle détecté
-        if (userRole === 'admin') {
-          localStorage.setItem('admin', JSON.stringify(result.member));
-        } else if (userRole === 'membre') {
+        if (userRole === 'membre') {
           localStorage.setItem('member', JSON.stringify(result.member));
-        } else if (userRole === 'non-membre') {
-          localStorage.setItem('non-member', JSON.stringify(result.member));
+        } else if (userRole === 'non_membre') {
+          localStorage.setItem('non_membre', JSON.stringify(result.member));
+          localStorage.setItem('auth', 'true'); // Ajouter auth pour les non_membres
+          console.log('💾 Stocké dans non_membre:', result.member);
         } else {
           localStorage.setItem('user', JSON.stringify(result.member));
         }
@@ -147,7 +149,7 @@ const Login = () => {
                     </svg>
                   ) : (
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2">
-                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 8 0 0 1-5.06 5.94"/>
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                       <line x1="1" y1="1" x2="23" y2="23" stroke="#3b82f6" strokeWidth="2"/>
                     </svg>
                   )}

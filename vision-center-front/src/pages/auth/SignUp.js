@@ -119,16 +119,7 @@ const SignUp = () => {
     }, 600);
   };
 
-  const handleNavigateToAdmin = (e) => {
-    e.preventDefault();
-    const wrapper = document.querySelector('.login-wrapper');
-    wrapper.classList.add('transitioning');
-    
-    setTimeout(() => {
-      navigate('/admin/code');
-    }, 600);
-  };
-
+  
   return (
     <div className="login-wrapper">
       <div className="login-left">
@@ -225,10 +216,7 @@ const SignUp = () => {
             Vous avez déjà un compte ? <a href="/login" className="signup-link" onClick={handleNavigateToLogin}>Se connecter</a>
           </div>
           
-          <div className="admin-link">
-            <a href="/admin/code" className="admin-login-link" onClick={handleNavigateToAdmin}>Pas encore membre ? Entrez code vérification</a>
-          </div>
-        </div>
+                  </div>
       </div>
 
       <div className="login-right">

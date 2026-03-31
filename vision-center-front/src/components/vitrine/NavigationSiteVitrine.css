@@ -400,7 +400,8 @@
 }
 
 /* FORCER L'AFFICHAGE DU DROPDOWN AU HOVER */
-.user-profile:hover .profile-dropdown {
+.user-profile:hover .profile-dropdown,
+.profile-dropdown.show {
   opacity: 1 !important;
   visibility: visible !important;
   transform: translateY(0) !important;

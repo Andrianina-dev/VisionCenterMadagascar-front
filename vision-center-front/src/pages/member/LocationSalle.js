@@ -46,6 +46,9 @@ const LocationSalle = () => {
   // État pour les notifications
   const [notification, setNotification] = useState(null);
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+  
+  // État pour le message de survol du bouton
+  const [hoveredButton, setHoveredButton] = useState(null);
 
   // Fonction pour afficher une notification
   const showNotification = (message, type = 'warning') => {
@@ -198,6 +201,41 @@ const LocationSalle = () => {
 
   useEffect(() => {
     fetchSalles();
+    
+    // Vérifier si l'utilisateur est déjà connecté au chargement
+    const checkUserConnection = () => {
+      const token = localStorage.getItem('token');
+      const user = localStorage.getItem('user') || localStorage.getItem('member'); // Chercher dans les deux clés
+      
+      console.log('🔍 Debug - Token trouvé:', token);
+      console.log('🔍 Debug - User trouvé:', user);
+      
+      if (token && user) {
+        console.log('✅ Utilisateur connecté détecté');
+        setIsLoggedIn(true);
+        // Si l'utilisateur est un membre, mettre isMember à true
+        try {
+          const userData = JSON.parse(user);
+          console.log('🔍 Debug - UserData parsé:', userData);
+          if (userData.role === 'membre') {
+            console.log('✅ Membre détecté, setIsMember(true)');
+            setIsMember(true);
+            setMemberInfo({
+              id: userData.id,
+              nom: userData.nom || userData.lastName || '',
+              prenom: userData.prenom || userData.firstName || '',
+              email: userData.email || ''
+            });
+          }
+        } catch (error) {
+          console.error('Erreur parsing user data:', error);
+        }
+      } else {
+        console.log('❌ Aucun utilisateur connecté détecté');
+      }
+    };
+    
+    checkUserConnection();
   }, []);
 
   const handleSearch = (e) => {
@@ -1099,6 +1137,40 @@ const LocationSalle = () => {
                         ))}
                       </div>
                     </div>
+                    
+                    {/* Bouton Réservez */}
+                    <button 
+                      className={`btn-reserve ${
+                        salle.disponibilite === 'occupée' ? 'disabled' : 
+                        !isLoggedIn ? 'disabled' : 
+                        'primary'
+                      }`}
+                      onClick={(e) => {
+                        console.log('🔍 Debug - Clic bouton - isLoggedIn:', isLoggedIn);
+                        console.log('🔍 Debug - Clic bouton - disponibilite:', salle.disponibilite);
+                        e.stopPropagation(); // Empêcher la propagation pour ne pas déclencher handleSalleClick
+                        if (salle.disponibilite !== 'occupée' && isLoggedIn) {
+                          console.log('✅ Bouton cliqué - handleSalleClick appelé');
+                          handleSalleClick(salle);
+                        } else {
+                          console.log('❌ Bouton bloqué - salle occupée ou utilisateur non connecté');
+                        }
+                      }}
+                      disabled={salle.disponibilite === 'occupée' || !isLoggedIn}
+                      onMouseEnter={() => setHoveredButton(salle.id)}
+                      onMouseLeave={() => setHoveredButton(null)}
+                    >
+                      {salle.disponibilite === 'occupée' ? 'Occupée' : 
+                       !isLoggedIn ? 'Réservez' : 
+                       'Réservez'}
+                    </button>
+                    
+                    {/* Message au survol pour non-connectés */}
+                    {hoveredButton === salle.id && !isLoggedIn && (
+                      <div className="reserve-tooltip">
+                        Veuillez vous connecter si vous voulez louer une salle
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

@@ -6,9 +6,10 @@ import AuthService from '../../services/auth.service';
 const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features', 'activities', 'cta', 'footer'] }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
   const [user, setUser] = useState(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('accueil');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Vérifier si un utilisateur est connecté
   useEffect(() => {
@@ -129,9 +130,9 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
             </li>
             <li>
               <a 
-                href="#features" 
-                onClick={(e) => handleNavClick(e, 'features')} 
-                className={isActive('features') ? 'active' : ''}
+                href="/site-vitrine" 
+                onClick={() => navigate('/site-vitrine#features')} 
+                className="nav-link"
               >
                 Valeurs
               </a>
@@ -176,8 +177,8 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
                 </li>
                 <li>
                   <a 
-                    href="/reservations" 
-                    onClick={() => navigate('/reservations')} 
+                    href="/paiement-reservation-salle" 
+                    onClick={() => navigate('/paiement-reservation-salle')} 
                     className="nav-link"
                   >
                     Réservations
@@ -185,9 +186,24 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
                 </li>
               </>
             )}
+            {user && user.role === 'non_membre' && (
+              <li>
+                <a 
+                  href="/paiement-reservation-salle" 
+                  onClick={() => navigate('/paiement-reservation-salle')} 
+                  className="nav-link"
+                >
+                  Réservations
+                </a>
+              </li>
+            )}
             <li>
-              {user && user.role === 'membre' ? (
-                <div className="user-profile">
+              {user && (user.role === 'membre' || user.role === 'non_membre') ? (
+                <div 
+                  className="user-profile" 
+                  onMouseEnter={() => setIsDropdownOpen(true)}
+                  onMouseLeave={() => setIsDropdownOpen(false)}
+                >
                   <div className="profile-avatar">
                     <img 
                       src={`https://ui-avatars.com/api/?name=${user.prenom && user.nom ? `${user.prenom}+${user.nom}` : user.firstName || user.name || user.email?.split('@')[0] || 'U'}&background=random&color=fff&size=28`} 
@@ -218,11 +234,11 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
                     <span className="profile-role">
                       {user.role === 'admin' ? 'Administrateur' : 
                        user.role === 'membre' ? 'Membre' :
-                       user.role === 'non-membre' ? 'Non-membre' :
+                       user.role === 'non_membre' ? 'non membre' :
                        user.role || 'Utilisateur'}
                     </span>
                   </div>
-                  <div className="profile-dropdown">
+                  <div className={`profile-dropdown ${isDropdownOpen ? 'show' : ''}`}>
                     <div className="dropdown-header">
                       <div className="dropdown-avatar">
                         <img 

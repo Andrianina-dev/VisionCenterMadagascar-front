@@ -17,37 +17,19 @@ const NonMemberDashboard = () => {
   useEffect(() => {
     // Récupérer les infos du non-membre depuis localStorage
     const storedUser = localStorage.getItem('non-member');
-    console.log('🔄 useEffect - Données dans localStorage:', storedUser);
+    console.log('🔄 useEffect - Début, storedUser:', storedUser);
     
     if (storedUser) {
       try {
         const userData = JSON.parse(storedUser);
-        console.log('🔄 useEffect - Données parsées:', userData);
-        console.log('🔄 useEffect - Email utilisateur:', userData.email);
-        
-        // Utiliser directement les données du localStorage sans se reconnecter
         setUser(userData);
-        
-        // Charger les réservations directement avec l'ID utilisateur
-        const userId = userData.id_utilisateur || userData.id || userData.member?.id;
-        if (userId) {
-          console.log('🔄 useEffect - Chargement réservations pour ID:', userId);
-          loadUserReservations(userId);
-        } else {
-          console.error('❌ ID utilisateur non trouvé');
-          setError('ID utilisateur non trouvé');
-        }
-        
-        setLoading(false);
+        // Charger les réservations de l'utilisateur
+        loadReservations(userData.email);
       } catch (error) {
-        console.error('❌ Erreur parsing localStorage:', error);
-        setError('Erreur dans les données locales');
+        console.error('Erreur parsing storedUser:', error);
         setLoading(false);
       }
     } else {
-      // Aucun utilisateur dans localStorage, rediriger vers la page de connexion
-      console.log('🔄 useEffect - Aucun utilisateur trouvé, redirection...');
-      navigate('/member/login');
       setLoading(false);
     }
     
@@ -87,6 +69,9 @@ const NonMemberDashboard = () => {
     } catch (error) {
       console.error('💥 Erreur chargement méthodes paiement:', error);
       setPaymentMethods([]);
+    } finally {
+      // Arrêter le chargement même s'il y a une erreur
+      setLoading(false);
     }
   };
 

@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Login from "../pages/auth/Login";
 import SignUp from "../pages/auth/SignUp";
 import MemberLogin from "../pages/auth/MemberLogin";
 import CodeVerification from "../pages/auth/CodeVerification";
@@ -23,7 +22,6 @@ import AccueilVitrineSimple from "../layouts/vitrine/AccueilVitrineSimple";
 import AccueilVitrine from "../layouts/vitrine/SiteVitrine";
 
 // Pages non-membre
-import MesReservations from "../pages/non-member/MesReservations";
 import NonMemberDashboard from "../pages/non-member/NonMemberDashboard";
 import PaymentPage from "../pages/non-member/PaymentPage";
 
@@ -52,16 +50,10 @@ const AppRouterContent = () => {
         } />
         
         {/* NON-MEMBRES */}
-        <Route path="/reservations" element={
+        <Route path="/paiement-reservation  -salle" element={
           <ProtectedRoute>
             <NonMemberDashboard />
           </ProtectedRoute>
-        } />
-
-        <Route path="/mes-reservations" element={
-          <AuthLayout>
-            <MesReservations />
-          </AuthLayout>
         } />
 
         <Route path="/non-member/dashboard" element={
@@ -84,6 +76,11 @@ const AppRouterContent = () => {
 
         {/* PAGE D'ACCUEIL */}
         <Route path="/" element={
+          <AccueilVitrineSimple />
+        } />
+        
+        {/* SITE VITRINE COMPLET */}
+        <Route path="/site-vitrine" element={
           <AccueilVitrine />
         } />
         

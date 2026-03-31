@@ -11,13 +11,11 @@
 
 /* Import des styles des layouts */
 @import './layouts/PublicLayout.css';
-@import './layouts/AdminLayout.css';
 @import './layouts/MemberLayout.css';
 @import './layouts/MainLayout.css';
 
 /* Import des styles des composants */
 @import './components/Sidebar.css';
-@import './components/AdminSidebar.css';
 @import './components/MemberSidebar.css';
 
 /* Import des styles des pages publiques */
@@ -87,7 +85,6 @@ html, body {
   padding: 0 !important;
 }
 
-.admin-layout,
 .member-layout,
 .main-layout {
   width: 100vw !important;
