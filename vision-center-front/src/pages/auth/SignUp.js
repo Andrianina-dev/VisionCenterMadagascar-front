@@ -10,7 +10,9 @@ const SignUp = () => {
     prenom_utilisateur: '',
     email_utilisateur: '',
     mot_de_passe: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    telephone: '',
+    role: 'membre' // Rôle par défaut
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -34,30 +36,45 @@ const SignUp = () => {
   const validateForm = () => {
     const newErrors = {};
     
+    // Validation nom_utilisateur (varchar(150))
     if (!formData.nom_utilisateur.trim()) {
       newErrors.nom_utilisateur = 'Le nom est requis';
+    } else if (formData.nom_utilisateur.length > 150) {
+      newErrors.nom_utilisateur = 'Le nom ne doit pas dépasser 150 caractères';
     }
     
-    if (!formData.prenom_utilisateur.trim()) {
+    // Validation prenom_utilisateur (seulement pour membre)
+    if (formData.role === 'membre' && !formData.prenom_utilisateur.trim()) {
       newErrors.prenom_utilisateur = 'Le prénom est requis';
     }
     
+    // Validation email_utilisateur (varchar(150))
     if (!formData.email_utilisateur.trim()) {
       newErrors.email_utilisateur = 'L\'email est requis';
     } else if (!/\S+@\S+\.\S+/.test(formData.email_utilisateur)) {
       newErrors.email_utilisateur = 'L\'email n\'est pas valide';
+    } else if (formData.email_utilisateur.length > 150) {
+      newErrors.email_utilisateur = 'L\'email ne doit pas dépasser 150 caractères';
     }
     
-    if (!formData.mot_de_passe) {
-      newErrors.mot_de_passe = 'Le mot de passe est requis';
-    } else if (formData.mot_de_passe.length < 8) {
-      newErrors.mot_de_passe = 'Le mot de passe doit contenir au moins 8 caractères';
+    // Validation mot_de_passe (text) - seulement pour membre
+    if (formData.role === 'membre') {
+      if (!formData.mot_de_passe) {
+        newErrors.mot_de_passe = 'Le mot de passe est requis';
+      } else if (formData.mot_de_passe.length < 8) {
+        newErrors.mot_de_passe = 'Le mot de passe doit contenir au moins 8 caractères';
+      }
+      
+      if (!formData.confirmPassword) {
+        newErrors.confirmPassword = 'La confirmation du mot de passe est requise';
+      } else if (formData.mot_de_passe !== formData.confirmPassword) {
+        newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
+      }
     }
     
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'La confirmation du mot de passe est requise';
-    } else if (formData.mot_de_passe !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
+    // Validation telephone (varchar(255)) - optionnel mais si rempli
+    if (formData.telephone && formData.telephone.length > 255) {
+      newErrors.telephone = 'Le numéro de téléphone ne doit pas dépasser 255 caractères';
     }
     
     setErrors(newErrors);
@@ -74,19 +91,27 @@ const SignUp = () => {
     setIsLoading(true);
     
     try {
-      // Simulation d'inscription API
+      // Préparer les données selon la structure exacte de la base
+      const requestData = {
+        nom_utilisateur: formData.nom_utilisateur,
+        email_utilisateur: formData.email_utilisateur,
+        id_role: formData.role, // 'membre' ou 'non_membre' (varchar(10))
+        numero_telephone: formData.telephone || null // varchar(255), null si non fourni
+      };
+
+      // Ajouter les champs spécifiques au rôle membre
+      if (formData.role === 'membre') {
+        requestData.prenom_utilisateur = formData.prenom_utilisateur;
+        requestData.mot_de_passe = formData.mot_de_passe;
+        // isMembre sera géré automatiquement par le backend selon id_role
+      }
+
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          nom_utilisateur: formData.nom_utilisateur,
-          prenom_utilisateur: formData.prenom_utilisateur,
-          email_utilisateur: formData.email_utilisateur,
-          mot_de_passe: formData.mot_de_passe,
-          id_role: 'membre' // Rôle par défaut
-        })
+        body: JSON.stringify(requestData)
       });
       
       const data = await response.json();
@@ -143,6 +168,7 @@ const SignUp = () => {
                     value={formData.nom_utilisateur}
                     onChange={handleChange}
                     placeholder="Nom"
+                    maxLength="150"
                   />
                   {errors.nom_utilisateur && <div className="invalid-feedback">{errors.nom_utilisateur}</div>}
                 </div>
@@ -157,6 +183,7 @@ const SignUp = () => {
                     value={formData.prenom_utilisateur}
                     onChange={handleChange}
                     placeholder="Prénom"
+                    maxLength="150"
                   />
                   {errors.prenom_utilisateur && <div className="invalid-feedback">{errors.prenom_utilisateur}</div>}
                 </div>
@@ -171,8 +198,22 @@ const SignUp = () => {
                 value={formData.email_utilisateur}
                 onChange={handleChange}
                 placeholder="Email"
+                maxLength="150"
               />
               {errors.email_utilisateur && <div className="invalid-feedback">{errors.email_utilisateur}</div>}
+            </div>
+
+            <div className="form-group">
+              <input
+                type="tel"
+                className={`input-field ${errors.telephone ? 'is-invalid' : ''}`}
+                name="telephone"
+                value={formData.telephone || ''}
+                onChange={handleChange}
+                placeholder="Téléphone"
+                maxLength="255"
+              />
+              {errors.telephone && <div className="invalid-feedback">{errors.telephone}</div>}
             </div>
 
             <div className="form-group">
@@ -197,6 +238,36 @@ const SignUp = () => {
                 placeholder="Confirmer mot de passe"
               />
               {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+            </div>
+
+            {/* Toggle Rôle - Déplacé en bas */}
+            <div className="role-toggle-container">
+              <div className="role-toggle-slider" data-role={formData.role}>
+                <div 
+                  className={`toggle-option ${formData.role === 'membre' ? 'active' : ''}`}
+                  onClick={() => setFormData(prev => ({ ...prev, role: 'membre' }))}
+                >
+                  <span className="toggle-icon">👤</span>
+                  <span className="toggle-text">Membre</span>
+                  <span className="toggle-desc">Accès complet</span>
+                </div>
+                <div 
+                  className={`toggle-option ${formData.role === 'non_membre' ? 'active' : ''}`}
+                  onClick={() => setFormData(prev => ({ ...prev, role: 'non_membre' }))}
+                >
+                  <span className="toggle-icon">👥</span>
+                  <span className="toggle-text">Non-Membre</span>
+                  <span className="toggle-desc">Accès limité</span>
+                </div>
+                <div className="toggle-slider-bg"></div>
+              </div>
+              <div className="role-description">
+                {formData.role === 'membre' ? (
+                  <p>Accès complet aux activités, services et réservations</p>
+                ) : (
+                  <p>Accès limité aux réservations d'événements</p>
+                )}
+              </div>
             </div>
 
             <button 

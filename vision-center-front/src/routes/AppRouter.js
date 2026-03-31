@@ -50,7 +50,7 @@ const AppRouterContent = () => {
         } />
         
         {/* NON-MEMBRES */}
-        <Route path="/paiement-reservation  -salle" element={
+        <Route path="/paiement-reservation-salle" element={
           <ProtectedRoute>
             <NonMemberDashboard />
           </ProtectedRoute>

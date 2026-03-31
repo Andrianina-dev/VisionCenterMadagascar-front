@@ -27,11 +27,9 @@ const ReservationSuccess = () => {
     // Logique de traitement du paiement selon la méthode
     if (paymentMethod === 'cash') {
       // Logique pour paiement en espèces
-      console.log('Paiement en espèces sélectionné');
-    } else {
+          } else {
       // Logique pour Mobile Money
-      console.log('Paiement Mobile Money sélectionné');
-    }
+          }
   };
 
   return (

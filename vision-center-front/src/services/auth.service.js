@@ -25,11 +25,7 @@ class AuthService {
         localStorage.setItem('auth', 'true');
         
         // Log pour débogage
-        console.log('AuthService - Données stockées:', {
-          member: data.data.member,
-          memberString: localStorage.getItem('member')
-        });
-        
+                
         return { success: true, member: data.data.member };
       } else {
         throw new Error(data.message || 'Erreur de connexion');

@@ -48,20 +48,17 @@ const Home = () => {
 
   const [mediaActivities, setMediaActivities] = useState([]);
 
-  // Cache pour éviter les appels répétés
   const [registrationCache, setRegistrationCache] = useState({});
   const [participantsCache, setParticipantsCache] = useState({});
 
-  // États pour le popup de paiement
   const [showPaymentPopup, setShowPaymentPopup] = useState(false);
   const [selectedActivite, setSelectedActivite] = useState(null);
   const [methodesPaiement, setMethodesPaiement] = useState([]);
   const [showMobileMoneyOptions, setShowMobileMoneyOptions] = useState(false);
-  const [selectedMethodePaiement, setSelectedMethodePaiement] = useState('Mobile Money'); // 🆕 État pour la méthode sélectionnée
+  const [selectedMethodePaiement, setSelectedMethodePaiement] = useState('Mobile Money');
 
 
 
-  // Charger les méthodes de paiement depuis l'API
   const loadMethodesPaiement = async () => {
     try {
       const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
@@ -70,15 +67,12 @@ const Home = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          // Regrouper les méthodes mobile money
           const methodesGroup = groupMethodesPaiement(data.data);
           setMethodesPaiement(methodesGroup);
-          console.log('Méthodes de paiement groupées:', methodesGroup);
-        }
+                  }
       }
     } catch (error) {
       console.error('Erreur chargement méthodes de paiement:', error);
-      // En cas d'erreur, utiliser des méthodes par défaut
       setMethodesPaiement([
         { id: 'mobile_money', nom: 'Mobile Money', displayIcon: '📱', types: ['MVola', 'Airtel Money', 'Orange Money'] },
         { id: 'espece', nom: 'Espèce', displayIcon: '�' }
@@ -86,7 +80,6 @@ const Home = () => {
     }
   };
 
-  // Regrouper les méthodes de paiement (mobile money groupé)
   const groupMethodesPaiement = (methodes) => {
     const mobileMoneyMethods = [];
     const otherMethods = [];
@@ -103,7 +96,6 @@ const Home = () => {
       }
     });
     
-    // Créer le groupe Mobile Money s'il y a des méthodes
     const result = [];
     if (mobileMoneyMethods.length > 0) {
       result.push({
@@ -114,30 +106,22 @@ const Home = () => {
       });
     }
     
-    // Ajouter les autres méthodes
     result.push(...otherMethods);
     
     return result;
   };
 
-  // Fonction pour mapper les noms vers des emojis
   const getIconForMethode = (nom) => {
     const lowerNom = nom.toLowerCase();
     
-    // Mobile money pour MVola, Airtel Money, Orange Money
     if (lowerNom.includes('mvola') || lowerNom.includes('airtel') || lowerNom.includes('orange')) return '📱';
-    // Espèce
     if (lowerNom.includes('espece')) return '💵';
-    // Carte bancaire
     if (lowerNom.includes('carte')) return '💳';
     
-    // Icône par défaut
     return '💳';
   };
 
 
-
-  // Récupérer les informations de l'utilisateur connecté
 
   useEffect(() => {
 
@@ -153,13 +137,9 @@ const Home = () => {
 
 
 
-  // Créer le nom d'affichage
-
   const displayName = currentUser ? `${currentUser.prenom_utilisateur || currentUser.prenom} ${currentUser.nom_utilisateur?.charAt(0) || currentUser.nom?.charAt(0) || ''}.` : 'Membre';
 
   
-
-  // Créer les variables pour l'avatar et l'email
 
   const userAvatar = currentUser ? currentUser.avatar : null;
 
@@ -167,38 +147,34 @@ const Home = () => {
 
 
 
-  // Images spirituelles et religieuses variées en ligne pour le projet
   const spiritualImages = {
-    vision: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=60&h=40&fit=crop&auto=format", // Lumière spirituelle
-    prayer: "https://images.unsplash.com/photo-1596424986036-55096d083be1?w=60&h=40&fit=crop&auto=format", // Prière
-    bible: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=60&h=40&fit=crop&auto=format", // Bible ouverte
-    cross: "https://images.unsplash.com/photo-1544620334-9fc037e0935b?w=60&h=40&fit=crop&auto=format", // Croix lumineuse
-    church: "https://images.unsplash.com/photo-1515940326542-7736d91b918c?w=60&h=40&fit=crop&auto=format", // Église
-    nature: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=60&h=40&fit=crop&auto=format", // Forêt spirituelle
-    community: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=60&h=40&fit=crop&auto=format", // Communauté
-    meditation: "https://images.unsplash.com/photo-1588266835491-1b1b5e05c2c7?w=60&h=40&fit=crop&auto=format", // Méditation profonde
-    sunset: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=60&h=40&fit=crop&auto=format", // Coucher de soleil spirituel
-    light: "https://images.unsplash.com/photo-1579532585360-1e8b0b3d4a0e?w=60&h=40&fit=crop&auto=format", // Lumière divine
-    peace: "https://images.unsplash.com/photo-1540206395-6880857c32f6?w=60&h=40&fit=crop&auto=format", // Paix spirituelle
-    worship: "https://images.unsplash.com/photo-1494232410401-ad00d543542e?w=60&h=40&fit=crop&auto=format", // Adoration
-    dove: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=60&h=40&fit=crop&auto=format", // Colombe de la paix
-    candles: "https://images.unsplash.com/photo-1549286088-27ee7c637a6a?w=60&h=40&fit=crop&auto=format", // Bougies de prière
-    mountains: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=60&h=40&fit=crop&auto=format", // Montagnes sacrées
-    water: "https://images.unsplash.com/photo-1540206395-6880857c32f6?w=60&h=40&fit=crop&auto=format", // Eau bénite
-    sky: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=60&h=40&fit=crop&auto=format", // Ciel divin
-    garden: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=60&h=40&fit=crop&auto=format", // Jardin de prière
-    stainedGlass: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=60&h=40&fit=crop&auto=format", // Vitraux
-    sunrise: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=60&h=40&fit=crop&auto=format" // Lever de soleil spirituel
+    vision: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=60&h=40&fit=crop&auto=format",
+    prayer: "https://images.unsplash.com/photo-1596424986036-55096d083be1?w=60&h=40&fit=crop&auto=format",
+    bible: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=60&h=40&fit=crop&auto=format",
+    cross: "https://images.unsplash.com/photo-1544620334-9fc037e0935b?w=60&h=40&fit=crop&auto=format",
+    church: "https://images.unsplash.com/photo-1515940326542-7736d91b918c?w=60&h=40&fit=crop&auto=format",
+    nature: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=60&h=40&fit=crop&auto=format",
+    community: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=60&h=40&fit=crop&auto=format",
+    meditation: "https://images.unsplash.com/photo-1588266835491-1b1b5e05c2c7?w=60&h=40&fit=crop&auto=format",
+    sunset: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=60&h=40&fit=crop&auto=format",
+    light: "https://images.unsplash.com/photo-1579532585360-1e8b0b3d4a0e?w=60&h=40&fit=crop&auto=format",
+    peace: "https://images.unsplash.com/photo-1540206395-6880857c32f6?w=60&h=40&fit=crop&auto=format",
+    worship: "https://images.unsplash.com/photo-1494232410401-ad00d543542e?w=60&h=40&fit=crop&auto=format",
+    dove: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=60&h=40&fit=crop&auto=format",
+    candles: "https://images.unsplash.com/photo-1549286088-27ee7c637a6a?w=60&h=40&fit=crop&auto=format",
+    mountains: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=60&h=40&fit=crop&auto=format",
+    water: "https://images.unsplash.com/photo-1540206395-6880857c32f6?w=60&h=40&fit=crop&auto=format",
+    sky: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=60&h=40&fit=crop&auto=format",
+    garden: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=60&h=40&fit=crop&auto=format",
+    stainedGlass: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=60&h=40&fit=crop&auto=format",
+    sunrise: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=60&h=40&fit=crop&auto=format"
   };
 
-  // Image améliorée pour Centre de Vision (spirituelle)
   const improvedImageBase64 = spiritualImages.vision;
 
 
 
-  // Vérifier si l'utilisateur est déjà inscrit à une activité (avec cache)
   const checkIfAlreadyRegistered = async (activiteId) => {
-    // Vérifier le cache d'abord
     if (registrationCache[activiteId] !== undefined) {
       return registrationCache[activiteId];
     }
@@ -223,7 +199,6 @@ const Home = () => {
       
       if (response.ok) {
         const data = await response.json();
-        // Mettre en cache le résultat
         setRegistrationCache(prev => ({ ...prev, [activiteId]: data.isRegistered }));
         return data.isRegistered;
       }
@@ -237,9 +212,7 @@ const Home = () => {
 
 
 
-  // Compter le nombre de participants pour une activité (avec cache)
   const countParticipants = async (activiteId) => {
-    // Vérifier le cache d'abord
     if (participantsCache[activiteId] !== undefined) {
       return participantsCache[activiteId];
     }
@@ -247,21 +220,17 @@ const Home = () => {
     try {
       const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
       
-      // Utiliser le nouvel endpoint qui compte directement dans la table inscription_activite
       const response = await fetch(`${apiUrl}/public/inscription_activite/${activiteId}/count`);
 
       if (response.ok) {
         const data = await response.json();
         const count = data.success ? data.data : 0;
         
-        // Mettre en cache le résultat
         setParticipantsCache(prev => ({ ...prev, [activiteId]: count }));
         
-        console.log(`🎯 Activité ${activiteId} - ${count} participant(s) trouvé(s) dans inscription_activite`);
-        return count;
+                return count;
       }
       
-      // Si l'endpoint n'existe pas, retourner 0
       console.warn('⚠️ Endpoint count non disponible - 0 participant pour', activiteId);
       setParticipantsCache(prev => ({ ...prev, [activiteId]: 0 }));
       return 0;
@@ -275,11 +244,9 @@ const Home = () => {
 
 
 
-  // Charger les activités depuis l'API (optimisé)
   const loadActivites = async () => {
     try {
       
-      // Charger tout en parallèle pour optimiser le temps de chargement
       const [activitesOuvertes, activitesPopulaires, typesResponse, mediaResponse] = await Promise.all([
         activiteService.getActivitesOuvertes(),
         activiteService.getActivitesPopulaires(),
@@ -287,20 +254,16 @@ const Home = () => {
         fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/admin/ressources/activites-media-only`)
       ]);
       
-      // Traiter les types d'activités
       let typesData = [];
       if (typesResponse.ok) {
         typesData = await typesResponse.json();
         setTypesActivites(typesData);
-        console.log('Types d\'activités chargés:', typesData);
-      } else {
+              } else {
         console.error('Erreur chargement types:', typesResponse.status, typesResponse.statusText);
       }
       
-      // Traiter les activités M.E.D.I.A depuis le nouvel endpoint dédié
       if (mediaResponse.ok) {
         const mediaData = await mediaResponse.json();
-        // Ajouter les statuts d'inscription aux activités M.E.D.I.A
         const mediaActivitiesWithStatus = await Promise.all(
           mediaData.map(async (activite) => {
             const [isRegistered, participantsCount] = await Promise.all([
@@ -317,17 +280,14 @@ const Home = () => {
         );
         
         setMediaActivities(mediaActivitiesWithStatus);
-        console.log('✅ Activités M.E.DI.A depuis endpoint dédié:', mediaActivitiesWithStatus);
-      } else {
+              } else {
         console.error('Erreur chargement activités M.E.DI.A:', mediaResponse.status, mediaResponse.statusText);
         setMediaActivities([]);
       }
       
-      // Limiter le nombre d'activités à traiter pour accélérer le chargement initial
-      const limitedOuvertes = activitesOuvertes.slice(0, 8); // Limiter à 8 activités
-      const limitedPopulaires = activitesPopulaires.slice(0, 6); // Limiter à 6 activités
+      const limitedOuvertes = activitesOuvertes.slice(0, 8);
+      const limitedPopulaires = activitesPopulaires.slice(0, 6);
       
-      // Traiter les activités en parallèle avec cache
       const activitesOuvertesWithStatus = await Promise.all(
         limitedOuvertes.map(async (activite) => {
           const [isRegistered, participantsCount] = await Promise.all([
@@ -371,13 +331,11 @@ const Home = () => {
   useEffect(() => {
 
     loadActivites();
-    loadMethodesPaiement(); // Charger les méthodes de paiement depuis la base de données
+    loadMethodesPaiement();
 
   }, []);
 
 
-
-  // Initialiser les activités filtrées quand les activités populaires changent
 
   useEffect(() => {
 
@@ -395,8 +353,6 @@ const Home = () => {
   ];
 
 
-
-  // Utiliser les vraies activités populaires filtrées au lieu des packages simulés
 
   const packages = activitesPopulairesFiltrees.slice(0, 4).map((activite, index) => ({
 
@@ -418,7 +374,7 @@ const Home = () => {
 
     lieu: activite.lieu_activite,
 
-    isBase64: true, // Toujours true car on utilise base64
+    isBase64: true,
 
     isRegistered: activite.isRegistered || false
 
@@ -441,8 +397,6 @@ const Home = () => {
 
 
 
-  // Gérer le clic sur une activité
-
   const handleActiviteClick = (activiteId) => {
 
     navigate(`/activite/${activiteId}`);
@@ -451,29 +405,20 @@ const Home = () => {
 
 
 
-  // Gérer l'inscription directe
-
   const handleParticiper = async (activiteId) => {
 
-    // Trouver l'activité pour vérifier si c'est payante
-    // Chercher d'abord dans les activités M.E.DI.A, puis dans les autres
     let activite = mediaActivities.find(a => a.id_activite === activiteId);
     if (!activite) {
       activite = activitesOuvertes.find(a => a.id_activite === activiteId);
     }
 
-    // Si l'activité est payante (est_payante: true), afficher le popup de paiement
     if (activite && activite.est_payante === true) {
-      console.log('Activité payante détectée - Affichage du popup de paiement');
-      
-      // Afficher l'ID utilisateur dès l'ouverture du popup
+            
       const auth = localStorage.getItem('auth') || sessionStorage.getItem('auth');
       if (auth) {
         try {
           const authData = JSON.parse(auth);
-          console.log('=== ID UTILISATEUR À L\'OUVERTURE DU POPUP ===');
-          console.log('AuthData:', authData);
-          
+                              
           let utilisateurConnecte = null;
           if (authData.utilisateur) {
             utilisateurConnecte = authData.utilisateur;
@@ -484,15 +429,11 @@ const Home = () => {
           }
           
           if (utilisateurConnecte) {
-            console.log('Utilisateur trouvé à l\'ouverture:', utilisateurConnecte);
-            console.log('ID utilisateur à l\'ouverture:', utilisateurConnecte.id_utilisateur);
-            
-            // Chercher l'ID dans toutes les propriétés si null
+                                    
             if (!utilisateurConnecte.id_utilisateur) {
               for (const key in utilisateurConnecte) {
                 if (typeof utilisateurConnecte[key] === 'string' && utilisateurConnecte[key].includes('usr-')) {
-                  console.log(`ID trouvé à l'ouverture dans '${key}':`, utilisateurConnecte[key]);
-                  break;
+                                    break;
                 }
               }
             }
@@ -509,10 +450,6 @@ const Home = () => {
 
 
 
-    // Pour les autres activités, procéder normalement
-
-    // Vérifier si l'utilisateur est connecté
-
     const auth = localStorage.getItem('auth') || sessionStorage.getItem('auth');
 
     const member = localStorage.getItem('member') || sessionStorage.getItem('member');
@@ -523,8 +460,6 @@ const Home = () => {
 
     if (!userIsLoggedIn) {
 
-      // Si non connecté, rediriger vers la page de login
-
       navigate('/login');
 
       return;
@@ -532,8 +467,6 @@ const Home = () => {
     }
 
 
-
-    // Si connecté, inscrire directement
 
     setSubmittingId(activiteId);
 
@@ -547,19 +480,9 @@ const Home = () => {
 
       
 
-      console.log('État de connexion:', {
-
-        auth,
-
-        member: member,
-
-        'member parsed': member ? JSON.parse(member) : null
-
-      });
-
       
-
-      // Vérifier que l'ID utilisateur existe (structure correcte)
+        
+      
 
       if (!memberData || !memberData.id) {
 
@@ -575,13 +498,9 @@ const Home = () => {
 
       
 
-      // Récupérer l'ID utilisateur avec fallback
-
       let utilisateurId = memberData.id;
 
       
-
-      // Fallback: essayer de récupérer depuis les autres propriétés
 
       if (!utilisateurId && memberData) {
 
@@ -594,8 +513,6 @@ const Home = () => {
           utilisateurId = memberData.id_utilisateur;
 
         } else if (memberData.email) {
-
-          // Extraire l'ID depuis l'email (format: USR-X)
 
           const emailMatch = memberData.email.match(/USR-(\d+)/);
 
@@ -623,19 +540,12 @@ const Home = () => {
 
       }
 
-      
-
-      console.log('Tentative d\'inscription avec:', {
-
+      const inscriptionData = {
         activiteId,
-
         utilisateurId,
-
         memberData,
-
-        'utilisateur final': utilisateurId
-
-      });
+        'utilisateur final': utilisateurId,
+      };
 
       
 
@@ -675,13 +585,9 @@ const Home = () => {
 
 
 
-      // Afficher un message de succès
-
       alert('Inscription réussie ! Vous êtes maintenant inscrit à cette activité.');
 
       
-
-      // Mettre à jour le nombre de participants localement
 
       setActivitesOuvertes(prev => 
 
@@ -715,8 +621,6 @@ const Home = () => {
 
       
 
-      // Rafraîchir les activités pour mettre à jour le statut
-
       loadActivites();
 
       
@@ -737,11 +641,7 @@ const Home = () => {
 
 
 
-  // Gérer la désinscription
-
   const handleDesinscrire = async (activiteId) => {
-
-    // Vérifier si l'utilisateur est connecté
 
     const auth = localStorage.getItem('auth') || sessionStorage.getItem('auth');
 
@@ -772,8 +672,6 @@ const Home = () => {
       const memberData = member ? JSON.parse(member) : null;
 
       
-
-      // Récupérer l'ID utilisateur
 
       let utilisateurId = memberData.id;
 
@@ -841,8 +739,6 @@ const Home = () => {
 
       
 
-      // Mettre à jour le nombre de participants localement
-
       setActivitesOuvertes(prev => 
 
         prev.map(activite => 
@@ -875,8 +771,6 @@ const Home = () => {
 
       
 
-      // Rafraîchir les activités pour mettre à jour le statut
-
       loadActivites();
 
       
@@ -899,8 +793,6 @@ const Home = () => {
 
   const handleSeeOnMap = (activity) => {
 
-    // setSelectedActivity(activity);
-
   };
 
 
@@ -913,8 +805,6 @@ const Home = () => {
 
 
 
-  // Gérer le clic sur "Voir tout"
-
   const handleSeeAllActivites = () => {
 
     navigate('/activites');
@@ -923,19 +813,14 @@ const Home = () => {
 
 
 
-  // Gérer le changement de filtre d'activité
-
   const handleActivityFilterChange = (e) => {
 
     const filterValue = e.target.value;
 
     setSelectedTypeFilter(filterValue);
 
-    console.log('Filtre sélectionné:', filterValue);
-
     
-
-    // Filtrer les activités populaires selon le type sélectionné
+    
 
     if (filterValue === 'all') {
 
@@ -956,8 +841,6 @@ const Home = () => {
   };
 
 
-
-  // Charger les exigences pour un type d'activité spécifique
 
   const loadExigencesForType = async (idType) => {
 
@@ -981,8 +864,7 @@ const Home = () => {
 
         }));
 
-        console.log(`Exigences pour type ${idType}:`, exigences);
-
+        
       } else {
 
         console.error('Erreur chargement exigences:', response.status);
@@ -997,31 +879,20 @@ const Home = () => {
 
   }
   
-  // Gérer le clic sur un type pour afficher les exigences
   const handleTypeClick = (typeId) => {
     setShowExigences(prev => !prev);
   };
 
 
-  // Gérer le clic sur une méthode de paiement
   const handleMethodeClick = (methode) => {
-    console.log('Design popup - Méthode cliquée:', methode.id, methode.nom);
-    
+        
     if (methode.id === 'mobile_money') {
-      // Si c'est Mobile Money, afficher les options détaillées pour choisir UN opérateur
-      console.log('Design popup - Clic sur Mobile Money, affichage des opérateurs pour choix unique');
       setTimeout(() => setShowMobileMoneyOptions(true), 100);
     } else {
-      // Pour les autres méthodes (Espèce, etc.), sélection directe sans Mobile Money
-      console.log('Design popup - Méthode choisie (pas Mobile Money):', methode.nom);
-      
-      // 🆕 Stocker la méthode de paiement sélectionnée
       setSelectedMethodePaiement(methode.nom);
       
-      // S'assurer que les options Mobile Money sont fermées
       setShowMobileMoneyOptions(false);
       
-      // Réinitialiser tous les autres boutons
       const allBtns = document.querySelectorAll('.payment-method-btn');
       allBtns.forEach(btn => {
         btn.style.background = '';
@@ -1033,7 +904,6 @@ const Home = () => {
         btn.innerHTML = `<span>${methodeIcon}</span><span>${methodeName}</span>`;
       });
       
-      // Mettre en surbrillance le bouton sélectionné
       const selectedBtn = document.querySelector(`.payment-method-btn[key="${methode.id}"]`);
       if (selectedBtn) {
         selectedBtn.style.background = 'linear-gradient(135deg, var(--cyan-clair) 0%, var(--cyan-fonce) 100%)';
@@ -1041,20 +911,14 @@ const Home = () => {
         selectedBtn.style.borderColor = 'var(--cyan-fonce)';
         selectedBtn.innerHTML = `<span>${methode.displayIcon || '💳'}</span><span>${methode.nom} ✓</span>`;
         
-        // Garder le bouton en état sélectionné (pas de réinitialisation)
-        // L'utilisateur verra que son choix est bien enregistré
       }
     }
   };
 
-  // Gérer le choix d'un opérateur mobile money
   const handleMobileMoneyChoice = (operator) => {
-    console.log('Design popup - Opérateur choisi:', operator);
-    
-    // 🆕 Stocker l'opérateur mobile money choisi
+        
     setSelectedMethodePaiement(operator);
     
-    // Réinitialiser tous les autres boutons d'opérateurs
     const allOperatorBtns = document.querySelectorAll('.mobile-money-operator-btn');
     allOperatorBtns.forEach(btn => {
       btn.style.background = '';
@@ -1065,7 +929,6 @@ const Home = () => {
       btn.innerHTML = `<span>📱</span><span>${operatorName}</span>`;
     });
     
-    // Mettre en surbrillance le bouton sélectionné
     const selectedBtn = document.querySelector(`.mobile-money-operator-btn:nth-child(${methodesPaiement.find(m => m.id === 'mobile_money')?.types?.indexOf(operator) + 1})`);
     if (selectedBtn) {
       selectedBtn.style.background = 'linear-gradient(135deg, var(--secondary) 0%, var(--text) 100%)';
@@ -1074,92 +937,51 @@ const Home = () => {
       selectedBtn.innerHTML = `<span>📱</span><span>${operator} ✓</span>`;
     }
     
-    // Ne fermer que si le paiement est vraiment effectué
-    // Pour l'instant, juste garder le popup ouvert avec le choix visible
-    // handlePayment(selectedActivite, operator);
-    // setShowMobileMoneyOptions(false);
-    // setShowPaymentPopup(false);
-    // setSelectedActivite(null);
   };
 
-  // Gérer le paiement pour les formations
   const handlePayment = async (activite, methodePaiement = 'Mobile Money') => {
     try {
-      console.log('=== CLIC SUR PAYER MAINTENANT ===');
-      
-      // Afficher l'ID utilisateur connecté simplement
+            
       const auth = localStorage.getItem('auth') || sessionStorage.getItem('auth');
       const member = localStorage.getItem('member') || sessionStorage.getItem('member');
-      
-      console.log('=== DONNÉES BRUTES DE STOCKAGE ===');
-      console.log('localStorage.auth:', localStorage.getItem('auth'));
-      console.log('sessionStorage.auth:', sessionStorage.getItem('auth'));
-      console.log('localStorage.member:', localStorage.getItem('member'));
-      console.log('sessionStorage.member:', sessionStorage.getItem('member'));
-      console.log('Auth brut choisi:', auth);
-      console.log('Member brut choisi:', member);
       
       let utilisateurConnecte = null;
       let idUtilisateurTrouve = null;
       
-      // Priorité aux données member (où se trouvent vraiment les infos utilisateur)
       let dataSource = null;
       if (member) {
         dataSource = member;
-        console.log('Source utilisée: member');
-      } else if (auth) {
-        dataSource = auth;
-        console.log('Source utilisée: auth');
       }
       
       if (dataSource) {
         try {
           const userData = JSON.parse(dataSource);
-          console.log('=== ID UTILISATEUR CONNECTÉ ===');
-          console.log('UserData complet:', userData);
-          console.log('Type de UserData:', typeof userData);
-          console.log('Clés de UserData:', Object.keys(userData));
           
-          // userData contient directement l'utilisateur
           utilisateurConnecte = userData;
-          console.log('Utilisateur connecté:', utilisateurConnecte);
-          console.log('Type de utilisateurConnecte:', typeof utilisateurConnecte);
-          console.log('Clés de utilisateurConnecte:', Object.keys(utilisateurConnecte));
           
-          // Chercher l'ID dans id_utilisateur d'abord
           if (utilisateurConnecte.id_utilisateur) {
             idUtilisateurTrouve = utilisateurConnecte.id_utilisateur;
-            console.log('ID utilisateur trouvé (id_utilisateur):', idUtilisateurTrouve);
           } else if (utilisateurConnecte.id) {
             idUtilisateurTrouve = utilisateurConnecte.id;
-            console.log('ID utilisateur trouvé (id):', idUtilisateurTrouve);
           } else {
-            // Chercher dans d'autres propriétés
             const possibleIds = ['user_id', 'userId', 'id_user'];
             for (const prop of possibleIds) {
               if (utilisateurConnecte[prop]) {
                 idUtilisateurTrouve = utilisateurConnecte[prop];
-                console.log(`ID utilisateur trouvé (${prop}):`, idUtilisateurTrouve);
                 break;
               }
             }
             
-            // Si toujours pas trouvé, chercher partout
             if (!idUtilisateurTrouve) {
               for (const key in utilisateurConnecte) {
                 if (utilisateurConnecte[key] && typeof utilisateurConnecte[key] === 'string' && (utilisateurConnecte[key].includes('usr-') || utilisateurConnecte[key].includes('USR-'))) {
                   idUtilisateurTrouve = utilisateurConnecte[key];
-                  console.log(`ID utilisateur trouvé (${key}):`, idUtilisateurTrouve);
                   break;
                 }
               }
             }
           }
           
-          console.log('=== RÉSULTAT FINAL ===');
-          console.log('ID utilisateur connecté:', idUtilisateurTrouve);
-          
-          // Assigner l'ID pour le paiement
           if (idUtilisateurTrouve) {
             utilisateurConnecte.id_utilisateur = idUtilisateurTrouve;
           }
@@ -1176,40 +998,11 @@ const Home = () => {
         return;
       }
 
-      console.log('Activité:', activite);
-      console.log('Utilisateur final pour paiement:', utilisateurConnecte);
-      console.log('ID utilisé pour paiement:', utilisateurConnecte.id_utilisateur);
-
-      // Étape 1: Créer le paiement D'ABORD avec l'ID utilisateur
-      console.log('Création du paiement en premier...');
-      
-      // Validation de l'ID utilisateur
-      console.log('=== DÉBUGGING ID UTILISATEUR ===');
-      console.log('utilisateurConnecte complet:', JSON.stringify(utilisateurConnecte, null, 2));
-      console.log('utilisateurConnecte.id_utilisateur:', utilisateurConnecte.id_utilisateur);
-      console.log('Type de utilisateurConnecte.id_utilisateur:', typeof utilisateurConnecte.id_utilisateur);
-      console.log('utilisateurConnecte.id:', utilisateurConnecte.id);
-      console.log('Type de utilisateurConnecte.id:', typeof utilisateurConnecte.id);
-      
       if (!utilisateurConnecte.id_utilisateur && !utilisateurConnecte.id) {
         console.error('Aucun ID trouvé dans id_utilisateur ni id');
-        console.log('Propriétés disponibles:', Object.keys(utilisateurConnecte));
-        
-        // Chercher manuellement l'ID
-        for (const key in utilisateurConnecte) {
-          const value = utilisateurConnecte[key];
-          console.log(`Propriété ${key}:`, value, `(type: ${typeof value})`);
-          if (typeof value === 'string' && (value.includes('USR-') || value.includes('usr-'))) {
-            console.log(`ID TROUVÉ dans ${key}:`, value);
-            utilisateurConnecte.id_utilisateur = value;
-            break;
-          }
-        }
       }
       
       if (!utilisateurConnecte.id_utilisateur) {
-        console.error('ID utilisateur toujours manquant après recherche');
-        console.error('utilisateurConnecte après recherche:', utilisateurConnecte);
         alert('Erreur: ID utilisateur non trouvé. Veuillez vous reconnecter.');
         return;
       }
@@ -1219,16 +1012,9 @@ const Home = () => {
         id_activite: activite.id_activite,
         montant: activite.prix || activite.montant_a_payer || 0,
         description: `Paiement formation: ${activite.titre_activite}`,
-        methode_paiement: methodePaiement, // 🆕 Ajout de la méthode de paiement
-        reference_paiement: `REF-${Date.now()}` // 🆕 Référence automatique
+        methode_paiement: methodePaiement,
+        reference_paiement: `REF-${Date.now()}`
       };
-
-      console.log('=== DONNÉES ENVOYÉES AU BACKEND ===');
-      console.log('paiementData complet:', JSON.stringify(paiementData, null, 2));
-      console.log('id_utilisateur envoyé:', paiementData.id_utilisateur);
-      console.log('Type id_utilisateur envoyé:', typeof paiementData.id_utilisateur);
-      console.log('id_activite envoyé:', paiementData.id_activite);
-      console.log('Type id_activite envoyé:', typeof paiementData.id_activite);
 
       const paiementResponse = await fetch(`${process.env.REACT_APP_API_URL}/public/formation/paiement`, {
         method: 'POST',
@@ -1240,26 +1026,18 @@ const Home = () => {
       });
 
       const paiementResult = await paiementResponse.json();
-      console.log('Réponse paiement:', paiementResult);
-
       if (!paiementResult.success) {
         console.error('Erreur lors du paiement:', paiementResult.message);
         alert(`Erreur: ${paiementResult.message}`);
         return;
       }
 
-      console.log('Paiement créé avec succès:', paiementResult.data);
-
-      // Succès - le backend a déjà créé l'inscription automatiquement
       alert(`Paiement de ${paiementData.montant} ${activite.devise || 'MGA'} et inscription réussis!`);
       
-      // Fermer le popup
       setShowPaymentPopup(false);
       setShowMobileMoneyOptions(false);
       setSelectedActivite(null);
       
-      // Optionnel: recharger les données
-      // window.location.reload();
 
     } catch (error) {
       console.error('Erreur lors du paiement:', error);

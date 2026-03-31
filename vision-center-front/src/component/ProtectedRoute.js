@@ -4,8 +4,7 @@ import AuthService from "../services/auth.service";
 
 const ProtectedRoute = ({ children }) => {
   // Tout le monde a accès à toutes les pages
-  console.log('✅ ProtectedRoute - Accès autorisé à toutes les routes');
-  return children;
+    return children;
 };
 
 export default ProtectedRoute;

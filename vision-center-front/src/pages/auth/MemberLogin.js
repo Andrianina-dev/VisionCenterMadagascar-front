@@ -24,8 +24,7 @@ const Login = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log('Field changed', { name, value });
-    setFormData(prev => ({
+        setFormData(prev => ({
       ...prev,
       [name]: value
     }));
@@ -35,17 +34,14 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     
-    console.log('Form submitted', { formData });
-    
+        
     // Validation basique
     if (!formData.email || !formData.password) {
-      console.log('Missing email or password');
-      setError('Veuillez remplir tous les champs');
+            setError('Veuillez remplir tous les champs');
       return;
     }
     
-    console.log('Validation passed, using AuthService...');
-    setLoading(true);
+        setLoading(true);
     setError('');
     
     try {
@@ -53,22 +49,17 @@ const Login = () => {
       const result = await AuthService.login(formData.email, formData.password);
       
       if (result.success) {
-        console.log('✅ Succès - Utilisateur trouvé:', result.member);
-        console.log('🔍 Rôle brut reçu:', result.member.role);
-        console.log('🔍 Rôle nom_role reçu:', result.member.role?.nom_role);
-        
+                                
         // Détecter automatiquement le rôle de l'utilisateur
         const userRole = result.member.role?.nom_role || result.member.role || result.member.type || 'membre'; // Par défaut: membre
-        console.log('🎯 Rôle détecté automatiquement:', userRole);
-        
+                
         // Stocker l'utilisateur selon son rôle détecté
         if (userRole === 'membre') {
           localStorage.setItem('member', JSON.stringify(result.member));
         } else if (userRole === 'non_membre') {
           localStorage.setItem('non_membre', JSON.stringify(result.member));
           localStorage.setItem('auth', 'true'); // Ajouter auth pour les non_membres
-          console.log('💾 Stocké dans non_membre:', result.member);
-        } else {
+                  } else {
           localStorage.setItem('user', JSON.stringify(result.member));
         }
         

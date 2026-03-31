@@ -20,13 +20,11 @@ const PaymentPage = () => {
         setReservation(reservationData);
         setSalle(salleData);
         setMember(memberData);
-        console.log('Données de l\'étape 3 reçues:', { reservationData, salleData, memberData });
-      }
+              }
     } else if (reservationId) {
       // Mode normal avec ID dans l'URL
       // Charger la réservation depuis l'API
-      console.log('Chargement de la réservation avec ID:', reservationId);
-      // TODO: Implémenter le chargement depuis l'API
+            // TODO: Implémenter le chargement depuis l'API
     }
     
     setLoading(false);

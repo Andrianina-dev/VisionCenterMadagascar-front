@@ -8,8 +8,7 @@ import activiteService from "../../services/activite.service";
 
 const getActiviteById = async (id) => {
 
-  console.log(`Tentative de chargement de l'activité ${id} à ${new Date().toISOString()}`);
-
+  
   
 
   try {
@@ -20,8 +19,7 @@ const getActiviteById = async (id) => {
 
     
 
-    console.log(`URL appelée: ${apiUrl}`);
-
+    
     
 
     const response = await fetch(apiUrl);
@@ -42,8 +40,7 @@ const getActiviteById = async (id) => {
 
     // Utiliser les données réelles de la base sans modifications statiques
 
-    console.log(`Activité ${id} chargée avec succès:`, data);
-
+    
     return data;
 
   } catch (error) {
@@ -106,8 +103,7 @@ const ActiviteDetails = () => {
       const memberData = member ? JSON.parse(member) : null;
       
       if (!memberData || !memberData.id) {
-        console.log('Utilisateur non connecté');
-        return;
+                return;
       }
 
       let utilisateurId = memberData.id;
@@ -128,8 +124,7 @@ const ActiviteDetails = () => {
       }
 
       if (!utilisateurId) {
-        console.log('ID utilisateur non trouvé');
-        return;
+                return;
       }
 
       // Appeler l'API pour vérifier l'inscription
@@ -139,8 +134,7 @@ const ActiviteDetails = () => {
       if (response.ok) {
         const data = await response.json();
         setIsUserRegistered(data.isRegistered);
-        console.log(`Utilisateur ${data.isRegistered ? 'INSCRIT' : 'NON INSCRIT'} à l'activité ${activiteId}`);
-      } else {
+              } else {
         console.error('Erreur vérification inscription:', response.status);
         setIsUserRegistered(false);
       }
@@ -162,8 +156,7 @@ const ActiviteDetails = () => {
       if (response.ok) {
         const exigencesData = await response.json();
         setExigences(exigencesData);
-        console.log(`Exigences pour l'activité de type ${idType}:`, exigencesData);
-      } else {
+              } else {
         console.error('Erreur chargement exigences:', response.status);
       }
     } catch (error) {
@@ -181,8 +174,7 @@ const ActiviteDetails = () => {
       setLoadingRessources(true);
       const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
       
-      console.log(`🔄 Chargement des ressources réelles pour l'activité ${activiteId}`);
-      
+            
       // Appel API réel pour récupérer les ressources
       const response = await fetch(`${apiUrl}/admin/ressources/activite/${activiteId}`);
       
@@ -194,14 +186,10 @@ const ActiviteDetails = () => {
       }
       
       const ressourcesData = await response.json();
-      console.log('📚 Ressources reçues de l\'API:', ressourcesData);
-      
+            
       // Séparer les documents et les vidéos
       const documents = ressourcesData.filter(r => r.type === 'document');
       const videos = ressourcesData.filter(r => r.type === 'video');
-      
-      console.log(`� Documents filtrés (${documents.length}):`, documents);
-      console.log(`🎥 Vidéos filtrées (${videos.length}):`, videos);
       
       setDocuments(documents);
       setVideos(videos);
@@ -249,8 +237,7 @@ const ActiviteDetails = () => {
 
           setTypesActivites(typesData);
 
-          console.log('Types d\'activités chargés:', typesData);
-
+          
         }
 
         
@@ -371,8 +358,7 @@ const ActiviteDetails = () => {
 
     } catch (e) {
 
-      console.log('Impossible de parser l\'erreur:', e);
-
+      
     }
 
 

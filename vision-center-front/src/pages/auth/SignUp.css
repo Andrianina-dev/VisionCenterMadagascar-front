@@ -191,6 +191,137 @@
   border-color: #999;
 }
 
+/* Toggle Rôle - Slider avec animation */
+.role-toggle-container {
+  margin-bottom: 20px;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.role-toggle-slider {
+  display: flex;
+  background: #f8f9fa;
+  border-radius: 20px;
+  padding: 2px;
+  border: 2px solid #00d4ff;
+  box-shadow: 0 2px 5px rgba(0, 212, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  height: 40px;
+  width: 200px;
+}
+
+.toggle-option {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Fond blanc pour l'option non sélectionnée */
+.toggle-option:not(.active) {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  color: #666;
+}
+
+.toggle-option:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+/* Couleur de l'option active selon le rôle */
+.role-toggle-slider[data-role="membre"] .toggle-option.active {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(240, 147, 108, 0.3);
+}
+
+.role-toggle-slider[data-role="membre"] .toggle-option:not(.active) {
+  border: 2px solid #f093fb;
+  color: #f093fb;
+}
+
+.role-toggle-slider[data-role="non_membre"] .toggle-option.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.role-toggle-slider[data-role="non_membre"] .toggle-option:not(.active) {
+  border: 2px solid #667eea;
+  color: #667eea;
+}
+
+.toggle-option.active {
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+  z-index: 3;
+}
+
+/* Couleur de l'option active selon le rôle */
+.role-toggle-slider[data-role="membre"] .toggle-option.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.role-toggle-slider[data-role="non_membre"] .toggle-option.active {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(240, 147, 108, 0.3);
+}
+
+.toggle-icon {
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.toggle-option.active .toggle-icon {
+  transform: scale(1.2);
+}
+
+.toggle-slider-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 25px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+/* Couleur dynamique selon le rôle */
+.role-toggle-slider[data-role="membre"] .toggle-slider-bg {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  transform: translateX(0);
+}
+
+.role-toggle-slider[data-role="non_membre"] .toggle-slider-bg {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transform: translateX(100%);
+}
+
+/* Animation fluide */
+.toggle-option {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .terms-text {
   font-size: 12px;
   color: #666;

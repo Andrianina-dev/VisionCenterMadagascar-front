@@ -196,10 +196,10 @@
   background: linear-gradient(135deg, #6b7280, #4b5563);
   color: #1a1a2e;
   border: 2px solid #6b7280;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   font-size: 0.85rem;
   font-weight: 600;
-  border-radius: 6px;
+  border-radius: 0.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
@@ -218,25 +218,109 @@
 .step-actions .btn-success {
   background: linear-gradient(135deg, #48bb78, #38a169);
   color: #ffffff;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   font-size: 0.85rem;
+  border-radius: 0.5rem;
   font-weight: 600;
-  border-radius: 6px;
+  transition: all 0.3s ease;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   min-width: 160px;
   flex: 1;
   box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .step-actions .btn-success:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+}
+
+.button-spacer {
+  width: 1rem;
+}
+
+/* Popup de confirmation simplifiée */
+.confirm-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-popup {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: 2px solid rgba(127, 254, 244, 0.3);
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  animation: popupSlideIn 0.3s ease-out;
+}
+
+@keyframes popupSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.confirm-popup h3 {
+  color: #7FFEF4;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.confirm-popup p {
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  opacity: 0.9;
+  font-size: 1rem;
+}
+
+.confirm-popup-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.confirm-popup-actions .btn {
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-width: 100px;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.confirm-popup-actions .btn-secondary {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  color: #1a1a2e;
+}
+
+.confirm-popup-actions .btn-success {
+  background: linear-gradient(135deg, #48bb78, #38a169);
+  color: #ffffff;
+}
+
+.confirm-popup-actions .btn:hover {
+  transform: translateY(-2px);
 }
 
 /* Validation Summary */
@@ -650,17 +734,22 @@ input:-webkit-autofill:active {
 
 .salle-card {
   background: white;
-  border-radius: 0.75rem;
+  border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
-  cursor: pointer;
-  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: default; /* Curseur normal, plus cliquable */
+  border: 1px solid #e5e7eb;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .salle-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  border-color: #3b82f6;
 }
 
 .salle-card.selected {

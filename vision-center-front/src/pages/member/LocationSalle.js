@@ -12,7 +12,32 @@ const LocationSalle = () => {
   const [salles, setSalles] = useState([]);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSalle, setSelectedSalle] = useState(null);
+  const [selectedSalle, setSelectedSalle] = useState(() => {
+    const savedSalle = sessionStorage.getItem('selectedSalle');
+    return savedSalle ? JSON.parse(savedSalle) : null;
+  });
+
+  // Sauvegarder selectedSalle dans sessionStorage quand il change
+  useEffect(() => {
+    if (selectedSalle) {
+      sessionStorage.setItem('selectedSalle', JSON.stringify(selectedSalle));
+    } else {
+      sessionStorage.removeItem('selectedSalle');
+    }
+  }, [selectedSalle]);
+
+  // Réinitialiser selectedSalle seulement quand on arrive via navigation (pas au rechargement)
+  useEffect(() => {
+    // Vérifier si on arrive via navigation (pas un rechargement)
+    const navigationEntries = performance.getEntriesByType('navigation');
+    const isNavigation = navigationEntries.length > 0 && 
+                        navigationEntries[0].type === 'navigate';
+    
+    if (isNavigation) {
+      // Forcer l'affichage de la liste des salles seulement si on arrive via navigation
+      setSelectedSalle(null);
+    }
+  }, []);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -81,62 +106,47 @@ const LocationSalle = () => {
         statut: 'En attente'
       };
 
-      console.log('Données de réservation initiales:', reservationData);
-      console.log('selectedSalle:', selectedSalle);
-      console.log('formData:', formData);
-      console.log('isMember:', isMember, 'isLoggedIn:', isLoggedIn);
-
+                        
       let result;
 
       if (isMember && isLoggedIn) {
         // Réservation pour un membre connecté - ajouter utilisateur_id
         reservationData.utilisateur_id = memberInfo.id || 1; // Adapter selon ton système
-        console.log('Création réservation pour membre avec utilisateur_id:', reservationData.utilisateur_id);
-        result = await ApiService.createReservation(reservationData);
+                result = await ApiService.createReservation(reservationData);
       } else {
         // Utiliser l'ID du non-membre créé à l'étape 1
-        console.log('memberInfo complet:', memberInfo);
-        console.log('memberInfo.id:', memberInfo.id);
-        
+                        
         if (!memberInfo.id) {
-          console.error('ERREUR: memberInfo.id est null ou undefined!');
-          console.error('memberInfo complet pour debug:', JSON.stringify(memberInfo, null, 2));
+                    console.error('memberInfo complet pour debug:', JSON.stringify(memberInfo, null, 2));
           throw new Error('ID du non-membre non trouvé. Veuillez recommencer depuis l\'étape 1.');
         }
         
         // Ajouter l'ID de l'utilisateur aux données de réservation
         reservationData.utilisateur_id = memberInfo.id;
-        console.log('Utilisation utilisateur_id de l\'étape 1:', memberInfo.id);
-        console.log('Données de réservation finales:', reservationData);
-        console.log('DataJSON envoyé à l\'API:', JSON.stringify(reservationData, null, 2));
-        
+                                
         // Créer la réservation avec l'ID de l'utilisateur
         result = await ApiService.createReservation(reservationData);
       }
 
-      console.log('Résultat de l API:', result);
-
+      
       if (result.success) {
         // Mettre à jour le résultat de réservation
-        console.log('selectedSalle au moment de la confirmation:', selectedSalle);
-        console.log('result.data (réservation créée):', result.data);
-        
+                        
         const validationData = {
           reservation: result.data,
           salle: selectedSalle,
           member: memberInfo
         };
         
-        console.log('validationData complet:', validationData);
-        setReservationResult(validationData);
+                setReservationResult(validationData);
         
-        // Rediriger directement vers le paiement après l'étape 3
-        navigate('/paiement', { 
+        // Rediriger tout de suite vers paiement-reservation-salle après confirmation
+        navigate('/paiement-reservation-salle', { 
           state: { 
             reservation: result.data, 
             salle: selectedSalle,
             member: memberInfo,
-            fromStep3: true // Indiquer que ça vient de l'étape 3
+            fromConfirmation: true // Indiquer que ça vient de la confirmation
           } 
         });
       } else {
@@ -207,19 +217,14 @@ const LocationSalle = () => {
       const token = localStorage.getItem('token');
       const user = localStorage.getItem('user') || localStorage.getItem('member'); // Chercher dans les deux clés
       
-      console.log('🔍 Debug - Token trouvé:', token);
-      console.log('🔍 Debug - User trouvé:', user);
-      
+                  
       if (token && user) {
-        console.log('✅ Utilisateur connecté détecté');
-        setIsLoggedIn(true);
+                setIsLoggedIn(true);
         // Si l'utilisateur est un membre, mettre isMember à true
         try {
           const userData = JSON.parse(user);
-          console.log('🔍 Debug - UserData parsé:', userData);
-          if (userData.role === 'membre') {
-            console.log('✅ Membre détecté, setIsMember(true)');
-            setIsMember(true);
+                    if (userData.role === 'membre') {
+                        setIsMember(true);
             setMemberInfo({
               id: userData.id,
               nom: userData.nom || userData.lastName || '',
@@ -231,8 +236,7 @@ const LocationSalle = () => {
           console.error('Erreur parsing user data:', error);
         }
       } else {
-        console.log('❌ Aucun utilisateur connecté détecté');
-      }
+              }
     };
     
     checkUserConnection();
@@ -306,10 +310,7 @@ const LocationSalle = () => {
         const result = await ApiService.createOrFindNonMember(memberData);
         
         if (result.success) {
-          console.log('Non-membre créé/trouvé:', result.data);
-          console.log('Structure complète de result.data:', JSON.stringify(result.data, null, 2));
-          console.log('ID du non-membre:', result.data.id_utilisateur);
-          
+                                        
           // Stocker les données complètes du non-membre dans localStorage
           const nonMemberData = {
             id_utilisateur: result.data.id_utilisateur,
@@ -327,8 +328,7 @@ const LocationSalle = () => {
             id: result.data.id_utilisateur  // Utiliser id_utilisateur au lieu de id
           }));
           
-          console.log('memberInfo mis à jour avec ID:', { ...memberInfo, id: result.data.id_utilisateur });
-          nextStep();
+                    nextStep();
         } else {
           alert(`Erreur: ${result.message}`);
         }
@@ -351,16 +351,14 @@ const LocationSalle = () => {
       return;
     }
     
-    // Passer à l'étape 3 (validation) sans créer la réservation
-    setCurrentStep(3);
+    // Passer à l'étape 2 (confirmation) pour afficher les données à confirmer
+    setCurrentStep(2);
   };
 
   const handleFinalSubmit = async () => {
     try {
       // Debug: vérifier si selectedSalle est défini
-      console.log('selectedSalle:', selectedSalle);
-      console.log('formData:', formData);
-      
+                  
       if (!selectedSalle || !selectedSalle.id) {
         alert('Erreur: Veuillez sélectionner une salle');
         return;
@@ -377,21 +375,19 @@ const LocationSalle = () => {
         description: formData.description || ''
       };
       
-      console.log('reservationData à envoyer:', reservationData);
-      
+            
       let result;
       
       if (isMember) {
-        // Réservation pour un membre
-        result = await ApiService.createReservation(reservationData);
+        // Réservation pour un membre - ajouter utilisateur_id
+        reservationData.utilisateur_id = memberInfo.id || 1;
+                result = await ApiService.createReservation(reservationData);
       } else {
         // Réservation pour un non membre déjà créé à l'étape 1
         // Utiliser l'ID de l'utilisateur déjà stocké dans memberInfo.id
         reservationData.utilisateur_id = memberInfo.id;
         
-        console.log('Réservation pour non-membre avec utilisateur_id:', memberInfo.id);
-        console.log('Données de réservation finales:', reservationData);
-        
+                        
         // Utiliser la route normale avec utilisateur_id
         result = await ApiService.createReservation(reservationData);
       }
@@ -442,20 +438,9 @@ const LocationSalle = () => {
   };
 
   const handleSalleClick = (salle) => {
-    // Vérifier si la salle est occupée
-    if (salle.disponibilite === 'occupée') {
-      showNotification('Cette salle est actuellement occupée', 'warning');
-      return; // Bloquer la sélection - ne pas setSelectedSalle
-    }
-    
-    // Si la salle n'est pas occupée, permettre la sélection
-    setSelectedSalle(salle);
-    setFormData(prev => ({
-      ...prev,
-      salle_id: salle.id,
-      capacite_requise: salle.capacite
-    }));
-  };
+    // Ne plus permettre la sélection directe depuis la liste
+    // Seul le bouton "Réservez" peut déclencher la réservation
+      };
 
   const filteredSalles = salles.filter(salle =>
     salle.nom.toLowerCase().includes(searchQuery.toLowerCase())
@@ -551,213 +536,41 @@ const LocationSalle = () => {
                 <div className="reservation-card">
                   <h3>📅 Réserver cette salle</h3>
                   
-                  {/* Toggle Membre/Non-membre */}
-                  <div className="member-toggle">
-                    <label className="toggle-label">
-                      <input
-                        type="checkbox"
-                        checked={isMember}
-                        onChange={(e) => setIsMember(e.target.checked)}
-                        className="toggle-input"
-                      />
-                      <span className="toggle-slider"></span>
-                      <span className="toggle-text">
-                        {isMember ? 'Je suis un membre' : 'Je ne suis pas membre'}
-                      </span>
-                    </label>
-                  </div>
-                  
-                  {/* Formulaire de connexion pour les membres */}
-                  {isMember && !isLoggedIn && (
-                    <div className="member-login-section">
-                      <h4>🔐 Connexion membre</h4>
-                      <div className="login-form">
-                        <div className="form-group">
-                          <label>Email</label>
-                          <input
-                            type="email"
-                            name="email"
-                            value={loginInfo.email}
-                            onChange={handleLoginChange}
-                            placeholder="votre@email.com"
-                            className="form-input"
-                            required
-                          />
-                        </div>
-                        
-                        <div className="form-group">
-                          <label>Mot de passe</label>
-                          <input
-                            type="password"
-                            name="password"
-                            value={loginInfo.password}
-                            onChange={handleLoginChange}
-                            placeholder="••••••••"
-                            className="form-input"
-                            required
-                          />
-                        </div>
-                        
-                        <button 
-                          type="button" 
-                          className="btn btn-primary login-btn"
-                          onClick={handleLogin}
-                        >
-                          Se connecter
-                        </button>
+                  {/* Utilisateur déjà connecté - afficher ses informations */}
+                  <div className="member-info-display">
+                    <h4>👤 Informations du réservant</h4>
+                    <div className="info-display-grid">
+                      <div className="info-item">
+                        <span className="info-label">Nom:</span>
+                        <span className="info-value">{memberInfo.prenom} {memberInfo.nom}</span>
                       </div>
+                      {memberInfo.telephone && (
+                        <div className="info-item">
+                          <span className="info-label">Téléphone:</span>
+                          <span className="info-value">{memberInfo.telephone}</span>
+                        </div>
+                      )}
                     </div>
-                  )}
-                  
-                  {/* Message de bienvenue pour membre connecté */}
-                  {isMember && isLoggedIn && (
-                    <div className="member-welcome-section">
-                      <h4>✅ Connecté en tant que membre</h4>
-                      <p>Vous pouvez maintenant procéder à votre réservation.</p>
-                    </div>
-                  )}
-                  
+                  </div>
+
                   <div className="reservation-form">
                     {/* Indicateur d'étapes */}
                     <div className="steps-indicator">
                       <div className={`step ${currentStep === 1 ? 'current' : ''} ${currentStep > 1 ? 'active' : ''}`}>
                         <div className="step-number">1</div>
-                        <div className="step-label">Identification</div>
+                        <div className="step-label">Détails de réservation</div>
                       </div>
                       <div className="step-connector"></div>
-                      <div className={`step ${currentStep === 2 ? 'current' : ''} ${currentStep > 2 ? 'active' : ''}`}>
+                      <div className={`step ${currentStep === 2 ? 'current' : ''}`}>
                         <div className="step-number">2</div>
-                        <div className="step-label">Réservation</div>
-                      </div>
-                      <div className="step-connector"></div>
-                      <div className={`step ${currentStep === 3 ? 'current' : ''} ${currentStep > 3 ? 'active' : ''}`}>
-                        <div className="step-number">3</div>
-                        <div className="step-label">Validation</div>
+                        <div className="step-label">Confirmation</div>
                       </div>
                     </div>
 
-                    {/* Étape 1 : Identification */}
+                    {/* Étape 1 : Détails de réservation */}
                     {currentStep === 1 && (
                       <div className="step-content">
-                        <h3>👤 Étape 1 : Identification</h3>
-                        
-                        {!isMember ? (
-                          <div className="member-info-section">
-                            <h4>Informations personnelles</h4>
-                            <div className="form-grid">
-                              <div className="form-group">
-                                <label>Nom *</label>
-                                <input
-                                  type="text"
-                                  name="nom"
-                                  value={memberInfo.nom}
-                                  onChange={handleMemberInfoChange}
-                                  placeholder="Votre nom"
-                                  className="form-input"
-                                  required
-                                />
-                              </div>
-                              
-                              <div className="form-group">
-                                <label>Prénom *</label>
-                                <input
-                                  type="text"
-                                  name="prenom"
-                                  value={memberInfo.prenom}
-                                  onChange={handleMemberInfoChange}
-                                    placeholder="Votre prénom"
-                                  className="form-input"
-                                  required
-                                />
-                              </div>
-                              
-                              <div className="form-group">
-                                <label>Email *</label>
-                                <input
-                                  type="email"
-                                  name="email"
-                                  value={memberInfo.email}
-                                  onChange={handleMemberInfoChange}
-                                  placeholder="votre@email.com"
-                                  className="form-input"
-                                  required
-                                />
-                              </div>
-                              
-                              <div className="form-group">
-                                <label>Téléphone *</label>
-                                <input
-                                  type="tel"
-                                  name="telephone"
-                                  value={memberInfo.telephone}
-                                  onChange={handleMemberInfoChange}
-                                  placeholder="Votre téléphone"
-                                  className="form-input"
-                                  required
-                                />
-                              </div>
-                              
-                              <div className="form-group full-width">
-                                <label>Numéro de carte d'identité *</label>
-                                <input
-                                  type="text"
-                                  name="numero_carte_identite"
-                                  value={memberInfo.numero_carte_identite}
-                                  onChange={handleMemberInfoChange}
-                                  placeholder="Ex: 1234567890123"
-                                  className="form-input"
-                                  required
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="member-login-section">
-                            <h4>Connexion membre</h4>
-                            <div className="form-grid">
-                              <div className="form-group">
-                                <label>Email</label>
-                                <input
-                                  type="email"
-                                  name="email"
-                                  value={loginInfo.email}
-                                  onChange={handleLoginChange}
-                                  placeholder="votre@email.com"
-                                  className="form-input"
-                                />
-                              </div>
-                              
-                              <div className="form-group">
-                                <label>Mot de passe</label>
-                                <input
-                                  type="password"
-                                  name="password"
-                                  value={loginInfo.password}
-                                  onChange={handleLoginChange}
-                                  placeholder="Votre mot de passe"
-                                  className="form-input"
-                                />
-                              </div>
-                            </div>
-                            
-                            <button className="btn btn-primary" onClick={handleLogin}>
-                              Se connecter
-                            </button>
-                          </div>
-                        )}
-                        
-                        <div className="step-actions">
-                          <button className="btn btn-primary" onClick={handleStep1Submit}>
-                            Suivant →
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Étape 2 : Réservation */}
-                    {currentStep === 2 && (
-                      <div className="step-content">
-                        <h3>📅 Étape 2 : Détails de la réservation</h3>
+                        <h3>📅 Étape 1 : Détails de réservation</h3>
                         
                         <div className="form-grid">
                           <div className="form-group">
@@ -835,9 +648,6 @@ const LocationSalle = () => {
                         </div>
                         
                         <div className="step-actions">
-                          <button className="btn btn-secondary" onClick={prevStep}>
-                            ← Précédent
-                          </button>
                           <button className="btn btn-primary" onClick={handleStep2Submit}>
                             Suivant →
                           </button>
@@ -845,235 +655,86 @@ const LocationSalle = () => {
                       </div>
                     )}
 
-                    {/* Étape 3 : Validation */}
-                    {currentStep === 3 && (
+                    {/* Étape 2 : Confirmation */}
+                    {currentStep === 2 && (
                       <div className="step-content">
-                        <h3>🎯 Étape 3 : Validation de la réservation</h3>
+                        <h3>✅ Étape 2 : Confirmation</h3>
                         
-                        {!reservationResult ? (
-                          <div className="validation-container">
-                            <div className="validation-summary">
-                              <h4>Résumé de votre réservation</h4>
-                              
-                              <div className="summary-section">
-                                <h5>📍 Salle réservée</h5>
-                                <div className="info-row">
-                                  <span className="info-label">Nom:</span>
-                                  <span className="info-value">{selectedSalle?.nom}</span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Capacité:</span>
-                                  <span className="info-value">{selectedSalle?.capacite} personnes</span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Prix:</span>
-                                  <span className="info-value">{selectedSalle?.prix} Ar</span>
-                                </div>
-                              </div>
-                              
-                              <div className="summary-section">
-                                <h5>📅 Période de réservation</h5>
-                                <div className="info-row">
-                                  <span className="info-label">Date début:</span>
-                                  <span className="info-value">{new Date(formData?.date_debut).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Date fin:</span>
-                                  <span className="info-value">{new Date(formData?.date_fin).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Horaires:</span>
-                                  <span className="info-value">
-                                    {formData?.heure_debut && formData?.heure_fin ? 
-                                      (() => {
-                                        const formatHeure = (heure) => {
-                                          if (typeof heure === 'string' && heure.includes('T')) {
-                                            const date = new Date(heure);
-                                            return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
-                                          }
-                                          else if (typeof heure === 'string' && heure.includes(':')) {
-                                            return heure.split(':').slice(0, 2).join(':');
-                                          }
-                                          else {
-                                            const date = new Date(heure);
-                                            return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
-                                          }
-                                        };
-                                        return `${formatHeure(formData.heure_debut)} à ${formatHeure(formData.heure_fin)}`;
-                                      })()
-                                      : 'Non défini'
-                                    }
-                                  </span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Durée:</span>
-                                  <span className="info-value">{Math.ceil((new Date(formData?.date_fin) - new Date(formData?.date_debut)) / (1000 * 60 * 60 * 24)) + 1} jour(s)</span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Capacité:</span>
-                                  <span className="info-value">{formData?.capacite_requise} personnes</span>
-                                </div>
-                              </div>
-                              
-                              <div className="summary-section">
-                                <h5>👤 Informations du réservataire</h5>
-                                <div className="info-row">
-                                  <span className="info-label">Nom:</span>
-                                  <span className="info-value">{memberInfo?.nom} {memberInfo?.prenom}</span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Email:</span>
-                                  <span className="info-value">{memberInfo?.email}</span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Téléphone:</span>
-                                  <span className="info-value">{memberInfo?.telephone}</span>
-                                </div>
-                              </div>
-                              
-                              {formData?.description && (
-                                <div className="summary-section">
-                                  <h5>📝 Description</h5>
-                                  <div className="info-row">
-                                    <span className="info-value">{formData.description}</span>
-                                  </div>
-                                </div>
-                              )}
+                        <div className="confirmation-summary">
+                          <h4>📋 Récapitulatif de votre réservation</h4>
+                          
+                          {/* Informations de la salle */}
+                          <div className="summary-section">
+                            <h5>📍 Salle réservée</h5>
+                            <div className="info-row">
+                              <span className="info-label">Nom:</span>
+                              <span className="info-value">{selectedSalle?.nom}</span>
+                            </div>
+                            <div className="info-row">
+                              <span className="info-label">Capacité:</span>
+                              <span className="info-value">{selectedSalle?.capacite} personnes</span>
+                            </div>
+                            <div className="info-row">
+                              <span className="info-label">Prix:</span>
+                              <span className="info-value">{selectedSalle?.prix} Ar</span>
                             </div>
                           </div>
-                        ) : (
-                          <div className="validation-container">
-                            <div className="validation-summary">
-                              <h4>Réservation créée avec succès!</h4>
-                              
-                              <div className="summary-section">
-                                <h5>📍 Salle réservée</h5>
-                                <div className="info-row">
-                                  <span className="info-label">Nom:</span>
-                                  <span className="info-value">{reservationResult.salle?.nom}</span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Capacité:</span>
-                                  <span className="info-value">{reservationResult.salle?.capacite} personnes</span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Prix:</span>
-                                  <span className="info-value">{reservationResult.salle?.prix} Ar</span>
-                                </div>
-                              </div>
-                              
-                              <div className="summary-section">
-                                <h5>📅 Période de réservation</h5>
-                                <div className="info-row">
-                                  <span className="info-label">Date début:</span>
-                                  <span className="info-value">{new Date(reservationResult.reservation?.date_debut).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Date fin:</span>
-                                  <span className="info-value">{new Date(reservationResult.reservation?.date_fin).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Horaires:</span>
-                                  <span className="info-value">
-                                    {reservationResult.reservation?.heure_debut && reservationResult.reservation?.heure_fin ? 
-                                      (() => {
-                                        const formatHeure = (heure) => {
-                                          // Si c'est une chaîne ISO comme "2026-03-02T10:00:00.000Z"
-                                          if (typeof heure === 'string' && heure.includes('T')) {
-                                            const date = new Date(heure);
-                                            return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
-                                          }
-                                          // Si c'est juste une heure comme "10:00"
-                                          else if (typeof heure === 'string' && heure.includes(':')) {
-                                            return heure.split(':').slice(0, 2).join(':');
-                                          }
-                                          // Sinon, essayer de convertir en date
-                                          else {
-                                            const date = new Date(heure);
-                                            return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
-                                          }
-                                        };
-                                        return `${formatHeure(reservationResult.reservation.heure_debut)} à ${formatHeure(reservationResult.reservation.heure_fin)}`;
-                                      })()
-                                      : 'Non défini'
-                                    }
-                                  </span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Durée:</span>
-                                  <span className="info-value">{Math.ceil((new Date(reservationResult.reservation?.date_fin) - new Date(reservationResult.reservation?.date_debut)) / (1000 * 60 * 60 * 24)) + 1} jour(s)</span>
-                                </div>
-                                <div className="info-row">
-                                  <span className="info-label">Capacité:</span>
-                                  <span className="info-value">{reservationResult.reservation?.capacite_requise} personnes</span>
-                                </div>
-                                <div className="info-row highlight">
-                                  <span className="info-label">Référence:</span>
-                                  <span className="info-value">#{reservationResult.reservation?.id}</span>
-                                </div>
-                              </div>
-                              
-                              <div className="summary-section">
-                                <h5>👤 Informations du réservataire</h5>
-                                {!isMember ? (
-                                  <>
-                                    <div className="info-row">
-                                      <span className="info-label">Nom:</span>
-                                      <span className="info-value">{reservationResult.member?.prenom} {reservationResult.member?.nom}</span>
-                                    </div>
-                                    <div className="info-row">
-                                      <span className="info-label">Email:</span>
-                                      <span className="info-value">{reservationResult.member?.email}</span>
-                                    </div>
-                                    <div className="info-row">
-                                      <span className="info-label">Téléphone:</span>
-                                      <span className="info-value">{reservationResult.member?.telephone}</span>
-                                    </div>
-                                    <div className="info-row">
-                                      <span className="info-label">Carte d'identité:</span>
-                                      <span className="info-value status">✅ Validée</span>
-                                    </div>
-                                  </>
-                                ) : (
-                                  <div className="info-row">
-                                    <span className="info-label">Statut membre:</span>
-                                    <span className="info-value status">✅ Connecté</span>
-                                  </div>
-                                )}
-                              </div>
-
-                              <div className="summary-section">
-                                <h5>💰 Prix total</h5>
-                                <p className="price-total">{reservationResult.reservation?.prix_total || 'Calcul en cours...'} Ar</p>
-                              </div>
+                          
+                          {/* Informations du réservant */}
+                          <div className="summary-section">
+                            <h5>👤 Informations du réservant</h5>
+                            <div className="info-row">
+                              <span className="info-label">Nom:</span>
+                              <span className="info-value">{memberInfo.prenom} {memberInfo.nom}</span>
                             </div>
+                            {memberInfo.telephone && (
+                              <div className="info-row">
+                                <span className="info-label">Téléphone:</span>
+                                <span className="info-value">{memberInfo.telephone}</span>
+                              </div>
+                            )}
                           </div>
-                        )}
+                          
+                          {/* Détails de réservation */}
+                          <div className="summary-section">
+                            <h5>📅 Détails de réservation</h5>
+                            <div className="info-row">
+                              <span className="info-label">Date de début:</span>
+                              <span className="info-value">{formData.date_debut}</span>
+                            </div>
+                            <div className="info-row">
+                              <span className="info-label">Date de fin:</span>
+                              <span className="info-value">{formData.date_fin}</span>
+                            </div>
+                            <div className="info-row">
+                              <span className="info-label">Heure de début:</span>
+                              <span className="info-value">{formData.heure_debut}</span>
+                            </div>
+                            <div className="info-row">
+                              <span className="info-label">Heure de fin:</span>
+                              <span className="info-value">{formData.heure_fin}</span>
+                            </div>
+                            <div className="info-row">
+                              <span className="info-label">Capacité requise:</span>
+                              <span className="info-value">{formData.capacite_requise} personnes</span>
+                            </div>
+                            {formData.description && (
+                              <div className="info-row">
+                                <span className="info-label">Description:</span>
+                                <span className="info-value">{formData.description}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                         
                         <div className="step-actions">
-                          <button className="btn btn-secondary" onClick={() => setCurrentStep(2)}>
-                            ← Revenir en arrière
+                          <button className="btn btn-secondary" onClick={prevStep}>
+                            ← Précédent
                           </button>
+                          <div className="button-spacer"></div>
                           <button className="btn btn-success" onClick={handleConfirmReservation}>
-                            ✅ Valider
+                            Confirmer la réservation
                           </button>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Popup de confirmation */}
-                    {showConfirmPopup && (
-                      <div className="confirm-popup-overlay">
-                        <div className="confirm-popup">
-                          <h3>Confirmez-vous votre réservation ?</h3>
-                          <div className="confirm-popup-actions">
-                            <button className="btn btn-secondary" onClick={cancelConfirmation}>
-                              Non
-                            </button>
-                            <button className="btn btn-success" onClick={confirmReservation}>
-                              Oui
-                            </button>
-                          </div>
                         </div>
                       </div>
                     )}
@@ -1082,10 +743,13 @@ const LocationSalle = () => {
               </div>
             </div>
           </div>
-        ) : (
+        ) : null}
+        
+        {/* Grille des salles */}
+        {!selectedSalle && (
           <>
-            {/* Barre de recherche */}
-            <div className="search-section">
+            <div className="salles-header">
+              <h2>📍 Salles disponibles</h2>
               <div className="search-container">
                 <input
                   type="text"
@@ -1095,12 +759,11 @@ const LocationSalle = () => {
                   className="search-input"
                 />
                 <button className="search-btn">
-                  <span>🔍</span>
+                  🔍
                 </button>
               </div>
             </div>
 
-            {/* Grille des salles */}
             <div className="salles-grid">
               {filteredSalles.map((salle, index) => (
                 <div
@@ -1111,12 +774,13 @@ const LocationSalle = () => {
                   <div className="salle-image">
                     <img src={salle.image} alt={salle.nom} />
                     <div className={`salle-status ${salle.disponibilite.toLowerCase()}`}>
-                      {salle.disponibilite === 'occupée' ? '🚫 Occupée' : salle.disponibilite}
+                      {salle.disponibilite}
                     </div>
                   </div>
                   
                   <div className="salle-info">
                     <h3>{salle.nom}</h3>
+                    <p className="salle-description">{salle.description}</p>
                     
                     <div className="salle-details">
                       <div className="detail-item">
@@ -1133,7 +797,7 @@ const LocationSalle = () => {
                       <h4>Équipements</h4>
                       <div className="equipements-list">
                         {salle.equipements.map((equip, index) => (
-                          <span key={`${salle.id}-equip-${index}`} className="equipement-tag">{equip}</span>
+                          <span key={`equip-${index}`} className="equipement-tag">{equip}</span>
                         ))}
                       </div>
                     </div>
@@ -1146,15 +810,17 @@ const LocationSalle = () => {
                         'primary'
                       }`}
                       onClick={(e) => {
-                        console.log('🔍 Debug - Clic bouton - isLoggedIn:', isLoggedIn);
-                        console.log('🔍 Debug - Clic bouton - disponibilite:', salle.disponibilite);
-                        e.stopPropagation(); // Empêcher la propagation pour ne pas déclencher handleSalleClick
+                                                                        e.stopPropagation(); // Empêcher la propagation pour ne pas déclencher handleSalleClick
                         if (salle.disponibilite !== 'occupée' && isLoggedIn) {
-                          console.log('✅ Bouton cliqué - handleSalleClick appelé');
-                          handleSalleClick(salle);
+                                                    // Sélectionner la salle et afficher le formulaire
+                          setSelectedSalle(salle);
+                          setFormData(prev => ({
+                            ...prev,
+                            salle_id: salle.id,
+                            capacite_requise: salle.capacite
+                          }));
                         } else {
-                          console.log('❌ Bouton bloqué - salle occupée ou utilisateur non connecté');
-                        }
+                                                  }
                       }}
                       disabled={salle.disponibilite === 'occupée' || !isLoggedIn}
                       onMouseEnter={() => setHoveredButton(salle.id)}
@@ -1179,8 +845,26 @@ const LocationSalle = () => {
         )}
       </div>
       
-      {/* Footer */}
       <FooterSiteVitrine />
+      
+      {/* Popup de confirmation de réservation */}
+      {showConfirmPopup && (
+        <div className="confirm-popup-overlay">
+          <div className="confirm-popup">
+            <h3>📋 Confirmation</h3>
+            <p>Voulez-vous confirmer votre location sur : {selectedSalle?.nom} ?</p>
+            
+            <div className="confirm-popup-actions">
+              <button className="btn btn-secondary" onClick={cancelConfirmation}>
+                Non
+              </button>
+              <button className="btn btn-success" onClick={confirmReservation}>
+                Oui
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
