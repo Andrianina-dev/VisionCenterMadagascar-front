@@ -1,38 +1,68 @@
 /* Variables de couleurs pour Vision Center */
 :root {
   /* Couleurs de base - Noms sémantiques */
-  --cyan-clair: #a7feeb;
-  --jaune-doux: #f6f868;
-  --bleu-gris-fonce: #2f3e46;
-  --gris-clair: #f2f2f2;
-  --cyan-fonce: #32cfc9;
-  --blanc: #ffffff;
-  --gris-moyen: #666666;
-  --gris-bordure: #e0e0e0;
+  --cyan-light: #e0f7fa;
+  --cyan-lighter: #a7feeb;
+  --cyan-dark: #019BFF;
+  --cyan-dark-light: #0066cc;
+  --cyan-deep: #32cfc9;
+  --yellow-soft: #f6f868;
+  --blue-gray-dark: #2f3e46;
+  --gray-light: #f2f2f2;
+  --white: #FFFFFF;
+  --white-soft: #fafafa;  /* Blanc cassé élégant */
+  --white-warmer: #f8f9fa;  /* Blanc légèrement chaud */
+  --gray-medium: #666666;
+  --gray-border: #e0e0e0;
+  --gray-blue: #58627A;
   
   /* Couleurs du dégradé */
-  --cyan-tres-clair: #8fefe9;
-  --rose-pale: #d4f1f4;
+  --cyan-very-light: #8fefe9;
+  --pink-pale: #d4f1f4;
 
   /* Usage des couleurs */
-  --background: var(--gris-clair);
-  --surface: var(--blanc);
-  --primary: var(--cyan-clair);
-  --accent: var(--jaune-doux);
-  --text: var(--bleu-gris-fonce);
-  --text-secondary: var(--gris-moyen);
-  --border: var(--gris-bordure);
-  --secondary: var(--cyan-fonce);
+  --background: var(--gray-light);
+  --surface: var(--white-soft);  /* Utilise le blanc cassé */
+  --primary: var(--cyan-light);
+  --accent: var(--yellow-soft);
+  --text: var(--blue-gray-dark);
+  --text-secondary: var(--gray-medium);
+  --text-simple: var(--gray-blue);
+  --border: var(--gray-border);
+  --secondary: var(--cyan-deep);
+  
+  /* Boutons */
+  --btn-bg: var(--cyan-dark-light);
+  
+  /* Texte spécial */
+  --text-special: var(--gray-border);
 }
 
-/* Classes utilitaires pour les couleurs */
+/* Classes utilitaires pour les couleurs - Background, Text (System/Cyan/Specialized), Form elements */
 .bg-background { background-color: var(--background); }
 .bg-surface { background-color: var(--surface); }
 .bg-primary { background-color: var(--primary); }
 .bg-accent { background-color: var(--accent); }
 
+/* Text colors - System/Cyan/Specialized */
 .text-primary { color: var(--text); }
 .text-secondary { color: var(--text-secondary); }
 .text-accent { color: var(--accent); }
+.text-cyan-light { color: var(--cyan-light); }
+.text-cyan-lighter { color: var(--cyan-lighter); }
+.text-cyan-dark { color: var(--cyan-dark); }
+.text-cyan-dark-light { color: var(--cyan-dark-light); }
+.text-special { color: var(--text-special); }
+.text-gray-blue { color: var(--gray-blue); }
+.text-simple { color: var(--text-simple); }
+.text-white { color: var(--white) !important; }
+
+.left-panel .brand-title { color: var(--white) !important; }
+.left-panel .brand-subtitle { color: var(--white) !important; }
+.left-panel .back-to-site-btn { color: var(--white) !important; }
+
+::placeholder {
+  color: var(--text-special);
+}
 
 .border-custom { border-color: var(--border); }

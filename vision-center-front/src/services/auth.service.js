@@ -36,6 +36,36 @@ class AuthService {
     }
   }
 
+  async register(userData) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/member/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'omit',
+        body: JSON.stringify(userData)
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        return { 
+          success: true, 
+          message: data.message,
+          user: data.data.user 
+        };
+      } else {
+        throw new Error(data.message || 'Erreur lors de l\'inscription');
+      }
+    } catch (error) {
+      console.error('Register error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
   async logout() {
     try {
       // Appeler l'API de déconnexion pour les membres

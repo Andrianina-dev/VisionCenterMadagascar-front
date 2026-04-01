@@ -17,21 +17,21 @@
 }
 
 /* Header */
-.header {
+.basic-vitrine-header {
   background: var(--white);
   border-bottom: 1px solid var(--border);
   padding: 1rem 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(10px);
+}
+
+.basic-vitrine-header.scrolled {
   background: rgba(255, 255, 255, 0.95);
 }
 
-.header .container {
+.basic-vitrine-header .basic-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 20px;
 }
 
 .logo {

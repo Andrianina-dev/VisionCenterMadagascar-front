@@ -58,31 +58,26 @@
   margin-bottom: 20px;
 }
 
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
 .input-field {
   width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #ddd;
+  padding: 8px 12px;
+  border: 2px solid #e2e8f0;
   border-radius: 6px;
   font-size: 14px;
-  font-family: inherit;
-  transition: border-color 0.3s;
-  box-sizing: border-box;
+  transition: all 0.3s ease;
+  background: #fff;
 }
 
 .input-field:focus {
   outline: none;
-  border-color: #7ffef4;
-}
-
-.signup-form .input-field {
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #00d4ff;
-  border-radius: 6px;
-  font-size: 14px;
-  font-family: inherit;
-  transition: border-color 0.3s;
-  box-sizing: border-box;
   background-color: white;
 }
 
@@ -191,135 +186,81 @@
   border-color: #999;
 }
 
-/* Toggle Rôle - Slider avec animation */
-.role-toggle-container {
-  margin-bottom: 20px;
-  position: relative;
+/* Toggle Switch Moderne */
+.toggle-switch-container {
   display: flex;
-  justify-content: flex-end;
-}
-
-.role-toggle-slider {
-  display: flex;
-  background: #f8f9fa;
-  border-radius: 20px;
-  padding: 2px;
-  border: 2px solid #00d4ff;
-  box-shadow: 0 2px 5px rgba(0, 212, 255, 0.1);
-  position: relative;
-  overflow: hidden;
-  height: 40px;
-  width: 200px;
-}
-
-.toggle-option {
-  flex: 1;
-  padding: 8px 12px;
-  border: none;
-  background: transparent;
-  font-size: 12px;
-  font-weight: 600;
-  color: #666;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 3px;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.toggle-switch {
   position: relative;
-  z-index: 2;
+  width: 60px;
+  height: 30px;
 }
 
-/* Fond blanc pour l'option non sélectionnée */
-.toggle-option:not(.active) {
-  background: #fff;
-  border: 2px solid #e2e8f0;
-  color: #666;
+.toggle-switch-checkbox {
+  display: none;
 }
 
-.toggle-option:hover {
-  background: rgba(0, 0, 0, 0.05);
-  transform: translateY(-1px);
+.toggle-switch-label {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #ccc;
+  border-radius: 15px;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.3s;
 }
 
-/* Couleur de l'option active selon le rôle */
-.role-toggle-slider[data-role="membre"] .toggle-option.active {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(240, 147, 108, 0.3);
-}
-
-.role-toggle-slider[data-role="membre"] .toggle-option:not(.active) {
-  border: 2px solid #f093fb;
-  color: #f093fb;
-}
-
-.role-toggle-slider[data-role="non_membre"] .toggle-option.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.role-toggle-slider[data-role="non_membre"] .toggle-option:not(.active) {
-  border: 2px solid #667eea;
-  color: #667eea;
-}
-
-.toggle-option.active {
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transform: scale(1.05);
-  z-index: 3;
-}
-
-/* Couleur de l'option active selon le rôle */
-.role-toggle-slider[data-role="membre"] .toggle-option.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.role-toggle-slider[data-role="non_membre"] .toggle-option.active {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(240, 147, 108, 0.3);
-}
-
-.toggle-icon {
-  font-size: 20px;
-  transition: transform 0.3s ease;
-}
-
-.toggle-option.active .toggle-icon {
-  transform: scale(1.2);
-}
-
-.toggle-slider-bg {
+.toggle-switch-label::before {
+  content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 25px;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 1;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Couleur dynamique selon le rôle */
-.role-toggle-slider[data-role="membre"] .toggle-slider-bg {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  transform: translateX(0);
+.toggle-switch-checkbox:checked + .toggle-switch-label {
+  background: #4CAF50;
 }
 
-.role-toggle-slider[data-role="non_membre"] .toggle-slider-bg {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  transform: translateX(100%);
+.toggle-switch-checkbox:checked + .toggle-switch-label::before {
+  transform: translateX(30px);
 }
 
-/* Animation fluide */
-.toggle-option {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+.toggle-labels {
+  display: flex;
+  gap: 15px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.toggle-label {
+  color: #666;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.toggle-label.active {
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+/* Hover effects */
+.toggle-switch:hover .toggle-switch-label {
+  background: #bbb;
+}
+
+.toggle-switch:hover .toggle-switch-checkbox:checked + .toggle-switch-label {
+  background: #45a049;
 }
 
 .terms-text {

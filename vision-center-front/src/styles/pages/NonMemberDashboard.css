@@ -1,6 +1,7 @@
 /* Dashboard Léger et Épuré */
 
-.dashboard {
+/* Namespace pour éviter les conflits */
+.non-member-dashboard {
   max-width: 1000px;
   margin: 0 auto;
   padding: 1.5rem;
@@ -11,7 +12,7 @@
 }
 
 /* Section Header Amélioré */
-.section-header {
+.non-member-section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -22,26 +23,26 @@
   border: 1px solid #e2e8f0;
 }
 
-.section-title {
+.non-member-section-title {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.section-title h2 {
+.non-member-section-title h2 {
   font-size: 1.25rem;
   font-weight: 600;
   margin: 0;
   color: #2d3748;
 }
 
-.section-count {
+.non-member-section-count {
   font-size: 0.875rem;
   color: #718096;
   font-weight: 500;
 }
 
-.section-actions {
+.non-member-section-actions {
   display: flex;
   gap: 0.75rem;
   align-items: center;
@@ -132,16 +133,17 @@
 }
 
 /* Header Compact */
-.header {
+.non-member-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 0;
+  padding: 0;
   margin-bottom: 2rem;
   border-bottom: 1px solid #f0f0f0;
+  background: white;
 }
 
-.user-welcome h1 {
+.non-member-user-welcome h1 {
   font-size: 1.6rem;
   font-weight: 600;
   margin: 0 0 0.5rem 0;

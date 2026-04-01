@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import GalerieService from '../../services/GalerieService';
 import NavigationSiteVitrine from '../../components/vitrine/NavigationSiteVitrine';
 import FooterSiteVitrine from '../../components/vitrine/FooterSiteVitrine';
-import './accueilVitrineSimple.css';
+import '../../styles/pages/Galerie.css';
 
 function Galerie() {
   const navigate = useNavigate();
@@ -82,26 +82,26 @@ function Galerie() {
   };
 
   return (
-    <div className="accueil-simple">
+    <div className="galerie-container">
       {/* Header */}
       <NavigationSiteVitrine scrollToSection={scrollToSection} />
 
       {/* Hero Section */}
-      <section className="hero-simple" id="accueil">
+      <section className="galerie-header" id="accueil">
         <div className="container">
-          <div className="hero-content">
-            <h2>Galerie</h2>
-            <p>Photos et vidéos des activités du Centre de Vision</p>
+          <div className="galerie-hero-content">
+            <h1 className="galerie-title">Galerie</h1>
+            <p className="galerie-subtitle">Photos et vidéos des activités du Centre de Vision</p>
           </div>
         </div>
       </section>
 
       {/* Galerie Grid */}
-      <section className="features-simple" id="galerie">
+      <section className="galerie-section" id="galerie">
         <div className="container">
           {loading && (
-            <div style={{ padding: '16px 0' }}>
-              Chargement...
+            <div className="galerie-loading">
+              <div className="loading-spinner"></div>
             </div>
           )}
 
@@ -114,23 +114,25 @@ function Galerie() {
           <div className="galerie-grid">
             {mediaItems.map((item) => (
               <div key={item.key || item.id} className="galerie-item" onClick={() => openMediaModal(item)}>
-                <div className="media-type">
+                <div className="galerie-media-type">
                   {item.type === 'video' ? '🎥' : '📸'}
                 </div>
                 <div className="galerie-image">
                   <img src={item.thumbnail} alt={item.title} />
+                  <span className="galerie-categorie">{item.type === 'video' ? 'Vidéo' : 'Photo'}</span>
                 </div>
-                <div className="galerie-content">
-                  <h3>{item.title}</h3>
+                <div className="galerie-contenu">
+                  <div className="galerie-meta">
+                    <span className="galerie-date">{item.date}</span>
+                    <span className="galerie-auteur">Vision Center</span>
+                  </div>
+                  <h3 className="galerie-titre">{item.title}</h3>
                   <div className="galerie-description">
                     <p>{item.description}</p>
                   </div>
-                  <div className="galerie-meta">
-                    <span className="galerie-date">{item.date}</span>
-                    {item.type === 'video' && (
-                      <span className="galerie-duration">▶ Vidéo</span>
-                    )}
-                  </div>
+                  <button className="galerie-lien" onClick={(e) => { e.stopPropagation(); navigate(`/galerie/${item.id}`); }}>
+                    Voir les détails →
+                  </button>
                 </div>
               </div>
             ))}
@@ -139,13 +141,13 @@ function Galerie() {
       </section>
 
       {/* CTA Section */}
-      <section className="cta-simple">
+      <section className="galerie-actions">
         <div className="container">
           <h2>Partagez vos souvenirs</h2>
           <p>Téléchargez et partagez les photos de nos activités</p>
-          <div className="cta-buttons">
-            <button className="btn-primary">Télécharger les photos</button>
-            <button onClick={() => navigate('/')} className="btn-secondary">Retour à l'accueil</button>
+          <div className="galerie-cta-buttons">
+            <button className="btn-galerie">Télécharger les photos</button>
+            <button onClick={() => navigate('/')} className="btn-galerie btn-secondary">Retour à l'accueil</button>
           </div>
         </div>
       </section>
@@ -170,6 +172,9 @@ function Galerie() {
               <div className="modal-info">
                 <p>{selectedMedia.description}</p>
                 <p className="modal-date">{selectedMedia.date}</p>
+                <button className="btn-galerie" onClick={() => navigate(`/galerie/${selectedMedia.id}`)}>
+                  Voir les détails complets
+                </button>
               </div>
             </div>
           </div>

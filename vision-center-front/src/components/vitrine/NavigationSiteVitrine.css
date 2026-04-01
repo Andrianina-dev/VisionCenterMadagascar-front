@@ -1,409 +1,251 @@
-  /* Navigation Styles */
+/* Styles pour NavigationSiteVitrine - Version harmonisée avec MemberLogin */
 .header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 0rem;
+  border-bottom: 1px solid var(--gray-border);
+  background: var(--white-soft);  /* Blanc cassé élégant */
+  box-shadow: none;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: sticky;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  transition: all 0.3s ease;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 0.5rem 0;
-  height: 60px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.header.scrolled {
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
 }
 
 .header .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 20px; /* Réduit de 1rem à 0.5rem */
+  padding: 0;
+  max-width: 100%;
+  padding: 10px;
 }
 
-.logo {
+/* Logo */
+.nav-logo {
   display: flex;
   align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
 }
 
-.logo:hover {
-  transform: scale(1.05);
+.nav-logo img {
+  height: 24px;
+  width: auto;
 }
 
-.logo-icon {
-  width: 32px; /* Réduit de 40px à 32px */
-  height: 32px; /* Réduit de 40px à 32px */
-  background: linear-gradient(135deg, #7FFEF4, #4FD1C5);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem; /* Réduit de 1.2rem à 1rem */
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
+/* Texte du logo - couleurs améliorées */
 .logo-text h1 {
-  color: #1e293b;
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 16px;
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.1;
+  font-weight: 600;
+  color: #1a2c3e;  /* Bleu foncé pour meilleur contraste */
 }
 
 .logo-text .tagline {
-  color: #3b82f6;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 9px;
+  color: #5a6e7c;  /* Gris moyen pour la tagline */
   display: block;
-  margin-top: 2px;
+  line-height: 1.1;
 }
 
-.nav {
-  display: flex;
-  align-items: center;
+.logo-icon {
+  font-size: 20px;
+  color: #0066cc;  /* Bleu vif pour l'icône */
 }
 
-.nav-links {
+/* Menu de navigation - couleurs améliorées */
+.nav-menu {
   display: flex;
-  align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-.nav-links a {
-  color: #475569;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-  position: relative;
-  padding: 0.5rem 0;
-}
-
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-  transition: width 0.3s ease;
-}
-
-.nav-links a:hover::after {
-  width: 100%;
-}
-
-.nav-links a:hover {
-  color: #3b82f6;
-  transform: translateY(-2px);
-}
-
-.nav-links a.active {
-  color: #3b82f6;
-}
-
-.nav-links a.active::after {
-  width: 100%;
-}
-
-.btn-nav-link {
-  color: #7FFEF4 !important;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #7FFEF4, #4FD1C5);
-  color: #1a1a2e !important;
-  padding: 0.75rem 1.5rem !important;
-  border-radius: 25px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(127, 254, 244, 0.3);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(127, 254, 244, 0.4);
-}
-
-.btn-primary::after {
-  display: none !important;
-}
-
-.btn-member {
-  margin-left: 0;
-}
-
-/* User Profile Styles - Style similaire à Home.js */
-.user-profile {
-  display: flex;
   align-items: center;
-  gap: 0.4rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 0.15rem 0.4rem;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-menu li {
   margin: 0;
-  vertical-align: middle;
 }
 
-.profile-avatar {
-  position: relative;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
-}
-
-.profile-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.profile-status-dot {
-  position: absolute;
-  bottom: 0px;
-  right: 0px;
-  width: 5px;
-  height: 5px;
-  background: #10b981;
-  border: 1px solid white;
-  border-radius: 50%;
-}
-
-.profile-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1;
-  justify-content: center;
-}
-
-/* Style plus spécifique pour forcer le blanc dans le site vitrine */
-.nav-links .user-profile .profile-info .profile-name {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #ffffff !important; /* Blanc forcé pour le site vitrine */
-  line-height: 1;
-  letter-spacing: 1px; /* Espacement augmenté entre les lettres */
-  text-transform: capitalize; /* Première lettre en majuscule */
-}
-
-.name-separator {
-  margin: 0 2px; /* Espacement entre prénom et nom */
-}
-
-.profile-role {
-  font-size: 0.6rem;
-  color: #3b82f6;
+.nav-link {
+  text-decoration: none;
+  font-size: 11px;
   font-weight: 500;
-  line-height: 1;
-  text-transform: capitalize;
+  color: #2c3e50;  /* Bleu-gris foncé pour meilleure lisibilité */
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
-.user-profile:hover .profile-avatar {
-  border-color: rgba(59, 130, 246, 0.5);
-  transform: scale(1.05);
+.nav-link:hover {
+  color: #0066cc;  /* Bleu vif au survol */
+  background: rgba(0, 102, 204, 0.08);  /* Fond bleu très léger */
 }
 
-.user-profile:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+/* Lien actif - style inspiré du bouton login */
+.nav-link.active {
+  color: #ffffff;  /* Blanc pur pour contraste sur fond bleu */
+  background: var(--btn-bg);  /* Utilise la variable de couleur */
+  border-radius: 3px;
+  font-weight: 500;
 }
 
-.btn-member {
-  margin-left: 0;
+.nav-link.active:hover {
+  background: #0052a3;  /* Bleu légèrement plus foncé au survol */
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .header .container {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem 20px;
-  }
-  
-  .nav-links {
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .logo-text h1 {
-    font-size: 1.3rem;
-  }
-  
-  .logo-text .tagline {
-    font-size: 0.8rem;
-  }
-  
-  .btn-member {
-    margin-left: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .nav-links {
-    gap: 0.5rem;
-  }
-  
-  .nav-links a,
-  .nav-links button {
-    font-size: 0.85rem;
-  }
-  
-  .btn-primary {
-    padding: 0.6rem 1.2rem !important;
-    font-size: 0.85rem;
-  }
-}
-
-/* Profile Dropdown Moderne - Style cohérent avec Home.css */
-.profile-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  min-width: 280px;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-  z-index: 1001;
-  overflow: hidden;
-}
-
-/* Dropdown Header */
-.dropdown-header {
-  padding: 1rem;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.dropdown-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.dropdown-avatar img {
+/* Style du bouton Se connecter */
+.btn-connecter {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.dropdown-info {
-  flex: 1;
-}
-
-.dropdown-name {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-  color: #ffffff;
-}
-
-.dropdown-email {
-  font-size: 0.85rem;
-  opacity: 0.9;
-  color: #ffffff;
-}
-
-/* Dropdown Divider */
-.dropdown-divider {
-  height: 1px;
-  background: #f1f5f9;
-  margin: 0.5rem 0;
-}
-
-/* Dropdown Items */
-.dropdown-item {
-  width: 100%;
-  background: none;
+  padding: 14px 16px;
+  background: var(--btn-bg, #0066cc);
   border: none;
-  padding: 0.75rem 1rem;
-  text-align: left;
-  color: #1f2937;
-  font-size: 0.9rem;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #ffffff;  /* Blanc pur */
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.btn-connecter:hover {
+  background: #0052a3;  /* Bleu plus foncé au survol */
+}
+
+.btn-connecter:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Menu burger pour mobile */
+.nav-burger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.nav-burger span {
+  width: 25px;
+  height: 2px;
+  background: #2c3e50;  /* Bleu-gris foncé pour meilleure visibilité */
+  transition: all 0.3s ease;
+}
+
+/* Responsive - adapté du MemberLogin */
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0.3rem 1rem;
+  }
+  
+  .nav-burger {
+    display: flex;
+  }
+  
+  .nav-menu {
+    position: fixed;
+    top: 50px;
+    left: -100%;
+    flex-direction: column;
+    background: #ffffff;  /* Blanc pur pour le menu mobile */
+    width: 100%;
+    padding: 2rem;
+    gap: 1rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s ease;
+    z-index: 1000;
+  }
+  
+  .nav-menu.active {
+    left: 0;
+  }
+  
+  .nav-link {
+    font-size: 14px;
+    padding: 12px 16px;
+    display: block;
+    text-align: center;
+    color: #2c3e50;  /* Bleu-gris foncé */
+  }
+  
+  .nav-link.active {
+    color: #ffffff;
+    background: var(--btn-bg);
+  }
+  
+  .btn-connecter {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .nav-logo img {
+    height: 18px;
+  }
+}
+
+/* Animation du burger */
+.nav-burger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.nav-burger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-burger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Focus states */
+.nav-link:focus,
+.btn-connecter:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+}
+
+/* Integration du composant Button dans la navigation */
+.btn-member.btn {
+  padding: 16px 36px;  /* Même taille que les boutons de l'accueil */
+  font-size: 16px;  /* Même taille de police */
+  font-weight: 600;  /* Même graisse */
+  border-radius: 50px;  /* Même forme arrondie */
+  min-width: auto;
+  color: #ffffff;
+  background: var(--btn-bg);
+  border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: block;
 }
 
-.dropdown-item:hover {
-  background: #f8fafc;
-  color: #3b82f6;
-}
-
-.dropdown-icon {
-  font-size: 1rem;
-  width: 20px;
-  text-align: center;
-}
-
-.dropdown-badge {
-  margin-left: auto;
-  background: #ef4444;
+.btn-member.btn-primary {
+  background: var(--btn-bg);
   color: #ffffff;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 0.2rem 0.5rem;
-  border-radius: 10px;
-  min-width: 20px;
-  text-align: center;
+  border: none;
 }
 
-.logout-item {
-  color: #ef4444;
+.btn-member.btn-primary:hover:not(:disabled) {
+  background: #0052a3;  /* Bleu plus foncé au survol */
+  color: #ffffff;
+  transform: translateY(-3px);  /* Même animation que les boutons de l'accueil */
+  box-shadow: 0 4px 8px rgba(0, 102, 204, 0.2);
 }
 
-.logout-item:hover {
-  background: rgba(239, 68, 68, 0.1);
-  color: #dc2626;
+.btn-member.btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
 }
 
-/* FORCER L'AFFICHAGE DU DROPDOWN AU HOVER */
-.user-profile:hover .profile-dropdown,
-.profile-dropdown.show {
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: translateY(0) !important;
-  z-index: 1001 !important;
+/* Variables CSS pour harmonisation */
+:root {
+  --btn-bg: #0066cc;  /* Bleu vif pour les boutons */
+  --primary: #0066cc;  /* Bleu vif pour les éléments interactifs */
+  --cyan-clair: #e0f7fa;
+  --gray-border: #e0e0e0;
+  --white-soft: #fefefe;  /* Blanc cassé */
+  --text: #1a2c3e;  /* Bleu-gris très foncé pour le texte principal */
+  --text-secondary: #5a6e7c;  /* Gris moyen pour le texte secondaire */
 }

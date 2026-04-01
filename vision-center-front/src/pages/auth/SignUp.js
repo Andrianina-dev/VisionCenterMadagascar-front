@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AuthService from '../../services/auth.service';
 import './SignUp.css';
 import '../../styles/components/couleur/couleur.css';
 
@@ -12,7 +13,7 @@ const SignUp = () => {
     mot_de_passe: '',
     confirmPassword: '',
     telephone: '',
-    role: 'membre' // Rôle par défaut
+    role: 'non_membre'
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +25,6 @@ const SignUp = () => {
       [name]: value
     }));
     
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -36,19 +36,16 @@ const SignUp = () => {
   const validateForm = () => {
     const newErrors = {};
     
-    // Validation nom_utilisateur (varchar(150))
     if (!formData.nom_utilisateur.trim()) {
       newErrors.nom_utilisateur = 'Le nom est requis';
     } else if (formData.nom_utilisateur.length > 150) {
       newErrors.nom_utilisateur = 'Le nom ne doit pas dépasser 150 caractères';
     }
     
-    // Validation prenom_utilisateur (seulement pour membre)
     if (formData.role === 'membre' && !formData.prenom_utilisateur.trim()) {
       newErrors.prenom_utilisateur = 'Le prénom est requis';
     }
     
-    // Validation email_utilisateur (varchar(150))
     if (!formData.email_utilisateur.trim()) {
       newErrors.email_utilisateur = 'L\'email est requis';
     } else if (!/\S+@\S+\.\S+/.test(formData.email_utilisateur)) {
@@ -57,22 +54,18 @@ const SignUp = () => {
       newErrors.email_utilisateur = 'L\'email ne doit pas dépasser 150 caractères';
     }
     
-    // Validation mot_de_passe (text) - seulement pour membre
-    if (formData.role === 'membre') {
-      if (!formData.mot_de_passe) {
-        newErrors.mot_de_passe = 'Le mot de passe est requis';
-      } else if (formData.mot_de_passe.length < 8) {
-        newErrors.mot_de_passe = 'Le mot de passe doit contenir au moins 8 caractères';
-      }
-      
-      if (!formData.confirmPassword) {
-        newErrors.confirmPassword = 'La confirmation du mot de passe est requise';
-      } else if (formData.mot_de_passe !== formData.confirmPassword) {
-        newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
-      }
+    // Validation mot de passe (obligatoire pour membre, optionnel pour non-membre)
+    if (formData.mot_de_passe && formData.mot_de_passe.length < 8) {
+      newErrors.mot_de_passe = 'Le mot de passe doit contenir au moins 8 caractères';
     }
     
-    // Validation telephone (varchar(255)) - optionnel mais si rempli
+    // Validation confirmation mot de passe (seulement si mot de passe est fourni)
+    if (formData.mot_de_passe && !formData.confirmPassword) {
+      newErrors.confirmPassword = 'La confirmation du mot de passe est requise';
+    } else if (formData.mot_de_passe && formData.mot_de_passe !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
+    }
+    
     if (formData.telephone && formData.telephone.length > 255) {
       newErrors.telephone = 'Le numéro de téléphone ne doit pas dépasser 255 caractères';
     }
@@ -91,41 +84,34 @@ const SignUp = () => {
     setIsLoading(true);
     
     try {
-      // Préparer les données selon la structure exacte de la base
       const requestData = {
         nom_utilisateur: formData.nom_utilisateur,
         email_utilisateur: formData.email_utilisateur,
-        id_role: formData.role, // 'membre' ou 'non_membre' (varchar(10))
-        numero_telephone: formData.telephone || null // varchar(255), null si non fourni
+        id_role: formData.role,
+        numero_telephone: formData.telephone || null
       };
 
-      // Ajouter les champs spécifiques au rôle membre
-      if (formData.role === 'membre') {
-        requestData.prenom_utilisateur = formData.prenom_utilisateur;
+      // Ajouter le mot de passe si fourni (pour les deux rôles)
+      if (formData.mot_de_passe) {
         requestData.mot_de_passe = formData.mot_de_passe;
-        // isMembre sera géré automatiquement par le backend selon id_role
       }
 
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestData)
-      });
+      // Ajouter le prénom seulement pour les membres
+      if (formData.role === 'membre') {
+        requestData.prenom_utilisateur = formData.prenom_utilisateur;
+      }
+
+      const result = await AuthService.register(requestData);
       
-      const data = await response.json();
-      
-      if (response.ok) {
-        // Redirection vers la page de connexion
+      if (result.success) {
         navigate('/login', { 
           state: { 
-            message: 'Inscription réussie ! Vous pouvez maintenant vous connecter.',
+            message: result.message,
             type: 'success'
           }
         });
       } else {
-        setErrors({ general: data.message || 'Une erreur est survenue lors de l\'inscription' });
+        setErrors({ general: result.error || 'Une erreur est survenue lors de l\'inscription' });
       }
     } catch (error) {
       setErrors({ general: 'Erreur de connexion. Veuillez réessayer.' });
@@ -161,13 +147,14 @@ const SignUp = () => {
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group">
+                  <label className="form-label">Nom</label>
                   <input
                     type="text"
                     className="input-field"
                     name="nom_utilisateur"
                     value={formData.nom_utilisateur}
                     onChange={handleChange}
-                    placeholder="Nom"
+                    placeholder="Entrez votre nom"
                     maxLength="150"
                   />
                   {errors.nom_utilisateur && <div className="invalid-feedback">{errors.nom_utilisateur}</div>}
@@ -176,13 +163,14 @@ const SignUp = () => {
 
               <div className="col-md-6">
                 <div className="form-group">
+                  <label className="form-label">Prénom</label>
                   <input
                     type="text"
                     className="input-field"
                     name="prenom_utilisateur"
                     value={formData.prenom_utilisateur}
                     onChange={handleChange}
-                    placeholder="Prénom"
+                    placeholder="Entrez votre prénom"
                     maxLength="150"
                   />
                   {errors.prenom_utilisateur && <div className="invalid-feedback">{errors.prenom_utilisateur}</div>}
@@ -191,82 +179,120 @@ const SignUp = () => {
             </div>
 
             <div className="form-group">
+              <label className="form-label">Email</label>
               <input
                 type="email"
                 className={`input-field ${errors.email_utilisateur ? 'is-invalid' : ''}`}
                 name="email_utilisateur"
                 value={formData.email_utilisateur}
                 onChange={handleChange}
-                placeholder="Email"
+                placeholder="Entrez votre email"
                 maxLength="150"
               />
               {errors.email_utilisateur && <div className="invalid-feedback">{errors.email_utilisateur}</div>}
             </div>
 
             <div className="form-group">
+              <label className="form-label">Téléphone</label>
               <input
                 type="tel"
                 className={`input-field ${errors.telephone ? 'is-invalid' : ''}`}
                 name="telephone"
                 value={formData.telephone || ''}
                 onChange={handleChange}
-                placeholder="Téléphone"
+                placeholder="Entrez votre numéro de téléphone"
                 maxLength="255"
               />
               {errors.telephone && <div className="invalid-feedback">{errors.telephone}</div>}
             </div>
 
-            <div className="form-group">
-              <input
-                type="password"
-                className={`input-field ${errors.mot_de_passe ? 'is-invalid' : ''}`}
-                name="mot_de_passe"
-                value={formData.mot_de_passe}
-                onChange={handleChange}
-                placeholder="Mot de passe"
-              />
-              {errors.mot_de_passe && <div className="invalid-feedback">{errors.mot_de_passe}</div>}
-            </div>
+            {formData.role === 'membre' && (
+              <>
+                <div className="form-group">
+                  <label className="form-label">Mot de passe</label>
+                  <input
+                    type="password"
+                    className={`input-field ${errors.mot_de_passe ? 'is-invalid' : ''}`}
+                    name="mot_de_passe"
+                    value={formData.mot_de_passe}
+                    onChange={handleChange}
+                    placeholder="Entrez votre mot de passe"
+                  />
+                  {errors.mot_de_passe && <div className="invalid-feedback">{errors.mot_de_passe}</div>}
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Confirmer mot de passe</label>
+                  <input
+                    type="password"
+                    className={`input-field ${errors.confirmPassword ? 'is-invalid' : ''}`}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirmez votre mot de passe"
+                  />
+                  {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+                </div>
+              </>
+            )}
+
+            {formData.role === 'non_membre' && (
+              <>
+                <div className="form-group">
+                  <label className="form-label">Mot de passe (optionnel)</label>
+                  <input
+                    type="password"
+                    className={`input-field ${errors.mot_de_passe ? 'is-invalid' : ''}`}
+                    name="mot_de_passe"
+                    value={formData.mot_de_passe}
+                    onChange={handleChange}
+                    placeholder="Entrez un mot de passe (optionnel)"
+                  />
+                  {errors.mot_de_passe && <div className="invalid-feedback">{errors.mot_de_passe}</div>}
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Confirmer mot de passe</label>
+                  <input
+                    type="password"
+                    className={`input-field ${errors.confirmPassword ? 'is-invalid' : ''}`}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirmez votre mot de passe"
+                  />
+                  {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+                </div>
+              </>
+            )}
 
             <div className="form-group">
-              <input
-                type="password"
-                className={`input-field ${errors.confirmPassword ? 'is-invalid' : ''}`}
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirmer mot de passe"
-              />
-              {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
-            </div>
-
-            {/* Toggle Rôle - Déplacé en bas */}
-            <div className="role-toggle-container">
-              <div className="role-toggle-slider" data-role={formData.role}>
-                <div 
-                  className={`toggle-option ${formData.role === 'membre' ? 'active' : ''}`}
-                  onClick={() => setFormData(prev => ({ ...prev, role: 'membre' }))}
-                >
-                  <span className="toggle-icon">👤</span>
-                  <span className="toggle-text">Membre</span>
-                  <span className="toggle-desc">Accès complet</span>
+              <label className="form-label">Type de compte</label>
+              <div className="toggle-switch-container">
+                <div className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    id="role-toggle"
+                    className="toggle-switch-checkbox"
+                    checked={formData.role === 'membre'}
+                    onChange={(e) => setFormData(prev => ({ 
+                      ...prev, 
+                      role: e.target.checked ? 'membre' : 'non_membre' 
+                    }))}
+                  />
+                  <label className="toggle-switch-label" htmlFor="role-toggle">
+                    <span className="toggle-switch-inner"></span>
+                    <span className="toggle-switch-switch"></span>
+                  </label>
                 </div>
-                <div 
-                  className={`toggle-option ${formData.role === 'non_membre' ? 'active' : ''}`}
-                  onClick={() => setFormData(prev => ({ ...prev, role: 'non_membre' }))}
-                >
-                  <span className="toggle-icon">👥</span>
-                  <span className="toggle-text">Non-Membre</span>
-                  <span className="toggle-desc">Accès limité</span>
+                <div className="toggle-labels">
+                  <span className={`toggle-label ${formData.role === 'membre' ? 'active' : ''}`}>
+                    Membre
+                  </span>
+                  <span className={`toggle-label ${formData.role === 'non_membre' ? 'active' : ''}`}>
+                    Non-Membre
+                  </span>
                 </div>
-                <div className="toggle-slider-bg"></div>
-              </div>
-              <div className="role-description">
-                {formData.role === 'membre' ? (
-                  <p>Accès complet aux activités, services et réservations</p>
-                ) : (
-                  <p>Accès limité aux réservations d'événements</p>
-                )}
               </div>
             </div>
 

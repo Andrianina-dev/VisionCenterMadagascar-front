@@ -86,6 +86,10 @@ const Login = () => {
         <div className="brand">
           <img src={logoVisionCenter} alt="Vision Center Logo" className="brand-logo" />
         </div>
+        <div className="brand-text">
+          <h2 className="brand-title text-white" style={{ color: '#FFFFFF', fontSize: '32px', fontWeight: '700' }}>Grandis. Inspire. Agis.</h2>
+          <p className="brand-subtitle text-white" style={{ color: '#FFFFFF', fontSize: '18px', fontWeight: '400' }}>Bienvenue à Vision Center.</p>
+        </div>
       </div>
 
       {/* PANEL DROIT - Formulaire */}
@@ -149,7 +153,7 @@ const Login = () => {
             </div>
 
             <div className="forgot-row">
-              <a href="#">Forgot Password?</a>
+              <a href="#" className="text-simple">Forgot Password?</a>
             </div>
 
             <button type="submit" className="login-btn" disabled={loading}>
@@ -157,7 +161,7 @@ const Login = () => {
             </button>
           </form>
 
-          <div className="divider">Or log in with</div>
+          <div className="divider text-simple">Or log in with</div>
 
           <div className="social-row">
             <button className="social-circle">
@@ -170,19 +174,19 @@ const Login = () => {
             </button>
           </div>
 
-          <p className="legal">
+          <p className="legal text-simple">
             Login means you agree our terms & conditions and Privacy Policy of
             Handeha Voyages
           </p>
 
-          <p className="signup">
+          <p className="signup text-simple">
             Don't have account? <a href="#" onClick={handleSignupClick}>Sign-up!</a>
           </p>
 
           {/* Bouton retour vers le site vitrine */}
           <div className="back-to-site">
             <button 
-              className="back-to-site-btn"
+              className="back-to-site-btn text-white"
               onClick={() => navigate('/')}
               disabled={loading}
             >
