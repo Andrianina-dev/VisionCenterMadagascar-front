@@ -1,68 +1,590 @@
-/* Variables de couleurs pour Vision Center */
-:root {
-  /* Couleurs de base - Noms sémantiques */
-  --cyan-light: #e0f7fa;
-  --cyan-lighter: #a7feeb;
-  --cyan-dark: #019BFF;
-  --cyan-dark-light: #0066cc;
-  --cyan-deep: #32cfc9;
-  --yellow-soft: #f6f868;
-  --blue-gray-dark: #2f3e46;
-  --gray-light: #f2f2f2;
-  --white: #FFFFFF;
-  --white-soft: #fafafa;  /* Blanc cassé élégant */
-  --white-warmer: #f8f9fa;  /* Blanc légèrement chaud */
-  --gray-medium: #666666;
-  --gray-border: #e0e0e0;
-  --gray-blue: #58627A;
-  
-  /* Couleurs du dégradé */
-  --cyan-very-light: #8fefe9;
-  --pink-pale: #d4f1f4;
+/* Page À Propos - Vision Center Madagascar - Design identique à l'accueil */
 
-  /* Usage des couleurs */
-  --background: var(--gray-light);
-  --surface: var(--white-soft);  /* Utilise le blanc cassé */
-  --primary: var(--cyan-light);
-  --accent: var(--yellow-soft);
-  --text: var(--blue-gray-dark);
-  --text-secondary: var(--gray-medium);
-  --text-simple: var(--gray-blue);
-  --border: var(--gray-border);
-  --secondary: var(--cyan-deep);
-  
-  /* Boutons */
-  --btn-bg: var(--cyan-dark-light);
-  
-  /* Texte spécial */
-  --text-special: var(--gray-border);
+/* Animations identiques à l'accueil */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Classes utilitaires pour les couleurs - Background, Text (System/Cyan/Specialized), Form elements */
-.bg-background { background-color: var(--background); }
-.bg-surface { background-color: var(--surface); }
-.bg-primary { background-color: var(--primary); }
-.bg-accent { background-color: var(--accent); }
-
-/* Text colors - System/Cyan/Specialized */
-.text-primary { color: var(--text); }
-.text-secondary { color: var(--text-secondary); }
-.text-accent { color: var(--accent); }
-.text-cyan-light { color: var(--cyan-light); }
-.text-cyan-lighter { color: var(--cyan-lighter); }
-.text-cyan-dark { color: var(--cyan-dark); }
-.text-cyan-dark-light { color: var(--cyan-dark-light); }
-.text-special { color: var(--text-special); }
-.text-gray-blue { color: var(--gray-blue); }
-.text-simple { color: var(--text-simple); }
-.text-white { color: var(--white) !important; }
-
-.left-panel .brand-title { color: var(--white) !important; }
-.left-panel .brand-subtitle { color: var(--white) !important; }
-.left-panel .back-to-site-btn { color: var(--white) !important; }
-
-::placeholder {
-  color: var(--text-special);
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-.border-custom { border-color: var(--border); }
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+}
+
+/* Styles de base */
+.a-propos-page-wrapper {
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--background, #f2f2f2);
+  color: var(--text, #2f3e46);
+  overflow-x: hidden;
+}
+
+.apropos-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* Header Section - Style identique à l'accueil */
+.apropos-header {
+  background: linear-gradient(135deg, var(--cyan-dark-light, #0066cc) 0%, var(--cyan-dark, #019BFF) 50%, var(--cyan-deep, #32cfc9) 100%);
+  color: var(--white, #FFFFFF);
+  padding: 100px 0 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-top: 0;
+}
+
+.apropos-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.apropos-header h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin: 0 0 24px 0;
+  position: relative;
+  z-index: 2;
+  animation: fadeInUp 1s ease forwards;
+  color: var(--white, #FFFFFF);
+}
+
+.apropos-header-subtitle {
+  font-size: 1.2rem;
+  margin: 0;
+  opacity: 0.95;
+  position: relative;
+  z-index: 2;
+  animation: fadeInUp 1s ease 0.2s forwards;
+  font-weight: 400;
+}
+
+/* Section Headers */
+.apropos-section-header {
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
+}
+
+.apropos-section-header h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: var(--text, #2f3e46);
+  position: relative;
+  animation: fadeInUp 1s ease forwards;
+}
+
+.apropos-divider {
+  width: 80px;
+  height: 3px;
+  background: var(--cyan-dark-light, #0066cc);
+  margin: 0 auto;
+  border-radius: 2px;
+  position: relative;
+}
+
+/* Historique Section */
+.apropos-historique {
+  padding: 80px 0;
+  background: var(--surface, #fafafa);
+  position: relative;
+}
+
+.apropos-timeline {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.apropos-timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--cyan-dark-light, #0066cc);
+  transform: translateX(-50%);
+}
+
+.apropos-timeline-item {
+  display: flex;
+  margin-bottom: 60px;
+  position: relative;
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.apropos-timeline-item:nth-child(odd) {
+  flex-direction: row;
+  animation: fadeInLeft 0.8s ease forwards;
+}
+
+.apropos-timeline-item:nth-child(even) {
+  flex-direction: row-reverse;
+  animation: fadeInRight 0.8s ease forwards;
+}
+
+.apropos-timeline-year {
+  flex: 0 0 100px;
+  text-align: center;
+  padding: 12px;
+  background: var(--cyan-dark-light, #0066cc);
+  color: var(--white, #FFFFFF);
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  position: relative;
+  z-index: 2;
+  margin: 0 30px;
+  transition: all 0.3s ease;
+}
+
+.apropos-timeline-year:hover {
+  transform: scale(1.05);
+  background: var(--cyan-dark, #019BFF);
+}
+
+.apropos-timeline-content {
+  flex: 1;
+  background: var(--white, #FFFFFF);
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid var(--border, #e0e0e0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.apropos-timeline-content:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.apropos-timeline-content h3 {
+  color: var(--cyan-dark-light, #0066cc);
+  font-size: 1.3rem;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.apropos-timeline-content p {
+  color: var(--text-secondary, #666666);
+  line-height: 1.6;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Vision Section */
+.apropos-vision {
+  padding: 80px 0;
+  background: var(--background, #f2f2f2);
+  position: relative;
+}
+
+.apropos-vision-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.apropos-vision-card {
+  background: var(--white, #FFFFFF);
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid var(--border, #e0e0e0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  position: relative;
+  animation: fadeInUp 0.8s ease forwards;
+  transition: all 0.3s ease;
+}
+
+.apropos-vision-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+.apropos-vision-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  display: inline-block;
+  animation: float 3s ease-in-out infinite;
+}
+
+.apropos-vision-card h3 {
+  color: var(--cyan-dark-light, #0066cc);
+  font-size: 1.5rem;
+  margin: 0 0 16px 0;
+  font-weight: 600;
+}
+
+.apropos-vision-card p {
+  color: var(--text-secondary, #666666);
+  line-height: 1.6;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.apropos-vision-quote {
+  text-align: center;
+  padding: 40px;
+  background: var(--white, #FFFFFF);
+  border-radius: 16px;
+  border: 1px solid var(--border, #e0e0e0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  animation: fadeInUp 0.8s ease 0.2s forwards;
+}
+
+.apropos-vision-quote blockquote {
+  font-size: 1.5rem;
+  font-style: italic;
+  color: var(--text, #2f3e46);
+  margin: 0;
+  position: relative;
+  padding: 0 30px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.apropos-vision-quote blockquote::before,
+.apropos-vision-quote blockquote::after {
+  content: '"';
+  font-size: 3rem;
+  color: var(--cyan-dark-light, #0066cc);
+  opacity: 0.3;
+  position: absolute;
+}
+
+.apropos-vision-quote blockquote::before {
+  left: 0;
+  top: -20px;
+}
+
+.apropos-vision-quote blockquote::after {
+  right: 0;
+  bottom: -40px;
+}
+
+/* Mission Section */
+.apropos-mission {
+  padding: 80px 0;
+  background: var(--surface, #fafafa);
+  position: relative;
+}
+
+.apropos-mission-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.apropos-mission-item {
+  text-align: center;
+  padding: 40px 30px;
+  background: var(--white, #FFFFFF);
+  border-radius: 12px;
+  border: 1px solid var(--border, #e0e0e0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.apropos-mission-item:nth-child(1) { animation-delay: 0.1s; }
+.apropos-mission-item:nth-child(2) { animation-delay: 0.2s; }
+.apropos-mission-item:nth-child(3) { animation-delay: 0.3s; }
+.apropos-mission-item:nth-child(4) { animation-delay: 0.4s; }
+
+.apropos-mission-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+.apropos-mission-icon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  display: inline-block;
+  animation: float 3s ease-in-out infinite;
+}
+
+.apropos-mission-item h3 {
+  color: var(--cyan-dark-light, #0066cc);
+  font-size: 1.3rem;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.apropos-mission-item p {
+  color: var(--text-secondary, #666666);
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Valeurs Section */
+.apropos-valeurs {
+  padding: 80px 0;
+  background: var(--background, #f2f2f2);
+  position: relative;
+}
+
+.apropos-valeurs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.apropos-valeur-item {
+  background: var(--white, #FFFFFF);
+  padding: 40px 30px;
+  border-radius: 12px;
+  border: 1px solid var(--border, #e0e0e0);
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.apropos-valeur-item:nth-child(1) { animation-delay: 0.1s; }
+.apropos-valeur-item:nth-child(2) { animation-delay: 0.2s; }
+.apropos-valeur-item:nth-child(3) { animation-delay: 0.3s; }
+.apropos-valeur-item:nth-child(4) { animation-delay: 0.4s; }
+.apropos-valeur-item:nth-child(5) { animation-delay: 0.5s; }
+.apropos-valeur-item:nth-child(6) { animation-delay: 0.6s; }
+
+.apropos-valeur-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+.apropos-valeur-icon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  display: inline-block;
+  animation: float 3s ease-in-out infinite;
+}
+
+.apropos-valeur-item h3 {
+  color: var(--cyan-dark-light, #0066cc);
+  font-size: 1.3rem;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.apropos-valeur-item p {
+  color: var(--text-secondary, #666666);
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* CTA Section - Style identique à l'accueil */
+.apropos-cta {
+  padding: 80px 0;
+  background: linear-gradient(135deg, var(--cyan-dark-light, #0066cc) 0%, var(--cyan-dark, #019BFF) 50%, var(--cyan-deep, #32cfc9) 100%);
+  color: var(--white, #FFFFFF);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.apropos-cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.apropos-cta-content {
+  position: relative;
+  z-index: 2;
+}
+
+.apropos-cta-content h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: var(--white, #FFFFFF);
+  animation: fadeInUp 1s ease forwards;
+}
+
+.apropos-cta-content p {
+  font-size: 1.1rem;
+  margin: 0 0 40px 0;
+  opacity: 0.95;
+  animation: fadeInUp 1s ease 0.2s forwards;
+}
+
+.apropos-cta-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeInUp 1s ease 0.4s forwards;
+}
+
+.apropos-cta-btn {
+  padding: 14px 40px;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.apropos-cta-btn.primary {
+  background: var(--white, #FFFFFF);
+  color: var(--cyan-dark-light, #0066cc);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.apropos-cta-btn.primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.apropos-cta-btn.secondary {
+  background: transparent;
+  color: var(--white, #FFFFFF);
+  border: 2px solid var(--white, #FFFFFF);
+}
+
+.apropos-cta-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .apropos-header h1 {
+    font-size: 2.5rem;
+  }
+  
+  .apropos-section-header h2 {
+    font-size: 2rem;
+  }
+  
+  .apropos-vision-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .apropos-header {
+    padding: 80px 0 60px;
+  }
+  
+  .apropos-header h1 {
+    font-size: 2rem;
+  }
+  
+  .apropos-header-subtitle {
+    font-size: 1rem;
+  }
+  
+  .apropos-section-header h2 {
+    font-size: 1.8rem;
+  }
+  
+  .apropos-timeline::before {
+    left: 30px;
+  }
+  
+  .apropos-timeline-item {
+    flex-direction: column !important;
+    padding-left: 70px;
+  }
+  
+  .apropos-timeline-year {
+    position: absolute;
+    left: 0;
+    margin: 0;
+    flex: 0 0 auto;
+    width: 80px;
+  }
+  
+  .apropos-mission-grid,
+  .apropos-valeurs-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .apropos-cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .apropos-cta-btn {
+    width: 100%;
+    max-width: 280px;
+  }
+  
+  .apropos-container {
+    padding: 0 20px;
+  }
+  
+  .apropos-vision-quote blockquote {
+    font-size: 1.2rem;
+    padding: 0 20px;
+  }
+}

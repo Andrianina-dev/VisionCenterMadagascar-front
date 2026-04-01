@@ -20,6 +20,7 @@ import { MessengerProvider, useMessenger } from "../contexts/MessengerContext";
 // ✅ AJOUT ICI
 import AccueilVitrineSimple from "../layouts/vitrine/AccueilVitrineSimple";
 import AccueilVitrine from "../layouts/vitrine/SiteVitrine";
+import APropos from "../pages/public/APropos";
 
 // Pages non-membre
 import NonMemberDashboard from "../pages/non-member/NonMemberDashboard";
@@ -87,6 +88,11 @@ const AppRouterContent = () => {
         {/* PAGE ACCUEIL SIMPLE */}
         <Route path="/accueil" element={
           <AccueilVitrineSimple />
+        } />
+      
+        {/* PAGE À PROPOS */}
+        <Route path="/a-propos" element={
+          <APropos />
         } />
       
         {/* GALERIE */}
