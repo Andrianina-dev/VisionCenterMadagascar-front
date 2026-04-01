@@ -291,42 +291,55 @@ const APropos = () => {
         </div>
       </section>
 
+      
       {/* Équipe Section - Staff */}
-      <section className="equipe-section-luxury">
-        <div className="apropos-container">
-          <div className="section-header-luxury">
-            <div className="section-icon-glow">👥</div>
-            <span className="section-badge-luxury">Notre équipe</span>
-            <h2 className="section-title-luxury">Notre Staff</h2>
-            <div className="section-divider-luxury">
-              <span className="divider-line"></span>
-              <span className="divider-icon">✦</span>
-              <span className="divider-line"></span>
-            </div>
-            <p className="section-subtitle-luxury">
-              Des professionnels passionnés au service de votre santé visuelle
-            </p>
-          </div>
+<section className="equipe-section-luxury">
+  <div className="apropos-container">
+    <div className="section-header-luxury">
+      <div className="section-icon-glow">👥</div>
+      <span className="section-badge-luxury">Notre équipe</span>
+      <h2 className="section-title-luxury">Notre Staff</h2>
+      <div className="section-divider-luxury">
+        <span className="divider-line"></span>
+        <span className="divider-icon">✦</span>
+        <span className="divider-line"></span>
+      </div>
+      <p className="section-subtitle-luxury">
+        Des professionnels passionnés au service de votre santé visuelle
+      </p>
+    </div>
 
-          <div className="equipe-grid-luxury">
-            {staffMembers.map((member) => (
-              <div key={member.id} className="membre-card-luxury">
-                <div className="membre-image-wrapper">
-                  <img 
-                    src={member.image} 
-                    alt={member.name}
-                    className="membre-image"
-                  />
-                </div>
-                <div className="membre-info">
-                  <h3 className="membre-nom">{member.name}</h3>
-                  <p className="membre-role">{member.role}</p>
-                </div>
-              </div>
-            ))}
+    <div className="equipe-grid-luxury">
+      {staffMembers.map((member) => (
+        <div key={member.id} className="membre-card-luxury">
+          <div className="membre-image-wrapper">
+            <img 
+              src={member.image} 
+              alt={member.name}
+              className="membre-image"
+            />
+            <div className="membre-badge">
+              {member.role.includes("Chef") ? "Expert" : "Spécialiste"}
+            </div>
+          </div>
+          <div className="membre-info">
+            <h3 className="membre-nom">{member.name}</h3>
+            <p className="membre-role">{member.role}</p>
+            <div className="membre-divider"></div>
+            <p className="membre-quote">
+              "Dévoué à votre santé visuelle"
+            </p>
+            <div className="membre-social">
+              <a href="#" className="membre-social-link">📧</a>
+              <a href="#" className="membre-social-link">💼</a>
+              <a href="#" className="membre-social-link">🔗</a>
+            </div>
           </div>
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* Stats Section */}
       <section className="stats-section-luxury">
