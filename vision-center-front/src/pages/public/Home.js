@@ -1069,26 +1069,6 @@ const Home = () => {
 
           {/* Catégories */}
           <div className="hero-categories">
-            <div className="category-item">
-              <span className="category-icon">🏖️</span>
-              <span className="category-label">Beaches</span>
-            </div>
-            <div className="category-item">
-              <span className="category-icon">💑</span>
-              <span className="category-label">Honeymoon</span>
-            </div>
-            <div className="category-item">
-              <span className="category-icon">🥾</span>
-              <span className="category-label">Hiking</span>
-            </div>
-            <div className="category-item">
-              <span className="category-icon">🦁</span>
-              <span className="category-label">Animal</span>
-            </div>
-            <div className="category-item">
-              <span className="category-icon">⚽</span>
-              <span className="category-label">Sport</span>
-            </div>
           </div>
         </div>
       </section>

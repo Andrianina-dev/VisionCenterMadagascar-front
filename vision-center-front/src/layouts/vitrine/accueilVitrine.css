@@ -128,7 +128,7 @@ body {
 }
 
 .nav-links a {
-  color: #b0b0b0;
+  color: #303135;
   text-decoration: none;
   font-weight: 500;
   font-size: 0.95rem;
@@ -144,7 +144,7 @@ body {
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, #7FFEF4, #4FD1C5);
+  background: linear-gradient(90deg, #e0b115, #d9a909);
   transition: width 0.3s ease;
 }
 
@@ -153,12 +153,12 @@ body {
 }
 
 .nav-links a:hover {
-  color: #7FFEF4;
+  color: #d9a909;
   transform: translateY(-2px);
 }
 
 .nav-links a.active {
-  color: #7FFEF4;
+  color:#d9a909;
 }
 
 /* Hero Section */
@@ -267,7 +267,7 @@ body {
   font-size: 1.25rem;
   opacity: 0.9;
   margin-bottom: 2.5rem;
-  max-width: 600px;
+  max-width: 690px;
   margin-left: auto;
   margin-right: auto;
   line-height: 1.6;

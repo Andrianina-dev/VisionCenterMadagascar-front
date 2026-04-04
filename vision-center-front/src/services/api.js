@@ -1,6 +1,7 @@
 // Service API pour communiquer avec le backend
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+// URL de l'API avec fallback automatique
+const API_BASE_URL = process.env.REACT_APP_API_URL_PRODUCTION || process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 
 class ApiService {
   constructor() {

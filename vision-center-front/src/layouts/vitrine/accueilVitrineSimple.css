@@ -345,7 +345,7 @@ body {
   color: var(--gray-dark);
   border: none;
   padding: 16px 36px;
-  border-radius: 50px;
+  border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -491,68 +491,6 @@ body {
 
 .stat-card-luxury:hover .stat-decoration {
   transform: scaleX(1);
-}
-
-/* Scroll Indicator */
-.hero-scroll-indicator {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  z-index: 2;
-  cursor: pointer;
-  animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateX(-50%) translateY(0);
-  }
-  50% {
-    transform: translateX(-50%) translateY(10px);
-  }
-}
-
-.scroll-mouse {
-  width: 30px;
-  height: 50px;
-  border: 2px solid var(--gold-primary);
-  border-radius: 20px;
-  position: relative;
-}
-
-.scroll-mouse::before {
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 8px;
-  background: var(--gold-primary);
-  border-radius: 2px;
-  animation: scrollWheel 1.5s infinite;
-}
-
-@keyframes scrollWheel {
-  0% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(20px);
-  }
-}
-
-.scroll-text {
-  font-size: 12px;
-  color: var(--white-pure);
-  letter-spacing: 1px;
 }
 
 /* ========== SECTION VALEURS LUXUEUSE ========== */
@@ -1110,7 +1048,7 @@ body {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: 40px;
-  max-width: 600px;
+  max-width: 590px;
   margin-left: auto;
   margin-right: auto;
 }

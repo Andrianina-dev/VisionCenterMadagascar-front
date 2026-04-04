@@ -18,8 +18,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0;
-  max-width: 100%;
-  padding: 10px;
+  max-width: 95%;
 }
 
 /* Logo */
@@ -72,7 +71,7 @@
   text-decoration: none;
   font-size: 11px;
   font-weight: 500;
-  color: #2c3e50;  /* Bleu-gris foncé pour meilleure lisibilité */
+  color: #000000;  /* Noir pour meilleure lisibilité */
   padding: 2px 6px;
   border-radius: 3px;
   transition: all 0.2s ease;
@@ -169,7 +168,7 @@
     padding: 12px 16px;
     display: block;
     text-align: center;
-    color: #2c3e50;  /* Bleu-gris foncé */
+    color: #000000;  /* Noir pour meilleure lisibilité */
   }
   
   .nav-link.active {
@@ -209,10 +208,10 @@
 
 /* Integration du composant Button dans la navigation */
 .btn-member.btn {
-  padding: 16px 36px;  /* Même taille que les boutons de l'accueil */
+  padding: 12px 20px; /* Même taille que les boutons de l'accueil */
   font-size: 16px;  /* Même taille de police */
   font-weight: 600;  /* Même graisse */
-  border-radius: 50px;  /* Même forme arrondie */
+  border-radius: 8px;  /* Même forme arrondie */
   min-width: auto;
   color: #ffffff;
   background: var(--btn-bg);

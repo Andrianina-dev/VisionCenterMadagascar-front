@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaStar, FaHeart, FaHands, FaDove, FaGlobe, FaPrayingHands, FaMagic, FaQuoteLeft, FaBook, FaCalendarAlt, FaMapMarkerAlt, FaQuoteRight, FaPray } from 'react-icons/fa';
 import NavigationSiteVitrine from '../../components/vitrine/NavigationSiteVitrine';
 import FooterSiteVitrine from '../../components/vitrine/FooterSiteVitrine';
 import './accueilVitrineSimple.css';
@@ -24,37 +25,37 @@ function AccueilVitrineSimple() {
       { 
         nom: "Foi Authentique", 
         description: "Une confiance inébranlable en la puissance divine",
-        icone: "✨",
+        icone: <FaPrayingHands />,
         couleur: "#FFD700"
       },
       { 
         nom: "Communauté d'Amour", 
         description: "Grandir ensemble dans l'unité et la bienveillance",
-        icone: "💝",
+        icone: <FaHeart />,
         couleur: "#FF6B6B"
       },
       { 
         nom: "Service Désintéressé", 
         description: "Donner sans compter, aimer sans conditions",
-        icone: "🤲",
+        icone: <FaHands />,
         couleur: "#4ECDC4"
       },
       { 
         nom: "Transformation Divine", 
         description: "Chaque jour, devenir la meilleure version de soi",
-        icone: "🕊️",
+        icone: <FaDove />,
         couleur: "#A8E6CF"
       },
       { 
         nom: "Excellence Spirituelle", 
         description: "Rechercher la perfection dans notre marche avec Dieu",
-        icone: "⭐",
+        icone: <FaStar />,
         couleur: "#FFD93D"
       },
       { 
         nom: "Impact Social", 
         description: "Transformer notre nation par l'amour en action",
-        icone: "🌍",
+        icone: <FaGlobe />,
         couleur: "#6BCB77"
       }
     ]
@@ -205,7 +206,7 @@ function AccueilVitrineSimple() {
           <div className="container hero-container">
             <div className="hero-content-wrapper">
               <div className="hero-badge-container">
-                <span className="hero-badge">✧ Communauté Vivante ✧</span>
+                <span className="hero-badge"><FaMagic /> Communauté Vivante <FaMagic /></span>
               </div>
               
               <h1 className="hero-title">
@@ -226,7 +227,7 @@ function AccueilVitrineSimple() {
                 </button>
                 <button className="btn-outline-luxury" onClick={() => navigate('/services')}>
                   <span className="btn-text">Découvrir nos Services</span>
-                  <span className="btn-icon">✨</span>
+                  <span className="btn-icon"><FaMagic /></span>
                 </button>
               </div>
             </div>
@@ -246,23 +247,18 @@ function AccueilVitrineSimple() {
               ))}
             </div>
           </div>
-          
-          <div className="hero-scroll-indicator">
-            <div className="scroll-mouse"></div>
-            <div className="scroll-text">Découvrir</div>
-          </div>
         </section>
 
         {/* Valeurs Section - Design Luxueux */}
         <section className="valeurs-section-luxury">
           <div className="container">
             <div className="section-header-luxury">
-              <div className="section-icon-glow">⚜️</div>
+              <div className="section-icon-glow"><FaMagic /></div>
               <span className="section-badge-luxury">Notre Fondation Spirituelle</span>
               <h2 className="section-title-luxury">Nos Valeurs Fondamentales</h2>
               <div className="section-divider-luxury">
                 <span className="divider-line"></span>
-                <span className="divider-icon">✧</span>
+                <span className="divider-icon"><FaMagic /></span>
                 <span className="divider-line"></span>
               </div>
               <p className="section-subtitle-luxury">Les piliers qui soutiennent notre vision et guident notre marche</p>
@@ -289,12 +285,12 @@ function AccueilVitrineSimple() {
         <section className="messages-section-luxury">
           <div className="container">
             <div className="section-header-luxury">
-              <div className="section-icon-glow">💫</div>
+              <div className="section-icon-glow"><FaStar /></div>
               <span className="section-badge-luxury">Paroles de Vie</span>
               <h2 className="section-title-luxury">Messages Inspirants</h2>
               <div className="section-divider-luxury">
                 <span className="divider-line"></span>
-                <span className="divider-icon">✧</span>
+                <span className="divider-icon"><FaMagic /></span>
                 <span className="divider-line"></span>
               </div>
               <p className="section-subtitle-luxury">Des paroles qui élèvent l'âme et nourrissent l'esprit</p>
@@ -304,7 +300,7 @@ function AccueilVitrineSimple() {
               {messagesInspirants.map((message, index) => (
                 <div key={message.id} className="message-card-luxury">
                   <div className="message-card-background"></div>
-                  <div className="message-quote-decoration">“</div>
+                  <div className="message-quote-decoration"><FaQuoteLeft /></div>
                   <div className="message-author-info">
                     <div className="message-author-image">
                       <img src={message.image} alt={message.auteur} />
@@ -316,7 +312,7 @@ function AccueilVitrineSimple() {
                   </div>
                   <p className="message-text-luxury">{message.message}</p>
                   <div className="message-verset-luxury">
-                    <span className="verset-icon">📖</span>
+                    <span className="verset-icon"><FaBook /></span>
                     <span>{message.verset}</span>
                   </div>
                   <div className="message-card-glow"></div>
@@ -330,12 +326,12 @@ function AccueilVitrineSimple() {
         <section className="evenements-section-luxury">
           <div className="container">
             <div className="section-header-luxury">
-              <div className="section-icon-glow">🗓️</div>
+              <div className="section-icon-glow"><FaCalendarAlt /></div>
               <span className="section-badge-luxury">Agenda Spirituel</span>
               <h2 className="section-title-luxury">Événements à Venir</h2>
               <div className="section-divider-luxury">
                 <span className="divider-line"></span>
-                <span className="divider-icon">✧</span>
+                <span className="divider-icon"><FaMagic /></span>
                 <span className="divider-line"></span>
               </div>
               <p className="section-subtitle-luxury">Ne manquez pas ces moments de grâce et de partage</p>
@@ -359,7 +355,7 @@ function AccueilVitrineSimple() {
                         <span>{event.heure}</span>
                       </div>
                       <div className="event-detail">
-                        <span className="detail-icon">📍</span>
+                        <span className="detail-icon"><FaMapMarkerAlt /></span>
                         <span>{event.lieu}</span>
                       </div>
                     </div>
@@ -379,12 +375,12 @@ function AccueilVitrineSimple() {
         <section className="temoignages-section-luxury">
           <div className="container">
             <div className="section-header-luxury">
-              <div className="section-icon-glow">🌟</div>
+              <div className="section-icon-glow"><FaQuoteRight /></div>
               <span className="section-badge-luxury">Vies Transformées</span>
               <h2 className="section-title-luxury">Ce qu'ils disent</h2>
               <div className="section-divider-luxury">
                 <span className="divider-line"></span>
-                <span className="divider-icon">✧</span>
+                <span className="divider-icon"><FaMagic /></span>
                 <span className="divider-line"></span>
               </div>
               <p className="section-subtitle-luxury">Des histoires qui témoignent de la puissance de Dieu</p>
@@ -398,7 +394,7 @@ function AccueilVitrineSimple() {
                   style={{ display: activeTestimonial === index ? 'block' : 'none' }}
                 >
                   <div className="temoignage-content">
-                    <div className="temoignage-quote-icon">❝</div>
+                    <div className="temoignage-quote-icon"><FaQuoteLeft /></div>
                     <p className="temoignage-text">{temoignage.temoignage}</p>
                     <div className="temoignage-author">
                       <div className="temoignage-author-image">
@@ -431,7 +427,7 @@ function AccueilVitrineSimple() {
             <div className="cta-card-luxury">
               <div className="cta-glow-effect"></div>
               <div className="cta-content">
-                <div className="cta-icon">🕊️</div>
+                <div className="cta-icon"><FaDove /></div>
                 <h3 className="cta-title-luxury">Prêt à commencer votre voyage spirituel ?</h3>
                 <p className="cta-description-luxury">Rejoignez une communauté qui croit en vous et en la puissance de Dieu pour transformer votre vie</p>
                 <div className="cta-buttons">
@@ -441,7 +437,7 @@ function AccueilVitrineSimple() {
                   </button>
                   <button className="cta-secondary" onClick={() => navigate('/priere')}>
                     <span>Demander une prière</span>
-                    <span className="cta-icon-prayer">🙏</span>
+                    <span className="cta-icon-prayer"><FaPray /></span>
                   </button>
                 </div>
               </div>

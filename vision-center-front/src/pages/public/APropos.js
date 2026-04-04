@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaStar } from 'react-icons/fa';
 import './APropos.css';
 import NavigationSiteVitrine from '../../components/vitrine/NavigationSiteVitrine';
 import FooterSiteVitrine from '../../components/vitrine/FooterSiteVitrine';
@@ -225,7 +226,7 @@ const APropos = () => {
             <div className="valeur-card-luxury">
               <div className="valeur-card-inner">
                 <div className="valeur-icon-circle">
-                  <div className="valeur-icon-luxury">⭐</div>
+                  <div className="valeur-icon-luxury"><FaStar /></div>
                 </div>
                 <h3 className="valeur-title-luxury">Excellence Spirituelle</h3>
                 <p className="valeur-description-luxury">Nous nous engageons à offrir un enseignement biblique de qualité, en suivant les principes divins pour la croissance spirituelle.</p>
