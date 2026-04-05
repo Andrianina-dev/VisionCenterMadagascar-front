@@ -1,12 +1,14 @@
 /* Styles principaux - Point d'entrée pour tous les styles */
 
+/* Import du système de couleurs harmonisé AVANT tout autre style */
+@import './components/couleur/couleur.css';
+
 /* Import des styles de base */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Import des styles de base */
-@import './index.css';
 @import './App.css';
 
 /* Import des styles des layouts */
@@ -27,11 +29,22 @@
 @import './pages/MapSearch.css';
 @import './pages/profileMembre.css';
 
+/* =============================================
+   RÈGLE GLOBALE - NUNITO POUR TOUT LE SITE
+   ============================================= */
+
+/* Appliquer Nunito à TOUS les éléments */
+* {
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* Assurer que le body utilise aussi Nunito */
 body {
-  margin: 0;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-weight: var(--font-weight-normal);
+  line-height: 1.6;
+  color: var(--bluegray-text);
+  background: var(--surface-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   width: 100vw !important;
@@ -51,6 +64,8 @@ html {
   overflow-x: hidden !important;
   padding: 0 !important;
   margin: 0 !important;
+  background: var(--surface-primary);
+  color: var(--bluegray-text);
 }
 
 /* Forcer tous les conteneurs principaux à prendre toute la largeur */
@@ -109,4 +124,8 @@ div[class*="Layout"] {
 code {
   font-family:
     source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  background: var(--surface-secondary);
+  color: var(--cyan-primary);
+  padding: 2px 4px;
+  border-radius: 4px;
 }

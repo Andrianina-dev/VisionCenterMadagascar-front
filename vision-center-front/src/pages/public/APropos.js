@@ -1,8 +1,6 @@
 import React from 'react';
-import { FaStar } from 'react-icons/fa';
+import { FaStar, FaUsers, FaEnvelope, FaBriefcase, FaLink } from 'react-icons/fa';
 import './APropos.css';
-import NavigationSiteVitrine from '../../components/vitrine/NavigationSiteVitrine';
-import FooterSiteVitrine from '../../components/vitrine/FooterSiteVitrine';
 
 const APropos = () => {
   // Données des membres de l'équipe
@@ -46,10 +44,7 @@ const APropos = () => {
   ];
 
   return (
-    <div className="a-propos-page-wrapper">
-      {/* Navigation du haut */}
-      <NavigationSiteVitrine />
-      
+    <div className="a-propos-page-content">
       {/* Header Section - Style luxueux comme l'accueil */}
       <section className="apropos-header-luxury">
         <div className="hero-glow-effect"></div>
@@ -259,7 +254,7 @@ const APropos = () => {
             <div className="valeur-card-luxury">
               <div className="valeur-card-inner">
                 <div className="valeur-icon-circle">
-                  <div className="valeur-icon-luxury">👥</div>
+                  <div className="valeur-icon-luxury"><FaUsers /></div>
                 </div>
                 <h3 className="valeur-title-luxury">Communauté</h3>
                 <p className="valeur-description-luxury">Nous cultivons des relations fraternelles et soutenons chaque membre dans son parcours spirituel.</p>
@@ -297,7 +292,7 @@ const APropos = () => {
 <section className="equipe-section-luxury">
   <div className="apropos-container">
     <div className="section-header-luxury">
-      <div className="section-icon-glow">👥</div>
+      <div className="section-icon-glow"><FaUsers /></div>
       <span className="section-badge-luxury">Notre équipe</span>
       <h2 className="section-title-luxury">Notre Staff</h2>
       <div className="section-divider-luxury">
@@ -331,9 +326,9 @@ const APropos = () => {
               "Dévoué à votre santé visuelle"
             </p>
             <div className="membre-social">
-              <a href="#" className="membre-social-link">📧</a>
-              <a href="#" className="membre-social-link">💼</a>
-              <a href="#" className="membre-social-link">🔗</a>
+              <a href="#" className="membre-social-link"><FaEnvelope /></a>
+              <a href="#" className="membre-social-link"><FaBriefcase /></a>
+              <a href="#" className="membre-social-link"><FaLink /></a>
             </div>
           </div>
         </div>
@@ -408,9 +403,7 @@ const APropos = () => {
         </div>
       </section>
 
-      {/* Footer du site vitrine */}
-      <FooterSiteVitrine />
-    </div>
+      </div>
   );
 };
 

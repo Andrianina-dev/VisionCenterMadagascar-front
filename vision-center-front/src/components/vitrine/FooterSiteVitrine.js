@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaFacebook } from 'react-icons/fa';
 import './FooterSiteVitrine.css';
 
 const FooterSiteVitrine = () => {
@@ -25,10 +26,10 @@ const FooterSiteVitrine = () => {
           <div className="footer-section">
             <h4>Contact</h4>
             <ul>
-              <li>📧 contact@visioncenter.mg</li>
-              <li>📱 +261 34 123 456</li>
-              <li>📍 Antananarivo, Madagascar</li>
-              <li><a href="https://www.facebook.com/profile.php?id=100068896893591" target="_blank" rel="noopener noreferrer">📘 Facebook de Vision Center Madagascar</a></li>
+              <li><FaEnvelope /> contact@visioncenter.mg</li>
+              <li><FaPhone /> +261 34 123 456</li>
+              <li><FaMapMarkerAlt /> Antananarivo, Madagascar</li>
+              <li><a href="https://www.facebook.com/profile.php?id=100068896893591" target="_blank" rel="noopener noreferrer"><FaFacebook /> Facebook de Vision Center Madagascar</a></li>
             </ul>
           </div>
         </div>

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { FaVideo, FaCamera } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import GalerieService from '../../services/GalerieService';
-import NavigationSiteVitrine from '../../components/vitrine/NavigationSiteVitrine';
-import FooterSiteVitrine from '../../components/vitrine/FooterSiteVitrine';
 import '../../styles/pages/Galerie.css';
 
 function Galerie() {
@@ -82,10 +81,7 @@ function Galerie() {
   };
 
   return (
-    <div className="galerie-container">
-      {/* Header */}
-      <NavigationSiteVitrine scrollToSection={scrollToSection} />
-
+    <div className="galerie-content">
       {/* Hero Section */}
       <section className="galerie-header" id="accueil">
         <div className="container">
@@ -115,7 +111,7 @@ function Galerie() {
             {mediaItems.map((item) => (
               <div key={item.key || item.id} className="galerie-item" onClick={() => openMediaModal(item)}>
                 <div className="galerie-media-type">
-                  {item.type === 'video' ? '🎥' : '📸'}
+                  {item.type === 'video' ? <FaVideo /> : <FaCamera />}
                 </div>
                 <div className="galerie-image">
                   <img src={item.thumbnail} alt={item.title} />
@@ -180,9 +176,6 @@ function Galerie() {
           </div>
         </div>
       )}
-
-      {/* Footer */}
-      <FooterSiteVitrine />
     </div>
   );
 }

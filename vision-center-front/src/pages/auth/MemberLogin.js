@@ -156,7 +156,11 @@ const Login = () => {
               <a href="#" className="text-simple">Forgot Password?</a>
             </div>
 
-            <button type="submit" className="login-btn" disabled={loading}>
+            <button 
+              type="submit"
+              className="login-btn text-white bg-yellow-orange border-yellow-orange"
+              disabled={loading}
+            >
               {loading ? 'Connexion en cours...' : 'Log In'}
             </button>
           </form>

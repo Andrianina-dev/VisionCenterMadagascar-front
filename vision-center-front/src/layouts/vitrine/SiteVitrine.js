@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import NavigationSiteVitrine from '../../components/vitrine/NavigationSiteVitrine';
-import FooterSiteVitrine from '../../components/vitrine/FooterSiteVitrine';
+import { FaPalette, FaUsers, FaMapMarkerAlt, FaEnvelope, FaBook, FaPray, FaHandshake, FaCalendarAlt, FaFire, FaClock, FaRocket, FaCheckCircle } from 'react-icons/fa';
 import './accueilVitrine.css';
 
 function SiteVitrine() {
@@ -15,10 +14,7 @@ function SiteVitrine() {
   };
 
   return (
-    <div className="accueil-vitrine">
-      {/* Header */}
-      <NavigationSiteVitrine scrollToSection={scrollToSection} />
-
+    <div className="accueil-vitrine-content">
       {/* Hero Section */}
       <section className="hero" id="hero">
         <div className="hero-background">
@@ -93,7 +89,7 @@ function SiteVitrine() {
           <div className="features-grid">
             <div className="feature-card">
               <div className="feature-icon-wrapper">
-                <div className="feature-icon">📚</div>
+                <div className="feature-icon"><FaBook /></div>
                 <div className="icon-bg"></div>
               </div>
               <div className="feature-content">
@@ -107,7 +103,7 @@ function SiteVitrine() {
             </div>
             <div className="feature-card">
               <div className="feature-icon-wrapper">
-                <div className="feature-icon">🙏</div>
+                <div className="feature-icon"><FaPray /></div>
                 <div className="icon-bg"></div>
               </div>
               <div className="feature-content">
@@ -121,7 +117,7 @@ function SiteVitrine() {
             </div>
             <div className="feature-card">
               <div className="feature-icon-wrapper">
-                <div className="feature-icon">🤝</div>
+                <div className="feature-icon"><FaHandshake /></div>
                 <div className="icon-bg"></div>
               </div>
               <div className="feature-content">
@@ -156,7 +152,7 @@ function SiteVitrine() {
         <div className="container">
           <div className="section-header">
             <div className="section-badge">
-              <span>📅 Événements</span>
+              <span><FaCalendarAlt /> Événements</span>
             </div>
             <h2 className="section-title">
               <span className="title-main">Prochains</span>
@@ -174,7 +170,7 @@ function SiteVitrine() {
                   <span className="date-month">Février</span>
                 </div>
                 <div className="activity-badge">
-                  <span>🔥 Populaire</span>
+                  <span><FaFire /> Populaire</span>
                 </div>
               </div>
               <div className="activity-content">
@@ -182,15 +178,15 @@ function SiteVitrine() {
                 <p>Découvrez les principes bibliques du leadership et développez votre potentiel de leader</p>
                 <div className="activity-meta">
                   <div className="meta-item">
-                    <span className="meta-icon">⏰</span>
+                    <span className="meta-icon"><FaClock /></span>
                     <span>09:00 - 17:00</span>
                   </div>
                   <div className="meta-item">
-                    <span className="meta-icon">📍</span>
+                    <span className="meta-icon"><FaMapMarkerAlt /></span>
                     <span>Centre Vision Center</span>
                   </div>
                   <div className="meta-item">
-                    <span className="meta-icon">👥</span>
+                    <span className="meta-icon"><FaUsers /></span>
                     <span>25 places</span>
                   </div>
                 </div>
@@ -209,11 +205,11 @@ function SiteVitrine() {
                 <p>Session hebdomadaire pour approfondir votre connaissance des Écritures</p>
                 <div className="activity-meta">
                   <div className="meta-item">
-                    <span className="meta-icon">⏰</span>
+                    <span className="meta-icon"><FaClock /></span>
                     <span>18:00 - 19:30</span>
                   </div>
                   <div className="meta-item">
-                    <span className="meta-icon">📍</span>
+                    <span className="meta-icon"><FaMapMarkerAlt /></span>
                     <span>Salle Multimédia</span>
                   </div>
                 </div>
@@ -232,11 +228,11 @@ function SiteVitrine() {
                 <p>3 jours de retraite spirituelle avec enseignements et activités</p>
                 <div className="activity-meta">
                   <div className="meta-item">
-                    <span className="meta-icon">⏰</span>
+                    <span className="meta-icon"><FaClock /></span>
                     <span>3 jours</span>
                   </div>
                   <div className="meta-item">
-                    <span className="meta-icon">📍</span>
+                    <span className="meta-icon"><FaMapMarkerAlt /></span>
                     <span>Andasibe</span>
                   </div>
                 </div>
@@ -256,7 +252,7 @@ function SiteVitrine() {
         <div className="container">
           <div className="cta-content">
             <div className="cta-badge">
-              <span>🚀 Rejoignez-nous</span>
+              <span><FaRocket /> Rejoignez-nous</span>
             </div>
             <h2 className="cta-title">
               <span className="title-main">Prêt à</span>
@@ -281,26 +277,23 @@ function SiteVitrine() {
             </div>
             <div className="cta-features">
               <div className="cta-feature">
-                <span className="feature-icon">✓</span>
+                <span className="feature-icon"><FaCheckCircle /></span>
                 <span>Accès gratuit aux activités</span>
               </div>
               <div className="cta-feature">
-                <span className="feature-icon">✓</span>
+                <span className="feature-icon"><FaCheckCircle /></span>
                 <span>Communauté bienveillante</span>
               </div>
               <div className="cta-feature">
-                <span className="feature-icon">✓</span>
+                <span className="feature-icon"><FaCheckCircle /></span>
                 <span>Formation de qualité</span>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <FooterSiteVitrine />
     </div>
   );
-}
+};
 
 export default SiteVitrine;

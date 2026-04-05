@@ -21,6 +21,7 @@ import { MessengerProvider, useMessenger } from "../contexts/MessengerContext";
 import AccueilVitrineSimple from "../layouts/vitrine/AccueilVitrineSimple";
 import AccueilVitrine from "../layouts/vitrine/SiteVitrine";
 import APropos from "../pages/public/APropos";
+import ProgrammesActivites from "../pages/public/ProgrammesActivites";
 
 // Pages non-membre
 import NonMemberDashboard from "../pages/non-member/NonMemberDashboard";
@@ -52,9 +53,9 @@ const AppRouterContent = () => {
         
         {/* NON-MEMBRES */}
         <Route path="/paiement-reservation-salle" element={
-          <ProtectedRoute>
+          <MainLayout>
             <NonMemberDashboard />
-          </ProtectedRoute>
+          </MainLayout>
         } />
 
         <Route path="/non-member/dashboard" element={
@@ -77,27 +78,44 @@ const AppRouterContent = () => {
 
         {/* PAGE D'ACCUEIL */}
         <Route path="/" element={
-          <AccueilVitrineSimple />
+          <MainLayout>
+            <AccueilVitrineSimple />
+          </MainLayout>
         } />
         
         {/* SITE VITRINE COMPLET */}
         <Route path="/site-vitrine" element={
-          <AccueilVitrine />
+          <MainLayout>
+            <AccueilVitrine />
+          </MainLayout>
         } />
         
         {/* PAGE ACCUEIL SIMPLE */}
         <Route path="/accueil" element={
-          <AccueilVitrineSimple />
+          <MainLayout>
+            <AccueilVitrineSimple />
+          </MainLayout>
         } />
       
         {/* PAGE À PROPOS */}
         <Route path="/a-propos" element={
-          <APropos />
+          <MainLayout>
+            <APropos />
+          </MainLayout>
+        } />
+
+        {/* PROGRAMMES & ACTIVITÉS */}
+        <Route path="/programmes-activites" element={
+          <MainLayout>
+            <ProgrammesActivites />
+          </MainLayout>
         } />
       
         {/* GALERIE */}
         <Route path="/galerie" element={
-          <Galerie />
+          <MainLayout>
+            <Galerie />
+          </MainLayout>
         } />
 
         {/* ESPACE MEMBRE */}
@@ -146,19 +164,25 @@ const AppRouterContent = () => {
 
         <Route path="/location-salle" element={
           <ProtectedRoute>
-            <LocationSalle />
+            <MainLayout>
+              <LocationSalle />
+            </MainLayout>
           </ProtectedRoute>
         } />
 
         <Route path="/reservation-validation" element={
           <ProtectedRoute>
-            <ReservationValidation />
+            <MainLayout>
+              <ReservationValidation />
+            </MainLayout>
           </ProtectedRoute>
         } />
 
         <Route path="/reservation-success" element={
           <ProtectedRoute>
-            <ReservationSuccess />
+            <MainLayout>
+              <ReservationSuccess />
+            </MainLayout>
           </ProtectedRoute>
         } />
 

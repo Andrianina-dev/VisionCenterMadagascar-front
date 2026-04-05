@@ -1,4 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { 
+  FaPalette, FaMobileAlt, FaCreditCard, FaMapMarkerAlt, FaCalendarAlt, 
+  FaUsers, FaInfoCircle, FaPhone, FaFacebook, FaEnvelope, 
+  FaVideo, FaCamera, FaMusic, FaGamepad, FaMoneyBillWave, 
+  FaCheckCircle, FaHourglassHalf, FaClipboardList, FaUserTie, FaLink, FaPlane
+} from 'react-icons/fa';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -7,8 +13,6 @@ import MadagascarMap from "../../component/map/MadagascarMap";
 import activiteService from "../../services/activite.service";
 
 import AuthService from "../../services/auth.service";
-
-import NavigationMembre from "../../components/NavigationMembre";
 
 import "../../styles/pages/Home.css";
 
@@ -114,11 +118,11 @@ const Home = () => {
   const getIconForMethode = (nom) => {
     const lowerNom = nom.toLowerCase();
     
-    if (lowerNom.includes('mvola') || lowerNom.includes('airtel') || lowerNom.includes('orange')) return '📱';
-    if (lowerNom.includes('espece')) return '💵';
-    if (lowerNom.includes('carte')) return '💳';
+    if (lowerNom.includes('mvola') || lowerNom.includes('airtel') || lowerNom.includes('orange')) return <FaMobileAlt />;
+    if (lowerNom.includes('espece')) return <FaMoneyBillWave />;
+    if (lowerNom.includes('carte')) return <FaCreditCard />;
     
-    return '💳';
+    return <FaCreditCard />;
   };
 
 
@@ -383,15 +387,15 @@ const Home = () => {
 
   const infoGuide = [
 
-    { icon: "💰", title: "Inscription Gratuite" },
+    { icon: <FaMoneyBillWave />, title: "Inscription Gratuite" },
 
-    { icon: "✈️", "title": "Activités Variées" },
+    { icon: <FaPlane />, title: "Activités Variées" },
 
-    { icon: "🎫", title: "Événements Réguliers" },
+    { icon: <FaCalendarAlt />, title: "Événements Réguliers" },
 
-    { icon: "ℹ️", title: "Assistance Permanente" },
+    { icon: <FaInfoCircle />, title: "Assistance Permanente" },
 
-    { icon: "📱", title: "Contact Facile" }
+    { icon: <FaMobileAlt />, title: "Contact Facile" }
 
   ];
 
@@ -926,7 +930,7 @@ const Home = () => {
       btn.style.borderColor = '';
       btn.style.border = '2px solid #0ea5e9';
       const operatorName = btn.querySelector('span:last-child')?.textContent || '';
-      btn.innerHTML = `<span>📱</span><span>${operatorName}</span>`;
+      btn.innerHTML = `<span><FaMobileAlt /></span><span>${operatorName}</span>`;
     });
     
     const selectedBtn = document.querySelector(`.mobile-money-operator-btn:nth-child(${methodesPaiement.find(m => m.id === 'mobile_money')?.types?.indexOf(operator) + 1})`);
@@ -934,7 +938,7 @@ const Home = () => {
       selectedBtn.style.background = 'linear-gradient(135deg, var(--secondary) 0%, var(--text) 100%)';
       selectedBtn.style.color = 'var(--blanc)';
       selectedBtn.style.borderColor = 'var(--text)';
-      selectedBtn.innerHTML = `<span>📱</span><span>${operator} ✓</span>`;
+      selectedBtn.innerHTML = `<span><FaMobileAlt /></span><span>${operator} ✓</span>`;
     }
     
   };
@@ -1048,9 +1052,6 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      {/* NavigationMembre en haut */}
-      <NavigationMembre />
-      
       {/* Hero Section */}
       <section className="hero" id="hero">
         <div className="hero-content">
@@ -1076,7 +1077,7 @@ const Home = () => {
       {/* Formation M.E.DI.A Section */}
       <section className="packages-section">
         <div className="section-header">
-          <h2 className="section-title-centered">🎨 Formation M.E.DI.A</h2>
+          <h2 className="section-title-centered"><FaPalette /> Formation M.E.DI.A</h2>
           <div className="header-actions">
             <span className="section-subtitle">Multimedia, Electronics, Digital Art</span>
             <a href="#" className="see-all" onClick={(e) => { e.preventDefault(); }}>Voir tout</a>
@@ -1091,18 +1092,18 @@ const Home = () => {
                   {activite.image_url ? (
                     <img src={activiteService.getImageUrl(activite.image_url)} alt={activite.titre_activite} className="media-activity-img" />
                   ) : (
-                    <div className="media-activity-fallback">🎨</div>
+                    <div className="media-activity-fallback"><FaPalette /></div>
                   )}
                 </div>
                 <div className="media-activity-content">
                   <h3 className="media-activity-title">{activite.titre_activite}</h3>
                   <div className="media-activity-price-section">
-                    <p className="media-activity-price">💰 {activite.prix ? `${activite.prix} ${activite.devise || 'MGA'}` : 'Gratuit'}</p>
+                    <p className="media-activity-price"><FaMoneyBillWave /> {activite.prix ? `${activite.prix} ${activite.devise || 'MGA'}` : 'Gratuit'}</p>
                     {activite.est_payante && (
                       <span className="media-price-badge">Payant</span>
                     )}
                   </div>
-                  <p className="media-activity-location">📍 {activite.lieu_activite}</p>
+                  <p className="media-activity-location"><FaMapMarkerAlt /> {activite.lieu_activite}</p>
                   <div className="media-activity-actions">
                     <button 
                       className={`media-participer-btn ${activite.isRegistered ? 'registered' : ''}`}
@@ -1220,16 +1221,16 @@ const Home = () => {
                       <img src={activiteService.getImageUrl(pkg.image)} alt={pkg.name} className="media-activity-img" />
                     )
                   ) : (
-                    <div className="media-activity-fallback">🏨</div>
+                    <div className="media-activity-fallback"><FaVideo /></div>
                   )}
                 </div>
                 <div className="media-activity-content">
                   <h3 className="media-activity-title">{pkg.name}</h3>
                   <div className="media-activity-price-section">
-                    <p className="media-activity-price">{pkg.price}</p>
+                    <p className="media-activity-price"><FaMoneyBillWave /> {pkg.price}</p>
                     <span className="media-price-badge">Populaire</span>
                   </div>
-                  <p className="media-activity-location">📍 {pkg.lieu}</p>
+                  <p className="media-activity-location"><FaMapMarkerAlt /> {pkg.lieu}</p>
                   <div className="media-activity-actions">
                     <button 
                       className={`media-participer-btn ${pkg.isRegistered ? 'registered' : ''}`}
@@ -1393,7 +1394,7 @@ const Home = () => {
         <div className="payment-popup-overlay">
           <div className="payment-popup">
             <div className="payment-popup-header">
-              <h3>💳 Paiement requis</h3>
+              <h3><FaCreditCard /> Paiement requis</h3>
               <button 
                 className="close-popup-btn" 
                 onClick={() => {
@@ -1434,7 +1435,7 @@ const Home = () => {
                       className="payment-method-btn"
                       onClick={() => handleMethodeClick(methode)}
                     >
-                      <span>{methode.displayIcon || '💳'}</span>
+                      <span>{methode.displayIcon || <FaCreditCard />}</span>
                       <span>{methode.nom}</span>
                     </button>
                   ))}
@@ -1453,7 +1454,7 @@ const Home = () => {
                         className="mobile-money-operator-btn"
                         onClick={() => handleMobileMoneyChoice(operator)}
                       >
-                        <span>📱</span>
+                        <span><FaMobileAlt /></span>
                         <span>{operator}</span>
                       </button>
                     ))}

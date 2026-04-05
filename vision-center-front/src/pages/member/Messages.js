@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaUserTie } from 'react-icons/fa';
 import AuthService from '../../services/auth.service';
 import '../../styles/pages/Messages.css';
 
@@ -161,7 +162,7 @@ const Messages = () => {
                 onClick={() => !message.lu && markAsRead(message.id_message)}
               >
                 <div className="message-avatar">
-                  <div className="admin-avatar">👨‍💼</div>
+                  <div className="admin-avatar"><FaUserTie /></div>
                   {!message.lu && <div className="unread-indicator"></div>}
                 </div>
                 

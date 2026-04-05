@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaVideo, FaCamera, FaMapMarkerAlt, FaCalendarAlt, FaUsers, FaMoneyBillWave, FaInfoCircle } from 'react-icons/fa';
 
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -489,7 +490,7 @@ const ActiviteDetails = () => {
 
                   <span className="activite-hero-date">
 
-                    📅 {activiteService.formatDate(activite.date_heure_activite)}
+                    <span className="activite-hero-date"><FaCalendarAlt /> {activiteService.formatDate(activite.date_heure_activite)}</span>
 
                   </span>
 
@@ -503,7 +504,7 @@ const ActiviteDetails = () => {
 
                 <div className="activite-badge">
 
-                  <span className="badge-icon">👥</span>
+                  <span className="badge-icon"><FaUsers /></span>
 
                   <span className="badge-text">{activite.nombre_participants || 0}/{activite.capacite || "Illimité"} places</span>
 
@@ -517,7 +518,7 @@ const ActiviteDetails = () => {
 
                 <div className="activite-badge">
 
-                  <span className="badge-icon">📍</span>
+                  <span className="badge-icon"><FaMapMarkerAlt /></span>
 
                   <span className="badge-text">Antananarivo</span>
 
@@ -525,7 +526,7 @@ const ActiviteDetails = () => {
 
                 <div className="activite-badge">
 
-                  <span className="badge-icon">💰</span>
+                  <span className="badge-icon"><FaMoneyBillWave /></span>
 
                   <span className="badge-text">{activite.prix}</span>
 
@@ -605,7 +606,7 @@ const ActiviteDetails = () => {
 
             <div className="activite-info-card">
 
-              <div className="activite-info-icon">📅</div>
+              <div className="activite-info-icon"><FaCalendarAlt /></div>
 
               <div className="activite-info-content">
 
@@ -625,7 +626,7 @@ const ActiviteDetails = () => {
 
             <div className="activite-info-card">
 
-              <div className="activite-info-icon">📍</div>
+              <div className="activite-info-icon"><FaMapMarkerAlt /></div>
 
               <div className="activite-info-content">
 
@@ -643,7 +644,7 @@ const ActiviteDetails = () => {
 
             <div className="activite-info-card">
 
-              <div className="activite-info-icon">👥</div>
+              <div className="activite-info-icon"><FaUsers /></div>
 
               <div className="activite-info-content">
 
@@ -703,7 +704,7 @@ const ActiviteDetails = () => {
 
             <div className="activite-info-card">
 
-              <div className="activite-info-icon">💰</div>
+              <div className="activite-info-icon"><FaMoneyBillWave /></div>
 
               <div className="activite-info-content">
 
@@ -721,7 +722,7 @@ const ActiviteDetails = () => {
 
             <div className="activite-info-card">
 
-              <div className="activite-info-icon">📊</div>
+              <div className="activite-info-icon"><FaInfoCircle /></div>
 
               <div className="activite-info-content">
 
@@ -802,7 +803,7 @@ const ActiviteDetails = () => {
 
                 <div className="resource-section">
 
-                  <h3>🎥 Vidéos de Formation</h3>
+                  <h3><FaVideo /> Vidéos de Formation</h3>
 
                   {loadingRessources ? (
 

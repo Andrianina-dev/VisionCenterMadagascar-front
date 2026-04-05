@@ -69,7 +69,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  color: var(--white-primary);
 }
 
 .status-badge.available {
@@ -82,7 +82,7 @@
   font-weight: 600;
   text-transform: uppercase;
   background: #28a745;
-  color: white;
+  color: var(--white-primary);
 }
 
 .media-content {
@@ -167,7 +167,7 @@
 
 .btn-action.primary {
   background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  color: var(--white-primary);
 }
 
 .btn-action.primary:hover {
@@ -183,7 +183,7 @@
 
 .btn-action.secondary:hover {
   background: #667eea;
-  color: white;
+  color: var(--white-primary);
 }
 
 /* Responsive pour M.E.DI.A */
@@ -248,7 +248,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--white-primary);
 }
 
 .sidebar-nav {
@@ -396,7 +396,7 @@
 
 .filter-btn.active {
   background: linear-gradient(135deg, #007bff 0%, #0056b3 50%, #004085 100%);
-  color: white;
+  color: var(--white-primary);
   border-color: #0056b3;
   transform: scale(1.08);
   box-shadow: 0 8px 20px rgba(0, 86, 179, 0.4);
@@ -452,7 +452,7 @@
 
 .activite-type {
   background: #007bff;
-  color: white;
+  color: var(--white-primary);
   padding: 0.25rem 0.75rem;
   border-radius: 4px;
   font-size: 0.75rem;
@@ -460,7 +460,7 @@
 }
 
 .activite-statut {
-  color: white;
+  color: var(--white-primary);
   padding: 0.25rem 0.75rem;
   border-radius: 4px;
   font-size: 0.75rem;

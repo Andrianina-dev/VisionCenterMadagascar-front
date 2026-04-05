@@ -82,22 +82,17 @@ body {
 .logo-icon {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #7FFEF4, #4FD1C5);
+  background: var(--cyan-lightest);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
-  animation: pulse 2s infinite;
 }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
 
 .logo-text h1 {
-  color: var(--gray-blue);
+  color: var(--cyan-lightest);
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
@@ -105,7 +100,7 @@ body {
 }
 
 .logo-text .tagline {
-  color: #7FFEF4;
+  color: var(--cyan-lightest);
   font-size: 0.875rem;
   font-weight: 500;
   display: block;
@@ -204,16 +199,9 @@ body {
   background-image: 
     radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-  animation: float 6s ease-in-out infinite;
   z-index: 1;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0) translateX(0); }
-  25% { transform: translateY(-20px) translateX(10px); }
-  50% { transform: translateY(-10px) translateX(-5px); }
-  75% { transform: translateY(-15px) translateX(5px); }
-}
 
 .container {
   max-width: 1200px;
@@ -250,11 +238,12 @@ body {
   margin-bottom: 1rem;
   line-height: 1.1;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  color: var(--cyan-lightest);
 }
 
 .title-line {
   display: block;
-  color: white;
+  color: var(--cyan-lightest);
 }
 
 .title-highlight {

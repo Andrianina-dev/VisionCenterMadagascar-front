@@ -1,14 +1,22 @@
-/* Styles pour NavigationSiteVitrine - Version harmonisée avec MemberLogin */
+/* Styles pour NavigationSiteVitrine - Nouveau système de couleurs harmonisé */
+@import '../../styles/components/couleur/couleur.css';
+
+/* Reset navigation */
+.vitrine-header * {
+  box-sizing: border-box;
+  font-family: 'Nunito', var(--font-family-primary);
+}
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+   padding: 0;
   margin-bottom: 0rem;
-  border-bottom: 1px solid var(--gray-border);
-  background: var(--white-soft);  /* Blanc cassé élégant */
-  box-shadow: none;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--blue-gray-night);
+  box-shadow: var(--shadow-light);
+  font-family: var(--font-family-primary);
   position: sticky;
   z-index: 1000;
 }
@@ -32,35 +40,479 @@
   width: auto;
 }
 
-/* Texte du logo - couleurs améliorées */
+/* Texte du logo - nouvelles couleurs pour fond noir */
 .logo-text h1 {
-  font-size: 16px;
+  font-size: var(--text-base);
   margin: 0;
   line-height: 1.1;
   font-weight: 600;
-  color: #1a2c3e;  /* Bleu foncé pour meilleur contraste */
+  color: var(--white-primary);
 }
 
 .logo-text .tagline {
-  font-size: 9px;
-  color: #5a6e7c;  /* Gris moyen pour la tagline */
+  font-size: var(--text-xs);
+  color: var(--gray-medium);
   display: block;
   line-height: 1.1;
 }
 
 .logo-icon {
-  font-size: 20px;
-  color: #0066cc;  /* Bleu vif pour l'icône */
+  font-size: var(--text-lg);
+  color: var(--yellow-primary);
 }
 
-/* Menu de navigation - couleurs améliorées */
-.nav-menu {
+/* Navigation */
+.nav {
   display: flex;
-  gap: 1.5rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
   align-items: center;
+  gap: 20px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 5px;
+  padding: 0;
+  gap: 0;
+}
+
+.nav-links li {
+  margin: 0;
+}
+
+.nav-links a {
+  color: var(--white-primary) !important;
+  text-decoration: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: all 0.3s ease;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--text-sm);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--yellow-primary);
+  background: var(--hover-secondary);
+}
+
+/* Bouton de connexion séparé */
+.btn-member {
+  margin-left: var(--spacing-md);
+  background: var(--bg-gradient-orange);
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-small);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  transition: all 0.4s ease;
+  box-shadow: var(--shadow-light);
+}
+
+.btn-member:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* Sélecteur de langue */
+.language-selector {
+  position: relative;
+  margin-left: var(--spacing-md);
+}
+
+.current-language {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.current-language:hover {
+  background: var(--surface-primary);
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-light);
+}
+
+.flag {
+  font-size: var(--text-base);
+}
+
+.lang-code {
+  color: var(--bluegray-text);
+  font-weight: 600;
+}
+
+.arrow {
+  font-size: var(--text-xs);
+  color: var(--gray-medium);
+  transition: transform 0.3s ease;
+}
+
+.language-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--spacing-xs);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--shadow-medium);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  min-width: 140px;
+}
+
+.language-dropdown.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-sm);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.language-option:last-child {
+  border-bottom: none;
+}
+
+.language-option:hover {
+  background: var(--hover-primary);
+}
+
+.language-option.active {
+  background: var(--active-primary);
+  color: var(--yellow-orange);
+  font-weight: 600;
+}
+
+.lang-name {
+  color: var(--bluegray-text);
+  font-size: var(--text-sm);
+}
+
+/* Sélecteur de langue mobile */
+.language-selector-mobile {
+  margin: 10px 0;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.current-language-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--hover-primary);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.language-dropdown-mobile {
+  margin-top: 8px;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.language-option-mobile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.language-option-mobile:last-child {
+  border-bottom: none;
+}
+
+.language-option-mobile:hover {
+  background: var(--hover-primary);
+}
+
+.language-option-mobile.active {
+  background: var(--active-primary);
+  color: var(--yellow-orange);
+  font-weight: 600;
+}
+
+/* Profil utilisateur */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.user-profile:hover {
+  background: var(--surface-primary);
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-light);
+}
+
+.profile-avatar {
+  position: relative;
+  width: 34px;
+  height: 34px;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-status-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background: var(--yellow-primary);
+  border: 2px solid var(--surface-primary);
+  border-radius: 50%;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profile-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bluegray-text);
+}
+
+.profile-role {
+  font-size: 12px;
+  color: var(--gray-medium);
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  box-shadow: var(--shadow-medium);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  min-width: 200px;
+}
+
+.profile-dropdown.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-header {
+  padding: 16px;
+  background: var(--surface-secondary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.dropdown-avatar {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 8px;
+}
+
+.dropdown-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.dropdown-info {
+  text-align: center;
+}
+
+.dropdown-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bluegray-text);
+  margin-bottom: 4px;
+}
+
+.dropdown-email {
+  font-size: 12px;
+  color: var(--gray-medium);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border-light);
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-size: 14px;
+  color: var(--bluegray-text);
+}
+
+.dropdown-item:hover {
+  background: var(--hover-primary);
+}
+
+.logout-item {
+  color: var(--gray-medium);
+}
+
+.logout-item:hover {
+  background: rgba(246, 255, 24, 0.1);
+  color: var(--yellow-primary);
+}
+
+/* Menu mobile */
+.mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.mobile-menu-toggle span {
+  width: 24px;
+  height: 2px;
+  background: var(--white-primary);
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-toggle:hover span {
+  background: var(--yellow-primary);
+}
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 280px;
+  height: 100vh;
+  background: var(--black-primary);
+  box-shadow: var(--shadow-heavy);
+  transition: left 0.3s ease;
+  z-index: 999;
+  overflow-y: auto;
+}
+
+.mobile-menu.open {
+  left: 0;
+}
+
+.mobile-menu .nav-links {
+  flex-direction: column;
+  padding: 20px;
+  gap: 8px;
+}
+
+.mobile-menu .nav-links li {
+  width: 100%;
+}
+
+.mobile-menu .nav-links a {
+  display: block;
+  padding: 12px 16px;
+  border-radius: 6px;
+  width: 100%;
+  text-align: left;
+  color: var(--white-primary) !important;
+}
+
+.mobile-menu .nav-links a:hover,
+.mobile-menu .nav-links a.active {
+  background: var(--hover-secondary);
+  color: var(--yellow-primary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mobile-menu-toggle {
+    display: flex;
+  }
+  
+  .mobile-menu {
+    display: block;
+  }
+  
+  .nav-links {
+    display: none;
+  }
+  
+  .language-selector {
+    display: none;
+  }
+  
+  .user-profile {
+    display: none;
+  }
+  
+  .btn-member {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .header .container {
+    padding: 0 16px;
+  }
+  
+  .logo-text h1 {
+    font-size: 14px;
+  }
+  
+  .mobile-menu {
+    width: 100%;
+    left: -100%;
+  }
+  
+  .mobile-menu.open {
+    left: 0;
+  }
 }
 
 .nav-menu li {
@@ -85,8 +537,8 @@
 
 /* Lien actif - style inspiré du bouton login */
 .nav-link.active {
-  color: #ffffff;  /* Blanc pur pour contraste sur fond bleu */
-  background: var(--btn-bg);  /* Utilise la variable de couleur */
+  color: var(--white-primary);  /* Blanc pur pour contraste sur fond orange */
+  background: var(--yellow-orange);  /* Utilise la couleur orange */
   border-radius: 3px;
   font-weight: 500;
 }
@@ -99,13 +551,13 @@
 .btn-connecter {
   width: 100%;
   padding: 14px 16px;
-  background: var(--btn-bg, #0066cc);
+  background: var(--yellow-orange);
   border: none;
   border-radius: 8px;
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  color: #ffffff;  /* Blanc pur */
+  color: var(--white-primary);  /* Blanc pur */
   text-decoration: none;
   display: inline-block;
   transition: all 0.2s ease;
@@ -172,8 +624,8 @@
   }
   
   .nav-link.active {
-    color: #ffffff;
-    background: var(--btn-bg);
+    color: var(--white-primary);
+    background: var(--yellow-orange);
   }
   
   .btn-connecter {
@@ -208,12 +660,12 @@
 
 /* Integration du composant Button dans la navigation */
 .btn-member.btn {
-  padding: 12px 20px; /* Même taille que les boutons de l'accueil */
+  padding: 12px 30px; /* Même taille que les boutons de l'accueil */
   font-size: 16px;  /* Même taille de police */
   font-weight: 600;  /* Même graisse */
   border-radius: 8px;  /* Même forme arrondie */
   min-width: auto;
-  color: #ffffff;
+  color: var(--white-primary);
   background: var(--btn-bg);
   border: none;
   cursor: pointer;
@@ -221,14 +673,14 @@
 }
 
 .btn-member.btn-primary {
-  background: var(--btn-bg);
-  color: #ffffff;
+  background: var(--yellow-orange);
+  color: var(--white-primary);
   border: none;
 }
 
 .btn-member.btn-primary:hover:not(:disabled) {
   background: #0052a3;  /* Bleu plus foncé au survol */
-  color: #ffffff;
+  color: var(--white-primary);
   transform: translateY(-3px);  /* Même animation que les boutons de l'accueil */
   box-shadow: 0 4px 8px rgba(0, 102, 204, 0.2);
 }
@@ -236,15 +688,4 @@
 .btn-member.btn:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
-}
-
-/* Variables CSS pour harmonisation */
-:root {
-  --btn-bg: #0066cc;  /* Bleu vif pour les boutons */
-  --primary: #0066cc;  /* Bleu vif pour les éléments interactifs */
-  --cyan-clair: #e0f7fa;
-  --gray-border: #e0e0e0;
-  --white-soft: #fefefe;  /* Blanc cassé */
-  --text: #1a2c3e;  /* Bleu-gris très foncé pour le texte principal */
-  --text-secondary: #5a6e7c;  /* Gris moyen pour le texte secondaire */
 }

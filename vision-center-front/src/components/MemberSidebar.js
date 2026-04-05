@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { FaHome, FaCalendarAlt, FaClipboardList, FaEnvelope, FaCog, FaSignOutAlt, FaMap, FaHeadset, FaUser, FaCog as FaCog2, FaBell } from 'react-icons/fa';
 import AuthService from '../services/auth.service';
 import '../styles/pages/MemberSidebar.css';
 import "../styles/components/couleur/couleur.css";
@@ -70,7 +71,7 @@ const MemberSidebar = ({ activeNav }) => {
             <img src={currentUser.avatar} alt={displayName} className="avatar-img" />
           ) : (
             <div className="avatar-placeholder">
-              <span className="avatar-icon">👤</span>
+              <span className="avatar-icon"><FaUser /></span>
             </div>
           )}
           <div className="member-status online"></div>
@@ -96,7 +97,7 @@ const MemberSidebar = ({ activeNav }) => {
           className={`member-nav-item ${activeNav === 'dashboard' ? 'active' : ''}`}
           onClick={() => handleNavClick('dashboard')}
         >
-          <span className="nav-icon">🏠</span>
+          <span className="nav-icon"><FaHome /></span>
           <span className="nav-text">Tableau de bord</span>
         </button>
         
@@ -104,7 +105,7 @@ const MemberSidebar = ({ activeNav }) => {
           className={`member-nav-item ${activeNav === 'account' ? 'active' : ''}`}
           onClick={() => handleNavClick('account')}
         >
-          <span className="nav-icon">👤</span>
+          <span className="nav-icon"><FaCalendarAlt /></span>
           <span className="nav-text">Mon Compte</span>
         </button>
         
@@ -112,7 +113,7 @@ const MemberSidebar = ({ activeNav }) => {
           className={`member-nav-item ${activeNav === 'profile' ? 'active' : ''}`}
           onClick={() => handleNavClick('profile')}
         >
-          <span className="nav-icon">📋</span>
+          <span className="nav-icon"><FaClipboardList /></span>
           <span className="nav-text">Profil</span>
         </button>
         
@@ -128,7 +129,7 @@ const MemberSidebar = ({ activeNav }) => {
           className={`member-nav-item ${activeNav === 'messages' ? 'active' : ''}`}
           onClick={() => handleNavClick('messages')}
         >
-          <span className="nav-icon">📧</span>
+          <span className="nav-icon"><FaEnvelope /></span>
           <span className="nav-text">Messages</span>
         </button>
         
@@ -136,7 +137,7 @@ const MemberSidebar = ({ activeNav }) => {
           className={`member-nav-item ${activeNav === 'map' ? 'active' : ''}`}
           onClick={() => handleNavClick('map')}
         >
-          <span className="nav-icon">🗺️</span>
+          <span className="nav-icon"><FaMap /></span>
           <span className="nav-text">Carte</span>
         </button>
         
@@ -144,7 +145,7 @@ const MemberSidebar = ({ activeNav }) => {
           className={`member-nav-item ${activeNav === 'support' ? 'active' : ''}`}
           onClick={() => handleNavClick('support')}
         >
-          <span className="nav-icon">💬</span>
+          <span className="nav-icon"><FaHeadset /></span>
           <span className="nav-text">Support</span>
         </button>
       </nav>
@@ -152,11 +153,11 @@ const MemberSidebar = ({ activeNav }) => {
       {/* Actions rapides */}
       <div className="quick-actions">
         <button className="quick-action-btn" onClick={() => navigate('/member/settings')}>
-          <span className="quick-icon">⚙️</span>
+          <span className="quick-icon"><FaCog2 /></span>
           <span className="quick-text">Paramètres</span>
         </button>
         <button className="quick-action-btn" onClick={() => navigate('/member/notifications')}>
-          <span className="quick-icon">🔔</span>
+          <span className="quick-icon"><FaBell /></span>
           <span className="quick-text">Notifications</span>
         </button>
       </div>
@@ -164,7 +165,7 @@ const MemberSidebar = ({ activeNav }) => {
       {/* Déconnexion */}
       <div className="member-sign-out-section">
         <button className="member-sign-out-btn" onClick={handleSignOut}>
-          <span className="sign-out-icon">🚪</span>
+          <span className="sign-out-icon"><FaSignOutAlt /></span>
           <span className="sign-out-text">Déconnexion</span>
         </button>
       </div>

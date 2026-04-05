@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import NavigationSiteVitrine from '../../components/vitrine/NavigationSiteVitrine';
 import '../../styles/pages/NonMemberDashboard.css';
 
 const NonMemberDashboard = () => {
@@ -363,9 +362,7 @@ const NonMemberDashboard = () => {
   }
 
   return (
-    <div className="dashboard">
-      <NavigationSiteVitrine />
-      
+    <div className="dashboard-content">
       {/* Contenu principal */}
       <div className="content">
         {/* Statistiques */}

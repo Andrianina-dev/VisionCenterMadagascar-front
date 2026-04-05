@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaEnvelope, FaCog, FaBell, FaSignOutAlt, FaClipboardList } from 'react-icons/fa';
 import AuthService from '../services/auth.service';
 import './NavigationMembre.css';
 
@@ -33,7 +34,7 @@ const NavigationMembre = () => {
       <div className="header-container">
         {/* Logo */}
         <div className="header-logo">
-          <span className="logo-icon">👁️</span>
+          <span className="nav-icon"><FaEnvelope /></span>
           <span className="logo-text">Vision Center</span>
         </div>
         
@@ -74,21 +75,21 @@ const NavigationMembre = () => {
               </div>
               <div className="dropdown-divider"></div>
               <button onClick={() => navigate("/profile")} className="dropdown-item">
-                <span className="dropdown-icon">📋</span>
+                <span className="dropdown-icon"><FaClipboardList /></span>
                 Mon Profil
               </button>
               <button onClick={() => navigate("/settings")} className="dropdown-item">
-                <span className="dropdown-icon">⚙️</span>
+                <span className="dropdown-icon"><FaCog /></span>
                 Paramètres
               </button>
               <button onClick={() => navigate("/notifications")} className="dropdown-item">
-                <span className="dropdown-icon">🔔</span>
+                <span className="dropdown-icon"><FaBell /></span>
                 Notifications
                 <span className="dropdown-badge">3</span>
               </button>
               <div className="dropdown-divider"></div>
               <button onClick={handleLogout} className="dropdown-item logout-item">
-                <span className="dropdown-icon">🚪</span>
+                <span className="dropdown-icon"><FaSignOutAlt /></span>
                 Déconnexion
               </button>
             </div>

@@ -1,5 +1,13 @@
+/* Importer le système de couleurs harmonisé */
+@import './components/couleur/couleur.css';
+
 .App {
+  font-family: 'Nunito', var(--font-family-primary);
+  font-weight: var(--font-weight-normal);
   text-align: center;
+  min-height: 100vh;
+  background: var(--surface-primary);
+  color: var(--bluegray-text);
 }
 
 .App-logo {
@@ -14,18 +22,25 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background: var(--gradient-primary);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: var(--white-primary);
 }
 
 .App-link {
-  color: #61dafb;
+  color: var(--cyan-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.App-link:hover {
+  color: var(--cyan-dark);
 }
 
 @keyframes App-logo-spin {

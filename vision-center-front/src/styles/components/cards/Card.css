@@ -1,0 +1,368 @@
+/* =============================================
+   COMPOSANT CARTE - RÉUTILISABLE
+   ============================================= */
+
+/* Carte principale */
+.card {
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  transition: all 0.3s ease;
+  background: var(--white-primary);
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0; /* Reset margin */
+  padding: 0; /* Reset padding */
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-medium);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--bg-gradient-orange);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.card:hover::before {
+  transform: scaleX(1);
+}
+
+.card.selected {
+  border-color: var(--cyan-primary);
+  box-shadow: 0 0 0 2px rgba(167, 254, 235, 0.1);
+}
+
+.card.disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.card.disabled:hover {
+  transform: none;
+  box-shadow: var(--shadow-light);
+}
+
+/* Image de la carte */
+.card-image {
+  position: relative;
+  height: 240px; /* Augmenté pour mieux proportionner */
+  background-size: cover;
+  background-position: center;
+  font-weight: var(--font-weight-bold);
+  overflow: hidden;
+  margin: 0; /* Pas de marge */
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .card-image img {
+  transform: scale(1.05);
+}
+
+/* Status badge */
+.card-status {
+  position: absolute;
+  top: 15px; /* Augmenté pour meilleur espacement */
+  right: 15px; /* Augmenté pour meilleur espacement */
+  display: inline-block;
+  background: rgba(212, 160, 23, 0.1);
+  color: var(--yellow-orange);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border-radius: var(--border-radius-small);
+  padding: 6px 12px; /* Augmenté pour meilleure lisibilité */
+  margin: 0;
+  z-index: 10;
+}
+
+.card-status.success {
+  background: var(--cyan-transparent);
+  color: var(--cyan-primary);
+}
+
+.card-status.danger {
+  background: var(--red-transparent);
+  color: var(--red-medium);
+}
+
+.card-status.warning {
+  background: var(--yellow-transparent);
+  color: var(--yellow-orange);
+}
+
+.card-status.info {
+  background: var(--gray-medium);
+  color: var(--white-primary);
+}
+
+/* Contenu de la carte */
+.card-content {
+  padding: 32px; /* Augmenté pour meilleur espacement */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espacement entre les éléments */
+}
+
+.card-content h3 {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--bluegray-text);
+  margin: 0 0 16px 0; /* Espacement contrôlé */
+  line-height: 1.3;
+}
+
+.card-content h3 a {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--bluegray-text);
+  text-decoration: none;
+  line-height: 1.4;
+  display: block;
+  margin: 0 0 16px 0; /* Espacement contrôlé */
+  transition: color 0.3s ease;
+}
+
+.card-content h3 a:hover {
+  color: var(--yellow-orange);
+}
+
+.card-description {
+  font-size: var(--text-sm);
+  color: var(--bluegray-text);
+  line-height: 1.7;
+  margin: 0 0 20px 0; /* Espacement contrôlé */
+  flex: 1;
+}
+
+/* Détails */
+.card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Augmenté pour meilleur espacement */
+  margin: 0 0 24px 0; /* Espacement contrôlé */
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Augmenté pour meilleur espacement */
+  font-size: var(--text-sm);
+  color: var(--bluegray-text);
+  margin: 0; /* Reset margin */
+}
+
+.detail-icon {
+  color: var(--yellow-orange);
+  font-size: var(--text-base);
+  flex-shrink: 0;
+}
+
+/* Tags */
+.card-tags {
+  margin: 0 0 28px 0; /* Espacement contrôlé */
+}
+
+.card-tags h4 {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--bluegray-text);
+  margin: 0 0 16px 0; /* Espacement contrôlé */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px; /* Augmenté pour meilleur espacement */
+}
+
+.tag {
+  background: var(--surface-secondary);
+  color: var(--bluegray-text);
+  border-radius: var(--border-radius-small);
+  padding: 8px 16px; /* Augmenté pour meilleure lisibilité */
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-light);
+  margin: 0; /* Reset margin */
+}
+
+.tag:hover {
+  background: var(--yellow-orange);
+  color: var(--black-pure);
+  border-color: var(--yellow-orange);
+  transform: translateY(-1px);
+}
+
+/* Métadonnées */
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 24px 0; /* Espacement contrôlé */
+}
+
+.card-meta span {
+  font-size: var(--text-xs);
+  color: var(--gray-medium);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* Augmenté pour meilleur espacement */
+}
+
+.card-meta a {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--yellow-orange);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* Augmenté pour meilleur espacement */
+  transition: all 0.3s ease;
+}
+
+.card-meta a:hover {
+  gap: 12px; /* Augmenté au hover */
+}
+
+/* Bouton d'action */
+.card-action {
+  width: 100%;
+  padding: 16px 24px; /* Augmenté pour meilleure apparence */
+  background: var(--bg-gradient-orange);
+  color: var(--black-pure);
+  border: none;
+  border-radius: var(--border-radius-small);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  box-shadow: var(--shadow-orange);
+  margin: auto 0 0 0 0; /* Espacement contrôlé */
+}
+
+.card-action:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+  background: var(--yellow-orange);
+}
+
+.card-action:disabled {
+  background: var(--gray-medium);
+  color: var(--gray-light);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.card-action:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Variations de taille */
+.card.small {
+  max-width: 300px;
+}
+
+.card.medium {
+  max-width: 350px;
+}
+
+.card.large {
+  max-width: 400px;
+}
+
+/* Variations de thème */
+.card.dark {
+  background: var(--blue-gray-night);
+  color: var(--white-primary);
+}
+
+.card.dark .card-content h3,
+.card.dark .card-content h3 a {
+  color: var(--white-primary);
+}
+
+.card.dark .card-description {
+  color: var(--bluegray-light);
+}
+
+.card.minimal {
+  border: none;
+  box-shadow: var(--shadow-light);
+}
+
+.card.minimal:hover {
+  box-shadow: var(--shadow-medium);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 2rem; /* Augmenté pour meilleur espacement mobile */
+  }
+  
+  .card-content {
+    padding: 24px; /* Réduit pour mobile */
+  }
+  
+  .card-image {
+    height: 200px; /* Réduit pour mobile */
+  }
+  
+  .card-status {
+    top: 12px;
+    right: 12px;
+    padding: 4px 10px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-content {
+    padding: 20px; /* Encore plus réduit pour petit mobile */
+    gap: 16px; /* Espacement réduit */
+  }
+  
+  .card-image {
+    height: 180px; /* Encore plus réduit */
+  }
+  
+  .tags-list {
+    gap: 8px; /* Espacement réduit */
+  }
+  
+  .tag {
+    padding: 6px 12px; /* Padding réduit */
+    font-size: 10px;
+  }
+}

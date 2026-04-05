@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaStar, FaHeart, FaHands, FaDove, FaGlobe, FaPrayingHands, FaMagic, FaQuoteLeft, FaBook, FaCalendarAlt, FaMapMarkerAlt, FaQuoteRight, FaPray } from 'react-icons/fa';
-import NavigationSiteVitrine from '../../components/vitrine/NavigationSiteVitrine';
-import FooterSiteVitrine from '../../components/vitrine/FooterSiteVitrine';
 import './accueilVitrineSimple.css';
 
 function AccueilVitrineSimple() {
@@ -183,9 +181,7 @@ function AccueilVitrineSimple() {
   }, []);
 
   return (
-    <div className="accueil-vitrine">
-      <NavigationSiteVitrine />
-
+    <div className="accueil-vitrine-content">
       <main>
         {/* Hero Section - Luxueux avec Parallax */}
         <section className="hero-section">
@@ -205,9 +201,6 @@ function AccueilVitrineSimple() {
           
           <div className="container hero-container">
             <div className="hero-content-wrapper">
-              <div className="hero-badge-container">
-                <span className="hero-badge"><FaMagic /> Communauté Vivante <FaMagic /></span>
-              </div>
               
               <h1 className="hero-title">
                 <span className="hero-title-line">{presentationData.titre}</span>
@@ -445,8 +438,6 @@ function AccueilVitrineSimple() {
           </div>
         </section>
       </main>
-
-      <FooterSiteVitrine />
     </div>
   );
 }

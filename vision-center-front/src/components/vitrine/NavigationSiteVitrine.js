@@ -12,6 +12,7 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
   const [activeSection, setActiveSection] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
 
   // Vérifier si un utilisateur est connecté
   useEffect(() => {
@@ -110,6 +111,54 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
     }, 50);
   };
 
+  // Déterminer les liens de navigation en fonction de la page actuelle
+  const getNavLinks = () => {
+    
+    // EXCEPTION : pages avec navigation réduite (Espace Membre et Réservation)
+    if (location.pathname === '/espace-membre' || location.pathname === '/paiement-reservation-salle') {
+      return [
+        { label: "Accueil", path: "/accueil" },
+        { label: "Espace Membre", path: "/espace-membre" },
+        { label: "Réservation", path: "/paiement-reservation-salle" },
+        { label: "Location", path: "/location-salle" }
+      ];
+    }
+    
+    // PAR DÉFAUT : tous les liens normaux sur les autres pages
+    return [
+      { label: "Accueil", path: "/accueil" },
+      { label: "À propos", path: "/a-propos" },
+      { label: "Valeurs", path: "/site-vitrine" },
+      { label: "Programmes & Activités", path: "/programmes-activites" },
+      { label: "Galerie", path: "/galerie" },
+      { label: "Location", path: "/location-salle" },
+      { label: "Espace Membre", path: "/espace-membre" },
+      
+    ];
+  };
+
+  // État pour la langue sélectionnée
+  const [selectedLanguage, setSelectedLanguage] = useState('mg');
+
+  // Obtenir les informations de la langue sélectionnée
+  const getLanguageInfo = (lang) => {
+    const languages = {
+      'mg': { flag: '🇲🇬', code: 'MG', name: 'Malagasy' },
+      'en': { flag: '🇺🇸', code: 'EN', name: 'English' },
+      'fr': { flag: '🇫🇷', code: 'FR', name: 'Français' }
+    };
+    return languages[lang] || languages['mg'];
+  };
+
+  const navLinks = getNavLinks();
+
+  const handleLanguageChange = (lang) => {
+    setIsLangDropdownOpen(false);
+    setSelectedLanguage(lang);
+    console.log('Langue changée vers:', lang);
+    localStorage.setItem('language', lang);
+  };
+
   const handleNavigation = (path) => {
     setIsMobileMenuOpen(false);
     navigate(path);
@@ -157,199 +206,113 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
         
         <nav className="nav">
           <ul className="nav-links">
-            {/* Lien Accueil */}
-            <li>
-              <a 
-                href="/accueil" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavigation('/accueil');
-                }} 
-                className={isLinkActive('/accueil') ? 'active' : ''}
-              >
-                Accueil
-              </a>
-            </li>
-            
-            {/* Lien À propos */}
-            <li>
-              <a 
-                href="/a-propos" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavigation('/a-propos');
-                }} 
-                className={isLinkActive('/a-propos') ? 'active' : ''}
-              >
-                À propos
-              </a>
-            </li>
-            
-            {/* Lien Valeurs */}
-            <li>
-              <a 
-                href="/site-vitrine" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavigation('/site-vitrine');
-                }} 
-                className={isLinkActive('/site-vitrine') ? 'active' : ''}
-              >
-                Valeurs
-              </a>
-            </li>
-            
-            {/* Lien Événements (section scroll) */}
-            <li>
-              <a 
-                href="#activities" 
-                onClick={(e) => handleNavClick(e, 'activities')} 
-                className={isSectionActive('activities') ? 'active' : ''}
-              >
-                Événements
-              </a>
-            </li>
-            
-            {/* Lien Galerie */}
-            <li>
-              <a 
-                href="/galerie" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavigation('/galerie');
-                }} 
-                className={isLinkActive('/galerie') ? 'active' : ''}
-              >
-                Galerie
-              </a>
-            </li>
-            
-            {/* Lien Location de salle */}
-            <li>
-              <a 
-                href="/location-salle" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavigation('/location-salle');
-                }} 
-                className={isLinkActive('/location-salle') ? 'active' : ''}
-              >
-                Location
-              </a>
-            </li>
-            
-            {/* Liens conditionnels pour les membres */}
-            {user && user.role === 'membre' && (
-              <>
-                <li>
-                  <a 
-                    href="/espace-membre" 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleNavigation('/espace-membre');
-                    }} 
-                    className={isLinkActive('/espace-membre') ? 'active' : ''}
-                  >
-                    Espace membre
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="/paiement-reservation-salle" 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleNavigation('/paiement-reservation-salle');
-                    }} 
-                    className={isLinkActive('/paiement-reservation-salle') ? 'active' : ''}
-                  >
-                    Réservations
-                  </a>
-                </li>
-              </>
-            )}
-            
-            {user && user.role === 'non_membre' && (
-              <li>
+            {navLinks.map((link, index) => (
+              <li key={index}>
                 <a 
-                  href="/paiement-reservation-salle" 
+                  href={link.path} 
                   onClick={(e) => {
                     e.preventDefault();
-                    handleNavigation('/paiement-reservation-salle');
+                    handleNavigation(link.path);
                   }} 
-                  className={isLinkActive('/paiement-reservation-salle') ? 'active' : ''}
+                  className={isLinkActive(link.path) ? 'active' : ''}
                 >
-                  Réservations
+                  {link.label}
                 </a>
               </li>
-            )}
+            ))}
             
-            {/* Profil ou Bouton Connexion */}
-            <li>
-              {user ? (
-                <div 
-                  className="user-profile" 
-                  onMouseEnter={() => setIsDropdownOpen(true)}
-                  onMouseLeave={() => setIsDropdownOpen(false)}
-                >
-                  <div className="profile-avatar">
-                    <img 
-                      src={`https://ui-avatars.com/api/?name=${getUserInitials()}&background=019BFF&color=fff&size=34&bold=true&length=2`} 
-                      alt="Profile" 
-                    />
-                    <div className="profile-status-dot"></div>
+            {/* Profil utilisateur (si connecté) */}
+            {user ? (
+              <div 
+                className="user-profile" 
+                onMouseEnter={() => setIsDropdownOpen(true)}
+                onMouseLeave={() => setIsDropdownOpen(false)}
+              >
+                <div className="profile-avatar">
+                  <img 
+                    src={`https://ui-avatars.com/api/?name=${getUserInitials()}&background=019BFF&color=fff&size=34&bold=true&length=2`} 
+                    alt="Profile" 
+                  />
+                  <div className="profile-status-dot"></div>
+                </div>
+                <div className="profile-info">
+                  <span className="profile-name">{getUserFullName()}</span>
+                  <span className="profile-role">{getUserRoleLabel()}</span>
+                </div>
+                <div className={`profile-dropdown ${isDropdownOpen ? 'show' : ''}`}>
+                  <div className="dropdown-header">
+                    <div className="dropdown-avatar">
+                      <img 
+                        src={`https://ui-avatars.com/api/?name=${getUserInitials()}&background=019BFF&color=fff&size=48&bold=true&length=2`} 
+                        alt="Profile" 
+                      />
+                    </div>
+                    <div className="dropdown-info">
+                      <div className="dropdown-name">{getUserFullName()}</div>
+                      <div className="dropdown-email">{user?.email || 'membre@visioncenter.mg'}</div>
+                    </div>
                   </div>
-                  <div className="profile-info">
-                    <span className="profile-name">{getUserFullName()}</span>
-                    <span className="profile-role">{getUserRoleLabel()}</span>
+                  <div className="dropdown-divider"></div>
+                  <button onClick={() => handleNavigation('/profile')} className="dropdown-item">
+                    Mon profil
+                  </button>
+                  <button onClick={() => handleNavigation('/settings')} className="dropdown-item">
+                    Paramètres
+                  </button>
+                  {user.role === 'membre' && (
+                    <button onClick={() => handleNavigation('/espace-membre')} className="dropdown-item">
+                      Espace membre
+                    </button>
+                  )}
+                  <div className="dropdown-divider"></div>
+                  <button onClick={handleLogout} className="dropdown-item logout-item">
+                    Déconnexion
+                  </button>
+                </div>
+              </div>
+            ) : null}
+          </ul>
+          
+          {/* Sélecteur de langue - à gauche du bouton Se connecter */}
+              <li>
+                <div className="language-selector">
+                  <div className="current-language" onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}>
+                    <span className="flag-icon">{getLanguageInfo(selectedLanguage).flag}</span>
+                    <span className="lang-code">{getLanguageInfo(selectedLanguage).code}</span>
+                    <span className="arrow">▼</span>
                   </div>
-                  <div className={`profile-dropdown ${isDropdownOpen ? 'show' : ''}`}>
-                    <div className="dropdown-header">
-                      <div className="dropdown-avatar">
-                        <img 
-                          src={`https://ui-avatars.com/api/?name=${getUserInitials()}&background=019BFF&color=fff&size=48&bold=true&length=2`} 
-                          alt="Profile" 
-                        />
+                  {isLangDropdownOpen && (
+                    <div className="language-dropdown show">
+                      <div className={`language-option ${selectedLanguage === 'mg' ? 'active' : ''}`} onClick={() => handleLanguageChange('mg')}>
+                        <span className="flag-icon">🇲🇬</span>
+                        <span className="lang-name">Malagasy</span>
                       </div>
-                      <div className="dropdown-info">
-                        <div className="dropdown-name">{getUserFullName()}</div>
-                        <div className="dropdown-email">{user?.email || 'membre@visioncenter.mg'}</div>
+                      <div className={`language-option ${selectedLanguage === 'en' ? 'active' : ''}`} onClick={() => handleLanguageChange('en')}>
+                        <span className="flag-icon">🇺🇸</span>
+                        <span className="lang-name">English</span>
+                      </div>
+                      <div className={`language-option ${selectedLanguage === 'fr' ? 'active' : ''}`} onClick={() => handleLanguageChange('fr')}>
+                        <span className="flag-icon">🇫🇷</span>
+                        <span className="lang-name">Français</span>
                       </div>
                     </div>
-                    <div className="dropdown-divider"></div>
-                    <button onClick={() => handleNavigation('/profile')} className="dropdown-item">
-                      Mon profil
-                    </button>
-                    <button onClick={() => handleNavigation('/settings')} className="dropdown-item">
-                      Paramètres
-                    </button>
-                    {user.role === 'membre' && (
-                      <button onClick={() => handleNavigation('/espace-membre')} className="dropdown-item">
-                        Espace membre
-                      </button>
-                    )}
-                    <div className="dropdown-divider"></div>
-                    <button onClick={handleLogout} className="dropdown-item logout-item">
-                      Déconnexion
-                    </button>
-                  </div>
+                  )}
                 </div>
-              ) : (
-                <Button 
-                  variant="primary" 
-                  size="medium"
-                  onClick={() => handleNavigation('/login')}
-                  className="btn-member"
-                >
-                  Se connecter
-                </Button>
-              )}
-            </li>
-          </ul>
+              </li>
+            {/* Bouton Se connecter séparé */}
+          {!user && (
+            <Button 
+              variant="primary" 
+              size="medium"
+              onClick={() => handleNavigation('/login')}
+              className="btn-member"
+            >
+              Se connecter
+            </Button>
+          )}
           
           {/* Menu Toggle pour Mobile */}
           <div className="mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            <span></span>
-            <span></span>
             <span></span>
           </div>
         </nav>
@@ -396,11 +359,14 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
           </li>
           <li>
             <a 
-              href="#activities" 
-              onClick={(e) => handleNavClick(e, 'activities')} 
-              className={isSectionActive('activities') ? 'active' : ''}
+              href="/programmes-activites" 
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavigation('/programmes-activites');
+              }} 
+              className={isLinkActive('/programmes-activites') ? 'active' : ''}
             >
-              Événements
+              Programmes & Activités
             </a>
           </li>
           <li>
@@ -484,6 +450,8 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
                     <span className="profile-role">{getUserRoleLabel()}</span>
                   </div>
                 </div>
+          
+
               </li>
               <li>
                 <div className="profile-dropdown show" style={{ position: 'relative', width: '100%', marginTop: '8px' }}>
@@ -515,7 +483,8 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
               >
                 Se connecter
               </Button>
-            </li>
+
+           </li>
           )}
         </ul>
       </div>

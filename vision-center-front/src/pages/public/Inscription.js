@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { FaCheckCircle, FaUser, FaCalendarAlt, FaMapMarkerAlt, FaUsers, FaInfoCircle } from 'react-icons/fa';
 
 const Inscription = () => {
   const { activiteId } = useParams();
@@ -136,10 +137,10 @@ const Inscription = () => {
             <h2>{activite.titre}</h2>
             <p className="activite-description">{activite.description}</p>
             <div className="activite-details">
-              <p><strong>📅 Date:</strong> {new Date(activite.date).toLocaleDateString('fr-FR')}</p>
-              <p><strong>📍 Lieu:</strong> {activite.lieu}</p>
-              <p><strong>👥 Capacité:</strong> {activite.capacite} places</p>
-              <p><strong>📊 Statut:</strong> 
+              <p><strong><FaCalendarAlt /> Date:</strong> {new Date(activite.date).toLocaleDateString('fr-FR')}</p>
+              <p><strong><FaMapMarkerAlt /> Lieu:</strong> {activite.lieu}</p>
+              <p><strong><FaUsers /> Capacité:</strong> {activite.capacite} places</p>
+              <p><strong><FaInfoCircle /> Statut:</strong> 
                 <span className={`status ${activite.statut}`}>
                   {activite.statut === 'ouverte' ? 'Ouverte aux inscriptions' : 'Fermée'}
                 </span>
@@ -170,8 +171,8 @@ const Inscription = () => {
             <p>Vous êtes sur le point de vous inscrire à l'activité :</p>
             <div className="activity-summary">
               <strong>{activite?.titre_activite}</strong><br/>
-              📅 {activite ? new Date(activite.date_heure_activite).toLocaleDateString('fr-FR') : ''}<br/>
-              📍 {activite?.lieu_activite}
+              <FaCalendarAlt /> {activite ? new Date(activite.date_heure_activite).toLocaleDateString('fr-FR') : ''}<br/>
+              <FaMapMarkerAlt /> {activite?.lieu_activite}
             </div>
           </div>
 

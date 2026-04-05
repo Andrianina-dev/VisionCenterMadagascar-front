@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { FaMapMarkerAlt, FaEnvelope, FaPhone, FaFacebook, FaTwitter, FaInstagram, FaClock } from 'react-icons/fa';
 
 const PublicLayout = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -120,13 +121,13 @@ const PublicLayout = ({ children }) => {
               </p>
               <div className="flex space-x-4">
                 <a href="#" className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
-                  <span className="text-sm">f</span>
+                  <FaFacebook />
                 </a>
                 <a href="#" className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors">
-                  <span className="text-sm">t</span>
+                  <FaTwitter />
                 </a>
                 <a href="#" className="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors">
-                  <span className="text-sm">i</span>
+                  <FaInstagram />
                 </a>
               </div>
             </div>
@@ -146,19 +147,19 @@ const PublicLayout = ({ children }) => {
               <h4 className="text-lg font-semibold">Contact</h4>
               <ul className="space-y-2 text-gray-300">
                 <li className="flex items-center space-x-2">
-                  <span>📍</span>
+                  <FaMapMarkerAlt />
                   <span>Antananarivo, Madagascar</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <span>📞</span>
+                  <FaPhone />
                   <span>+261 34 12 345 67</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <span>✉️</span>
+                  <FaEnvelope />
                   <span>contact@visioncenter.mg</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <span>🕒</span>
+                  <FaClock />
                   <span>Lun-Ven: 8h-17h</span>
                 </li>
               </ul>

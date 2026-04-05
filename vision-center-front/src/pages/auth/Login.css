@@ -1,8 +1,10 @@
 /* Styles pour MemberLogin - Vision Center Madagascar */
+@import '../../styles/components/couleur/couleur.css';
+
 .login-container {
   display: flex;
   min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-family-primary);
 }
 
 /* Panel gauche - Branding avec fond image */
@@ -19,11 +21,11 @@
 
 /* Force couleur blanche pour les textes du panel gauche */
 .left-panel .brand-text .brand-title {
-  color: #FFFFFF !important;
+  color: var(--white-primary) !important;
 }
 
 .left-panel .brand-text .brand-subtitle {
-  color: #FFFFFF !important;
+  color: var(--white-primary) !important;
 }
 
 .brand {
@@ -60,7 +62,7 @@
 /* Panel droit - Formulaire */
 .right-panel {
   flex: 1;
-  background: #f8fafc;
+  background: var(--surface-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,15 +70,15 @@
 }
 
 .form-card {
-  background: white;
+  background: var(--white-primary);
   padding: 32px;
   width: 100%;
   max-width: 380px;
 }
 
 .signin-title {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
   text-align: center;
   margin-bottom: 24px;
 }
@@ -89,16 +91,16 @@
 .input-group input {
   width: 100%;
   padding: 14px 16px;
-  border: 1px solid var(--gray-border);
-  border-radius: 8px;
-  font-size: 10px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius-small);
+  font-size: var(--text-xs);
   box-sizing: border-box;
 }
 
 .input-group input:focus {
   outline: none;
-  border-color: var(--cyan-light);
-  box-shadow: 0 0 0 3px rgba(224, 247, 250, 0.1);
+  border-color: var(--cyan-primary);
+  box-shadow: 0 0 0 3px rgba(167, 254, 235, 0.1);
 }
 
 .password-wrapper {
@@ -145,18 +147,21 @@
 button.login-btn {
   width: 100%;
   padding: 14px;
-  background: var(--btn-bg);
+  background: var(--yellow-orange);
   border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 500;
+  border-radius: var(--border-radius-small);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
   margin-top: 8px;
+  color: var(--black-pure);
 }
 
 .login-btn:hover:not(:disabled),
 button.login-btn:hover:not(:disabled) {
-  background: var(--cyan-clair);
+  background: var(--yellow-orange);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
 }
 
 .login-btn:disabled,
@@ -174,18 +179,18 @@ button.login-btn-large {
 /* Textes secondaires - taille 10px */
 .forgot-row {
   text-align: center;
-  margin: 16px 0 0 0;
-  font-size: 10px;
+  margin: 16px 0 0;
+  font-size: var(--text-xs);
 }
 
 .forgot-row a:hover {
-  color: var(--cyan-light);
+  color: var(--cyan-primary);
 }
 
 .divider {
   text-align: center;
   margin: 24px 0;
-  font-size: 10px;
+  font-size: var(--text-xs);
   position: relative;
 }
 
@@ -196,14 +201,14 @@ button.login-btn-large {
   left: 0;
   right: 0;
   height: 1px;
-  background: var(--gray-border);
+  background: var(--border-light);
   z-index: 1;
 }
 
 .divider::after {
   content: attr(data-text);
   position: relative;
-  background: white;
+  background: var(--white-primary);
   padding: 0 12px;
   z-index: 2;
 }
@@ -219,7 +224,7 @@ button.login-btn-large {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid var(--gray-border);
+  border: 1px solid var(--border-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -227,13 +232,13 @@ button.login-btn-large {
 }
 
 .social-circle:hover {
-  border-color: var(--gray-blue);
+  border-color: var(--bluegray-text);
 }
 
 /* Textes légaux et liens */
 .legal {
   text-align: center;
-  font-size: 10px;
+  font-size: var(--text-xs);
   margin: 20px 0;
   line-height: 1.4;
 }
@@ -259,7 +264,7 @@ button.login-btn-large {
 }
 
 .back-to-site-btn {
-  border: 2px solid #667eea;
+  border: 2px solid var(--yellow-primary);
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -267,11 +272,13 @@ button.login-btn-large {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 18px;
+  font-size: var(--text-base);
+  color: var(--white-primary);
 }
 
 .back-to-site-btn:hover:not(:disabled) {
-  background: #667eea;
+  background: var(--yellow-primary);
+  color: var(--black-primary);
 }
 
 /* Responsive */

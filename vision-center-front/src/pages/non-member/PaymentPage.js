@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { FaMoneyBillWave, FaMobileAlt, FaCreditCard, FaClipboardList } from 'react-icons/fa';
 
 const PaymentPage = () => {
   const { reservationId } = useParams();
@@ -81,7 +82,7 @@ const PaymentPage = () => {
       {reservation && salle && (
         <>
           <div style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '8px', margin: '1rem 0' }}>
-            <h3>📋 Détails de la réservation</h3>
+            <h3><FaClipboardList /> Détails de la réservation</h3>
             <p><strong>Référence:</strong> #{reservation.id}</p>
             <p><strong>Salle:</strong> {salle?.nom || reservation.salle || 'Salle non spécifiée'}</p>
             <p><strong>Date début:</strong> {new Date(reservation.date_debut).toLocaleDateString('fr-FR')}</p>
@@ -93,15 +94,15 @@ const PaymentPage = () => {
           </div>
           
           <div style={{ background: '#fff3cd', padding: '1rem', borderRadius: '8px', margin: '1rem 0' }}>
-            <h3>💰 Informations de paiement</h3>
+            <h3><FaMoneyBillWave /> Informations de paiement</h3>
             <p><strong>Montant total:</strong> <span style={{ fontSize: '1.2rem', color: '#28a745', fontWeight: 'bold' }}>
               {reservation.prix_total ? reservation.prix_total.toLocaleString() : 'Calcul en cours...'} Ar
             </span></p>
             <p><strong>Méthodes disponibles:</strong></p>
             <ul style={{ listStyle: 'none', padding: 0 }}>
-              <li style={{ marginBottom: '0.5rem' }}>💵 Espèce</li>
-              <li style={{ marginBottom: '0.5rem' }}>📱 Mobile Money (MVola, Orange Money, Airtel Money)</li>
-              <li style={{ marginBottom: '0.5rem' }}>💳 Carte bancaire</li>
+              <li style={{ marginBottom: '0.5rem' }}><FaMoneyBillWave /> Espèce</li>
+              <li style={{ marginBottom: '0.5rem' }}><FaMobileAlt /> Mobile Money (MVola, Orange Money, Airtel Money)</li>
+              <li style={{ marginBottom: '0.5rem' }}><FaCreditCard /> Carte bancaire</li>
             </ul>
           </div>
           
@@ -130,7 +131,7 @@ const PaymentPage = () => {
             fontWeight: 'bold'
           }}
         >
-          💳 Procéder au paiement
+          <FaCreditCard /> Procéder au paiement
         </button>
       </div>
     </div>
