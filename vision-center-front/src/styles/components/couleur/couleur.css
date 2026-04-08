@@ -1,5 +1,5 @@
 /* =============================================
-   SYSTÈME DE COULEURS HARMONISÉ - VISION CENTER MADAGASCAR
+   SYSTÃƒË†ME DE COULEURS HARMONISÃƒâ€° - VISION CENTER MADAGASCAR
    ============================================= */
 
 /* Import Google Fonts */
@@ -7,22 +7,22 @@
 
 /* Couleurs principales */
 :root {
-  /* Couleurs de base spécifiées */
+  /* Couleurs de base */
   --cyan-primary: #a7feeb;
   --yellow-primary: #f6ff18;
   --black-primary: #1a1a1a;
   --bluegray-text: #1a2c3e;
   --white-primary: #ffffff;
 
-  /* Nuances de Cyan */
+  /* Nuances de cyan */
   --cyan-light: #b8ffee;
   --cyan-medium: #a7feeb;
   --cyan-dark: #06947f;
   --cyan-darker: #85eadc;
- --cyan-lightest: #c9ffed; 
+  --cyan-lightest: #c9ffed;
   --cyan-accent: #78e8d6;
 
-  /* Nuances de Yellow */
+  /* Nuances de yellow */
   --yellow-light: #f8ff4a;
   --yellow-medium: #f6ff18;
   --yellow-dark: #f4ff00;
@@ -30,8 +30,11 @@
   --yellow-lightest: #faff7c;
   --yellow-accent: #d4d400;
   --yellow-orange: #d4a017;
+  --yellow-soft: #fcffd6;
+  --yellow-surface: rgba(246, 255, 24, 0.16);
+  --yellow-surface-strong: rgba(246, 255, 24, 0.28);
 
-  /* Nuances de Red */
+  /* Nuances de red */
   --red-light: #ff6b6b;
   --red-medium: #dc3545;
   --red-dark: #c82333;
@@ -42,7 +45,7 @@
   --red-transparent-medium: rgba(220, 53, 69, 0.3);
   --red-transparent-strong: rgba(220, 53, 69, 0.5);
 
-  /* Nuances de Black/Gray */
+  /* Nuances de noir / gris */
   --black-light: #404040;
   --black-medium: #1a1a1a;
   --black-dark: #0d0d0d;
@@ -51,7 +54,7 @@
   --gray-medium: #444444;
   --gray-dark: #222222;
 
-  /* Nuances de Blue Gray */
+  /* Nuances de blue gray */
   --bluegray-light: #2a3c4e;
   --bluegray-medium: #1a2c3e;
   --bluegray-dark: #0a1c2e;
@@ -60,56 +63,74 @@
   --bluegray-accent: #24364a;
   --blue-gray-night: #1a1d23;
 
-  /* Couleurs de surface */
+  /* Surfaces */
   --surface-primary: #ffffff;
   --surface-secondary: #f8f9fa;
   --surface-tertiary: #f1f3f4;
   --surface-accent: rgba(167, 254, 235, 0.1);
 
-  /* Couleurs de bordure */
+  /* Fonds globaux inspires du dashboard */
+  --bg-page-primary: linear-gradient(180deg, #fcfffe 0%, rgba(167, 254, 235, 0.12) 100%);
+  --bg-page-dashboard:
+    radial-gradient(circle at top right, rgba(167, 254, 235, 0.22), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(246, 255, 24, 0.14), transparent 24%),
+    linear-gradient(180deg, #fcfffe 0%, #f4fffb 100%);
+  --bg-panel-soft: rgba(255, 255, 255, 0.86);
+  --bg-panel-strong: rgba(255, 255, 255, 0.96);
+  --bg-panel-accent: linear-gradient(180deg, rgba(167, 254, 235, 0.18), rgba(255, 255, 255, 0.92));
+
+  /* Bordures */
   --border-light: rgba(167, 254, 235, 0.2);
   --border-medium: rgba(167, 254, 235, 0.4);
   --border-dark: rgba(167, 254, 235, 0.6);
+  --border-soft: rgba(26, 44, 62, 0.08);
+  --border-strong: rgba(26, 44, 62, 0.14);
 
-  /* Dégradés */
+  /* Gradients */
   --gradient-primary: linear-gradient(135deg, var(--cyan-primary) 0%, var(--cyan-dark) 50%, var(--cyan-accent) 100%);
   --gradient-secondary: linear-gradient(135deg, var(--yellow-primary) 0%, var(--yellow-light) 50%, var(--yellow-accent) 100%);
   --gradient-dark: linear-gradient(135deg, var(--bluegray-dark) 0%, var(--bluegray-medium) 50%, var(--bluegray-light) 100%);
   --gradient-accent: linear-gradient(135deg, var(--cyan-primary) 0%, var(--yellow-primary) 100%);
+  --bg-gradient-orange: linear-gradient(135deg, var(--yellow-orange), var(--yellow-primary));
 
   /* Ombres */
   --shadow-light: 0 2px 8px rgba(167, 254, 235, 0.15);
   --shadow-medium: 0 4px 16px rgba(167, 254, 235, 0.25);
   --shadow-heavy: 0 8px 32px rgba(167, 254, 235, 0.35);
   --shadow-dark: 0 4px 20px rgba(0, 0, 0, 0.2);
+  --shadow-card: 0 20px 60px rgba(26, 44, 62, 0.08);
+  --shadow-card-hover: 0 24px 70px rgba(26, 44, 62, 0.12);
+  --shadow-glass: 0 10px 30px rgba(167, 254, 235, 0.18);
+  --shadow-orange: 0 4px 16px rgba(212, 160, 23, 0.3);
 
   /* Transparences */
   --cyan-transparent: rgba(167, 254, 235, 0.1);
   --cyan-transparent-medium: rgba(167, 254, 235, 0.3);
   --cyan-transparent-strong: rgba(167, 254, 235, 0.5);
-
   --yellow-transparent: rgba(246, 255, 24, 0.1);
   --yellow-transparent-medium: rgba(246, 255, 24, 0.3);
   --yellow-transparent-strong: rgba(246, 255, 24, 0.5);
 
-  /* États */
+  /* Etats */
   --hover-primary: rgba(167, 254, 235, 0.15);
   --active-primary: rgba(167, 254, 235, 0.25);
   --focus-primary: rgba(167, 254, 235, 0.3);
-
   --hover-secondary: rgba(246, 255, 24, 0.15);
   --active-secondary: rgba(246, 255, 24, 0.25);
   --focus-secondary: rgba(246, 255, 24, 0.3);
 
-  /* Border Radius */
-  --border-radius-small: 8px;
-  --border-radius-medium: 12px;
-  --border-radius-large: 16px;
-  --border-radius-xlarge: 24px;
+  /* Arrondis */
+  --border-radius-small: 10px;
+  --border-radius-medium: 14px;
+  --border-radius-large: 20px;
+  --border-radius-xlarge: 28px;
   --border-radius-round: 50px;
   --border-radius-circle: 50%;
+  --border-radius-card: 24px;
+  --border-radius-panel: 28px;
+  --border-radius-pill: 999px;
 
-  /* Tailles de texte */
+  /* Texte */
   --text-xs: 10px;
   --text-sm: 12px;
   --text-base: 14px;
@@ -120,6 +141,15 @@
   --text-4xl: 36px;
   --text-5xl: 48px;
 
+  /* Icônes */
+  --icon-xs: 12px;
+  --icon-sm: 14px;
+  --icon-md: 16px;
+  --icon-lg: 20px;
+  --icon-xl: 24px;
+  --icon-2xl: 32px;
+  --icon-3xl: 40px;
+
   /* Espacements */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -127,6 +157,21 @@
   --spacing-lg: 24px;
   --spacing-xl: 32px;
   --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* Inputs */
+  --input-height-sm: 42px;
+  --input-height-md: 48px;
+  --input-height-lg: 54px;
+  --input-padding-x: 14px;
+  --input-padding-y: 12px;
+  --input-border-radius: 16px;
+
+  /* Layout / design */
+  --container-page-max: 1280px;
+  --section-gap: 24px;
+  --panel-padding: 24px;
+  --panel-backdrop-blur: blur(10px);
 
   /* Typographie */
   --font-family-primary: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -156,7 +201,7 @@
 .text-red-dark { color: var(--red-dark); }
 .text-red-accent { color: var(--red-accent); }
 
-/* Arrière-plans */
+/* ArriÃƒÂ¨re-plans */
 .bg-cyan { background-color: var(--cyan-primary); }
 .bg-yellow { background-color: var(--yellow-primary); }
 .bg-black { background-color: var(--black-primary); }
@@ -189,7 +234,7 @@
 .border-red-dark { border-color: var(--red-dark); }
 .border-red-accent { border-color: var(--red-accent); }
 
-/* Dégradés */
+/* DÃƒÂ©gradÃƒÂ©s */
 .bg-gradient-primary { background: var(--gradient-primary); }
 .bg-gradient-secondary { background: var(--gradient-secondary); }
 .bg-gradient-orange { background: linear-gradient(135deg, var(--yellow-orange), var(--yellow-primary)); }
@@ -314,7 +359,7 @@
 }
 
 /* =============================================
-   COMPOSANTS GÉNÉRIQUES
+   COMPOSANTS GÃƒâ€°NÃƒâ€°RIQUES
    ============================================= */
 
 /* Boutons */

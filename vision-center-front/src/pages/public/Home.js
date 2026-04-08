@@ -399,6 +399,16 @@ const Home = () => {
 
   ];
 
+  const heroHighlights = [
+
+    { icon: <FaPalette />, label: "Formations M.E.DI.A" },
+
+    { icon: <FaCheckCircle />, label: "Activités ouvertes" },
+
+    { icon: <FaCalendarAlt />, label: "Inscription rapide" }
+
+  ];
+
 
 
   const handleActiviteClick = (activiteId) => {
@@ -1055,21 +1065,30 @@ const Home = () => {
       {/* Hero Section */}
       <section className="hero" id="hero">
         <div className="hero-content">
-          <h1>Destination Madagascar</h1>
-          <p>Escape at your fingertips</p>
+          <h1>Activités et formations pour les membres</h1>
+          <p>
+            Retrouvez ici les activités disponibles, les formations ouvertes et
+            les informations utiles pour participer simplement.
+          </p>
           
           <div className="search-bar">
             <input 
               type="text" 
-              placeholder="Where are you headed?"
+              placeholder="Rechercher une activité ou une formation"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button className="search-btn">Search</button>
+            <button className="search-btn">Explorer</button>
           </div>
 
           {/* Catégories */}
           <div className="hero-categories">
+            {heroHighlights.map((item, idx) => (
+              <div key={idx} className="hero-highlight-chip">
+                {item.icon}
+                <span>{item.label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -1079,7 +1098,7 @@ const Home = () => {
         <div className="section-header">
           <h2 className="section-title-centered"><FaPalette /> Formation M.E.DI.A</h2>
           <div className="header-actions">
-            <span className="section-subtitle">Multimedia, Electronics, Digital Art</span>
+            <span className="section-subtitle">Les formations disponibles pour apprendre et progresser</span>
             <a href="#" className="see-all" onClick={(e) => { e.preventDefault(); }}>Voir tout</a>
           </div>
         </div>
@@ -1363,7 +1382,7 @@ const Home = () => {
 
       <section className="info-guide-section">
 
-        <h2>Informations & guide</h2>
+        <h2>Informations pratiques</h2>
 
         <div className="info-grid">
 

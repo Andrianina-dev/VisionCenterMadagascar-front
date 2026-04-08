@@ -18,6 +18,8 @@ const FloatingMessenger = () => {
   const [isResponding, setIsResponding] = useState(false);
   const messagesEndRef = useRef(null);
 
+  console.log('🤖 FloatingMessenger rendu - messages.length:', messages.length);
+
   // Suggestions prédéfinies
   const suggestions = [
     "Quelles sont les activités à venir ?",
