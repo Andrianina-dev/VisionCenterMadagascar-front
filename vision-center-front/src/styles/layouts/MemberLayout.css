@@ -274,7 +274,6 @@
   justify-content: center;
   flex: 1;
   min-width: 0;
-  overflow: hidden;
 }
 
 .profile-name {
@@ -293,9 +292,7 @@
   font-size: 0.6rem;
   color: var(--text-light);
   font-weight: 500;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: var(--white);
-  padding: 0.1rem 0.3rem;
   border-radius: 6px;
   margin-top: 1px;
   white-space: nowrap;

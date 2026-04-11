@@ -1,3 +1,5 @@
+@import "../../styles/components/couleur/couleur.css";
+
 .floating-messenger {
   position: fixed;
   bottom: 20px;
@@ -86,19 +88,19 @@
 /* Fenêtre de chat */
 .messenger-window {
   position: absolute;
-  bottom: 20px;
-  right: 70px;
-  width: 380px;
-  height: 620px;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+    bottom: 70px;
+    right: 30px;
+    width: 379px;
+    height: 460px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
 }
 
 @keyframes slideUp {
@@ -236,7 +238,7 @@
 .chat-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 20px;
+  padding: 12px 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -264,8 +266,14 @@
 .contact-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   z-index: 1;
+  min-width: 0;
+  flex: 1;
+}
+
+.contact-details {
+  min-width: 0;
 }
 
 .avatar-large {
@@ -284,18 +292,26 @@
 
 .contact-details h3 {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .contact-status {
   margin: 2px 0 0 0;
-  font-size: 12px;
+  font-size: 11px;
   opacity: 0.9;
   display: flex;
   align-items: center;
   gap: 6px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .contact-status::before {
@@ -312,16 +328,17 @@
   50% { opacity: 0.5; }
 }
 
-.header-actions {
+.chat-header-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   z-index: 1;
+  flex-shrink: 0;
 }
 
-.action-btn {
+.chat-action-btn {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 10px;
   border: none;
   background: rgba(255, 255, 255, 0.2);
   color: white;
@@ -331,20 +348,21 @@
   justify-content: center;
   transition: all 0.2s ease;
   backdrop-filter: blur(10px);
+  line-height: 1;
 }
 
-.action-btn:hover {
+.chat-action-btn:hover {
   background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
+  transform: none;
 }
 
-.action-btn.close-btn {
+.chat-action-btn.chat-close-btn {
   background: rgba(255, 71, 87, 0.3);
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 22px;
+  font-weight: 700;
 }
 
-.action-btn.close-btn:hover {
+.chat-action-btn.chat-close-btn:hover {
   background: rgba(255, 71, 87, 0.5);
 }
 
@@ -441,11 +459,7 @@
 
 /* Animation d'entrée pour les messages */
 .message-group {
-  animation: messageSlideIn 0.3s ease-out;
-}
-
-.message-group.message-appearing {
-  animation: messageAppear 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: none;
 }
 
 @keyframes messageSlideIn {
@@ -476,7 +490,7 @@
 
 /* Animation pour les nouvelles bulles de message */
 .message-bubble.message-new {
-  animation: bubbleAppear 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: none;
 }
 
 @keyframes bubbleAppear {
@@ -499,7 +513,7 @@
 
 /* Animation spéciale pour les messages de l'IA */
 .message-group.received.message-appearing {
-  animation: aiMessageAppear 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: none;
 }
 
 @keyframes aiMessageAppear {
@@ -523,15 +537,7 @@
 
 /* Effet de shimmer pour les nouveaux messages */
 .message-bubble.message-new::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  animation: messageShimmer 1s ease-out;
-  border-radius: inherit;
+  content: none;
 }
 
 @keyframes messageShimmer {
@@ -731,7 +737,7 @@
 }
 
 .send-btn::before {
-  content: '';
+  content: none;
   position: absolute;
   top: 0;
   left: 0;
@@ -747,12 +753,12 @@
 }
 
 .send-btn:hover {
-  transform: scale(1.1) translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  transform: none;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .send-btn:active {
-  transform: scale(0.95);
+  transform: none;
 }
 
 .send-btn:disabled {
@@ -997,7 +1003,7 @@
 .send-btn.loading {
   background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
   cursor: not-allowed;
-  animation: loadingPulse 2s infinite;
+  animation: none;
 }
 
 @keyframes loadingPulse {
@@ -1033,4 +1039,89 @@
   75% {
     transform: scale(0.9);
   }
+}
+
+/* Theme override: blue-medium clean design */
+.floating-messenger {
+  font-family: var(--font-family-primary);
+}
+
+.messenger-toggle {
+  background: linear-gradient(135deg, var(--blue-medium) 0%, #007fd1 100%);
+  box-shadow: 0 10px 24px rgba(1, 155, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.messenger-toggle:hover {
+  box-shadow: 0 14px 30px rgba(1, 155, 255, 0.45);
+}
+
+.messenger-window {
+  background:
+    radial-gradient(circle at top right, rgba(167, 220, 255, 0.25), transparent 35%),
+    linear-gradient(180deg, #ffffff 0%, #f4faff 100%);
+  border: 1px solid rgba(1, 155, 255, 0.18);
+  box-shadow: 0 24px 60px rgba(15, 40, 66, 0.22);
+}
+
+.chat-header {
+  background: linear-gradient(135deg, var(--blue-medium) 0%, #007fd1 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.avatar-large,
+.avatar-message,
+.message-group.sent .message-bubble,
+.send-btn {
+  background: linear-gradient(135deg, var(--blue-medium) 0%, #007fd1 100%);
+}
+
+.message-group.sent .avatar-message {
+  background: linear-gradient(135deg, var(--blue-medium) 0%, #007fd1 100%);
+}
+
+.suggestions-container {
+  background: linear-gradient(180deg, #f7fbff 0%, #eef6ff 100%);
+}
+
+.suggestion-btn {
+  border-color: rgba(1, 155, 255, 0.22);
+  color: #1a2c3e;
+}
+
+.suggestion-btn:hover {
+  background: linear-gradient(135deg, var(--blue-medium) 0%, #007fd1 100%);
+  color: var(--white-primary);
+  box-shadow: 0 8px 18px rgba(1, 155, 255, 0.26);
+}
+
+.chat-input:focus {
+  border-color: var(--blue-medium);
+  box-shadow: 0 0 0 3px rgba(1, 155, 255, 0.12);
+}
+
+.chat-action-btn.chat-close-btn {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.contact-name {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--white-primary);
+}
+
+.contact-status {
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.chat-header::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.16) 50%,
+    transparent 100%
+  );
+  animation-duration: 4.5s;
 }

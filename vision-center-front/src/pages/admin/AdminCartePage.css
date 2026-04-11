@@ -1,0 +1,254 @@
+.admin-carte-page {
+  min-height: 100vh;
+  padding: 24px;
+  background: linear-gradient(180deg, #fbf8f1 0%, #f4efe4 100%);
+  color: #112018;
+}
+
+.admin-carte-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.admin-carte-header .kicker {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0f766e;
+  font-weight: 700;
+}
+
+.admin-carte-header h1 {
+  margin: 6px 0 0;
+  font-size: clamp(1.5rem, 2.3vw, 2rem);
+}
+
+.btn-primary,
+.btn-outline {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #d4a017;
+  color: #fff;
+}
+
+.btn-outline {
+  background: transparent;
+  border-color: rgba(17, 32, 24, 0.16);
+  color: #112018;
+}
+
+.btn-outline.warn {
+  border-color: rgba(217, 119, 6, 0.35);
+  color: #d97706;
+}
+
+.error-banner {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  background: rgba(220, 38, 38, 0.06);
+  color: #dc2626;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.stats-grid article,
+.filters-card,
+.map-card,
+.activities-card,
+.modal-card {
+  border: 1px solid rgba(17, 32, 24, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 14px 34px rgba(17, 32, 24, 0.08);
+}
+
+.stats-grid article {
+  padding: 16px;
+}
+
+.stats-grid span {
+  display: block;
+  color: #5a695f;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.stats-grid strong {
+  font-size: 1.5rem;
+}
+
+.filters-card {
+  margin-bottom: 14px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 180px 180px 1fr;
+  gap: 10px;
+}
+
+.filters-card select,
+.filters-card input,
+.modal-card input {
+  min-height: 40px;
+  border: 1px solid rgba(17, 32, 24, 0.14);
+  border-radius: 12px;
+  padding: 0 12px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 12px;
+}
+
+.map-card {
+  overflow: hidden;
+}
+
+.leaflet-map {
+  height: 560px;
+  width: 100%;
+}
+
+.activities-card {
+  padding: 14px;
+}
+
+.activities-card h3 {
+  margin: 0 0 10px;
+}
+
+.activity-list {
+  max-height: 520px;
+  overflow: auto;
+  display: grid;
+  gap: 10px;
+}
+
+.activity-item {
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(17, 32, 24, 0.08);
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.activity-item h4 {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+}
+
+.activity-item p {
+  margin: 0 0 8px;
+  color: #5a695f;
+  font-size: 0.85rem;
+}
+
+.status-badge {
+  display: inline-flex;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-badge.is-open {
+  background: rgba(15, 118, 110, 0.12);
+  color: #0f766e;
+}
+
+.status-badge.is-closed {
+  background: rgba(217, 119, 6, 0.12);
+  color: #d97706;
+}
+
+.status-badge.is-ended {
+  background: rgba(82, 82, 91, 0.12);
+  color: #52525b;
+}
+
+.empty-state {
+  color: #5a695f;
+  margin: 8px 0 0;
+}
+
+.popup-shell h4 {
+  margin: 0 0 8px;
+}
+
+.popup-shell p {
+  margin: 0 0 6px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: grid;
+  place-items: center;
+  z-index: 999;
+}
+
+.modal-card {
+  width: min(92vw, 460px);
+  padding: 16px;
+}
+
+.modal-card h4 {
+  margin: 0 0 6px;
+}
+
+.modal-card p {
+  margin: 0 0 12px;
+  color: #5a695f;
+}
+
+.modal-card label {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+@media (max-width: 1080px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filters-card {
+    grid-template-columns: 1fr;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}

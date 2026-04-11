@@ -10,7 +10,7 @@
 /* Panel gauche - Branding avec fond image */
 .left-panel {
   flex: 1;
-  background: url('../../assets/images/login/fond-vision-login.jpg') center center/cover no-repeat;
+  background: url('../../assets/images/login/login.jpg') center center/cover no-repeat;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -85,7 +85,7 @@
 
 /* Champs de formulaire */
 .input-group {
-  margin-bottom: 16px;
+  margin-top: 16px;
 }
 
 .input-group input {
@@ -141,25 +141,31 @@
 .eye-btn:hover svg {
   color: #6b7280;
 }
-
+.social-list
+{
+  display: flex;
+  gap: 2;
+  justify-content: center;
+  align-items: center;
+}
 /* Boutons */
 .login-btn,
 button.login-btn {
   width: 100%;
-  padding: 14px;
-  background: var(--yellow-orange);
+  padding: 10px;
+  background: var(--blue-medium);
   border: none;
-  border-radius: var(--border-radius-small);
+  border-radius: 3px;
   font-size: var(--text-sm);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-bold);
   cursor: pointer;
   margin-top: 8px;
-  color: var(--black-pure);
+  color: var(--white-primary);
 }
 
 .login-btn:hover:not(:disabled),
 button.login-btn:hover:not(:disabled) {
-  background: var(--yellow-orange);
+  background: var(--blue-light);
   transform: translateY(-2px);
   box-shadow: var(--shadow-medium);
 }
@@ -179,7 +185,8 @@ button.login-btn-large {
 /* Textes secondaires - taille 10px */
 .forgot-row {
   text-align: center;
-  margin: 16px 0 0;
+  text-align: right;
+  color: #808080;
   font-size: var(--text-xs);
 }
 
@@ -221,8 +228,8 @@ button.login-btn-large {
 }
 
 .social-circle {
-  width: 40px;
-  height: 40px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   border: 1px solid var(--border-light);
   display: flex;
@@ -265,15 +272,17 @@ button.login-btn-large {
 
 .back-to-site-btn {
   border: 2px solid var(--yellow-primary);
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-size: var(--text-base);
-  color: var(--white-primary);
+  background: var(--yellow-primary);
+  color: var(--black-primary)!important;
+  font-weight: 700;
 }
 
 .back-to-site-btn:hover:not(:disabled) {

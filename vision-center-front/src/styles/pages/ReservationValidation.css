@@ -1,3 +1,5 @@
+@import "../components/couleur/couleur.css";
+
 /* Validation Container Styles */
 .validation-container {
   display: flex;
@@ -153,12 +155,17 @@
   color: #6b7280;
   font-size: 0.9rem;
 }
-
 .info-value {
   color: #1f2937;
   font-weight: 500;
   text-align: right;
 }
+.step-action
+{
+  gap: 12px;
+    display: flex;
+}
+
 
 .info-value.status {
   color: #10b981;
@@ -415,4 +422,106 @@
   background: #059669;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Harmonisation style Login pour l'etape 2 et la popup */
+.validation-summary {
+  border-radius: var(--border-radius-medium);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-light);
+}
+
+.validation-summary h4 {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--bluegray-text);
+}
+
+.summary-section {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius-small);
+  box-shadow: none;
+}
+
+.summary-section h5 {
+  color: var(--bluegray-text);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.info-row {
+  border-bottom: 1px solid var(--border-light);
+  padding: 0.8rem 0;
+}
+
+.info-row:hover {
+  background: transparent;
+  transform: none;
+}
+
+.info-label {
+  color: var(--gray-light);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.info-value {
+  color: var(--bluegray-text);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  background: transparent;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.confirm-popup {
+  border-radius: var(--border-radius-medium);
+  border: 1px solid var(--border-light);
+}
+
+.confirm-popup h3 {
+  color: var(--bluegray-text);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.confirm-popup p {
+  color: var(--gray-light);
+  font-size: var(--text-sm);
+}
+
+.confirm-popup-actions .btn {
+  min-height: 42px;
+  border-radius: 3px;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  padding: 10px 14px;
+}
+
+.confirm-popup-actions .btn-secondary {
+  background: var(--surface-primary);
+  color: var(--bluegray-text);
+  border: 1px solid var(--border-soft);
+}
+
+.confirm-popup-actions .btn-secondary:hover {
+  background: var(--surface-secondary);
+  color: var(--bluegray-text);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light);
+}
+
+.confirm-popup-actions .btn-success {
+  background: var(--blue-medium);
+  color: var(--white-primary);
+}
+
+.confirm-popup-actions .btn-success:hover {
+  background: var(--blue-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
 }

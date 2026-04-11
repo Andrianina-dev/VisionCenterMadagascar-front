@@ -1,203 +1,39 @@
-.login-wrapper {
-  display: flex;
-  height: 100vh;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  overflow: hidden;
-  position: relative;
+.signup-container {
+  flex-direction: row-reverse;
 }
 
-.login-left {
-  flex: 1;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+.signup-container .signup-form-card {
+  max-width: 460px;
 }
 
-.login-right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #b3f5fc 0%, #7ffef4 50%, #80deea 100%);
-  padding: 40px;
-  position: relative;
-  transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+.signup-grid-two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
-/* États pour l'animation */
-.login-wrapper.transitioning .login-left {
-  transform: translateX(100%);
-  opacity: 0.8;
+.signup-role-row {
+  margin-bottom: 16px;
 }
 
-.login-wrapper.transitioning .login-right {
-  transform: translateX(-100%);
-  opacity: 0.8;
-}
-
-.login-form-container {
-  width: 100%;
-  max-width: 350px;
-}
-
-.login-form-container h1 {
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 30px;
-  text-align: center;
-  color: #000;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-label {
+.signup-role-row label {
   display: block;
   margin-bottom: 8px;
-  font-weight: 600;
-  color: #333;
-  font-size: 14px;
+  font-size: 12px;
+  color: var(--bluegray-text);
+  font-weight: var(--font-weight-semibold);
 }
 
-.input-field {
-  width: 100%;
-  padding: 8px 12px;
-  border: 2px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  background: #fff;
-}
-
-.input-field:focus {
-  outline: none;
-  background-color: white;
-}
-
-.signup-form .input-field:focus {
-  outline: none;
-  border-color: #00d4ff;
-  box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.25);
-}
-
-.password-wrapper {
-  position: relative;
-}
-
-.password-toggle {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  padding: 0;
-}
-
-.forgot-password {
-  display: block;
-  text-align: right;
-  color: #0099ff;
-  text-decoration: none;
-  font-size: 13px;
-  margin-bottom: 20px;
-  font-weight: 500;
-}
-
-.forgot-password:hover {
-  text-decoration: underline;
-}
-
-.login-button {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(135deg, #b3f5fc 0%, #7ffef4 100%);
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #000;
-  cursor: pointer;
-  transition: opacity 0.3s;
-  margin-bottom: 20px;
-}
-
-.login-button:hover {
-  opacity: 0.9;
-}
-
-.divider {
-  text-align: center;
-  color: #999;
-  font-size: 13px;
-  margin: 20px 0;
-  position: relative;
-}
-
-.divider::before,
-.divider::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 40%;
-  height: 1px;
-  background: #ddd;
-}
-
-.divider::before {
-  left: 0;
-}
-
-.divider::after {
-  right: 0;
-}
-
-.social-login {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.social-btn {
-  width: 45px;
-  height: 45px;
-  border: 1px solid #ddd;
-  border-radius: 50%;
-  background: #fff;
-  cursor: pointer;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color 0.3s;
-}
-
-.social-btn:hover {
-  border-color: #999;
-}
-
-/* Toggle Switch Moderne */
 .toggle-switch-container {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 10px;
+  gap: 12px;
 }
 
 .toggle-switch {
   position: relative;
-  width: 60px;
-  height: 30px;
+  width: 52px;
+  height: 28px;
 }
 
 .toggle-switch-checkbox {
@@ -208,261 +44,86 @@
   display: block;
   width: 100%;
   height: 100%;
-  background: #ccc;
-  border-radius: 15px;
+  border-radius: 999px;
+  background: var(--border-light);
+  border: 1px solid var(--border-medium);
   cursor: pointer;
   position: relative;
-  transition: background-color 0.3s;
+  transition: background 0.2s ease;
 }
 
 .toggle-switch-label::before {
   content: '';
   position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 24px;
-  height: 24px;
-  background: white;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  transition: transform 0.3s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background: var(--white-primary);
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
 }
 
 .toggle-switch-checkbox:checked + .toggle-switch-label {
-  background: #4CAF50;
+  background: rgba(167, 254, 235, 0.45);
 }
 
 .toggle-switch-checkbox:checked + .toggle-switch-label::before {
-  transform: translateX(30px);
+  transform: translateX(24px);
 }
 
 .toggle-labels {
   display: flex;
-  gap: 15px;
-  font-size: 14px;
-  font-weight: 500;
+  gap: 10px;
 }
 
 .toggle-label {
-  color: #666;
-  transition: color 0.3s;
-  cursor: pointer;
+  font-size: 12px;
+  color: var(--bluegray-light);
 }
 
 .toggle-label.active {
-  color: #4CAF50;
-  font-weight: 600;
+  color: var(--cyan-dark);
+  font-weight: var(--font-weight-bold);
 }
 
-/* Hover effects */
-.toggle-switch:hover .toggle-switch-label {
-  background: #bbb;
-}
-
-.toggle-switch:hover .toggle-switch-checkbox:checked + .toggle-switch-label {
-  background: #45a049;
-}
-
-.terms-text {
-  font-size: 12px;
-  color: #666;
-  text-align: center;
+.signup-error-banner {
+  color: #e74c3c;
+  font-size: 14px;
   margin-bottom: 15px;
-  line-height: 1.5;
-}
-
-.terms-text a {
-  color: #0099ff;
-  text-decoration: none;
-}
-
-.terms-text a:hover {
-  text-decoration: underline;
-}
-
-.signup-text {
+  padding: 10px;
+  background-color: #fdf2f2;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
   text-align: center;
-  font-size: 14px;
-  color: #666;
 }
 
-.signup-link {
-  color: #0099ff;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.signup-link:hover {
-  text-decoration: underline;
-}
-
-.login-footer {
-  margin-top: 40px;
-  text-align: center;
+.invalid-feedback {
+  margin-top: 6px;
+  color: #dc2626;
   font-size: 12px;
-  color: #999;
 }
 
-/* Styles pour les liens entre pages de login */
-.admin-link {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 14px;
-  color: #666;
+.signup-legal {
+  margin-top: 18px;
 }
 
-.admin-login-link {
-  color: #0066cc;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 14px;
+.signup-footer-link {
+  margin-top: 10px;
 }
 
-.admin-login-link:hover {
-  text-decoration: underline;
-  color: #004499;
-}
-
-/* Responsive design */
-@media (max-width: 900px) {
-  .login-wrapper {
+@media (max-width: 768px) {
+  .signup-container {
     flex-direction: column;
   }
 
-  .login-left {
-    min-height: 200px;
-    flex: 0;
+  .signup-grid-two {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
 
-  .login-right {
-    flex: 1;
-    justify-content: flex-start;
-    padding-top: 40px;
+  .signup-container .signup-form-card {
+    max-width: 380px;
   }
-}
-
-/* Styles spécifiques pour la page d'inscription */
-.blue-accent {
-  position: absolute;
-  top: 0;
-  left: 50%; /* Déplace le fond vers la droite */
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(135deg, #00bcd4 0%, #00d4ff 50%, #0099cc 100%);
-  clip-path: polygon(0 0, 100% 0, 50% 100%, 0% 100%); /* Forme pour la droite */
-  z-index: -1;
-}
-
-.signup-form {
-  position: relative; /* Assure que le formulaire reste au-dessus */
-  z-index: 1; /* Place le formulaire au-dessus du fond cyan */
-}
-
-.signup-form .row {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.signup-form .col-md-6 {
-  flex: 1;
-}
-
-.signup-form .form-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: #333;
-  font-size: 14px;
-}
-
-.signup-form .form-label i {
-  margin-right: 8px;
-  color: #7ffef4;
-}
-
-.signup-form .form-check {
-  margin-bottom: 20px;
-}
-
-.signup-form .form-check-input {
-  margin-right: 8px;
-}
-
-.signup-form .form-check-label {
-  font-size: 13px;
-  color: #666;
-  line-height: 1.4;
-}
-
-.signup-form .form-check-label a {
-  color: #0099ff;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.signup-form .form-check-label a:hover {
-  text-decoration: underline;
-}
-
-.signup-form .alert {
-  padding: 12px 16px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  border: none;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-}
-
-.signup-form .alert-danger {
-  background-color: #fee;
-  color: #c33;
-  border-left: 4px solid #dc3545;
-}
-
-.signup-form .invalid-feedback {
-  display: block;
-  width: 100%;
-  margin-top: 5px;
-  font-size: 12px;
-  color: #dc3545;
-}
-
-.signup-form .is-invalid {
-  border-color: #dc3545;
-}
-
-.signup-form .btn-lg {
-  padding: 16px;
-  font-size: 18px;
-}
-
-.signup-form .spinner-border-sm {
-  width: 1rem;
-  height: 1rem;
-  border-width: 0.15em;
-}
-
-.signup-footer {
-  text-align: center;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
-}
-
-.signup-footer p {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 0;
-}
-
-.signup-footer a {
-  color: #0099ff;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.signup-footer a:hover {
-  text-decoration: underline;
 }

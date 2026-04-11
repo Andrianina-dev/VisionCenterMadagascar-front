@@ -22,6 +22,7 @@ import AccueilVitrineSimple from "../layouts/vitrine/AccueilVitrineSimple";
 import AccueilVitrine from "../layouts/vitrine/SiteVitrine";
 import APropos from "../pages/public/APropos";
 import ProgrammesActivites from "../pages/public/ProgrammesActivites";
+import AdminCartePage from "../pages/admin/AdminCartePage";
 
 // Pages non-membre
 import NonMemberDashboard from "../pages/non-member/NonMemberDashboard";
@@ -108,6 +109,12 @@ const AppRouterContent = () => {
         <Route path="/programmes-activites" element={
           <MainLayout>
             <ProgrammesActivites />
+          </MainLayout>
+        } />
+
+        <Route path="/admin/carte" element={
+          <MainLayout>
+            <AdminCartePage />
           </MainLayout>
         } />
       

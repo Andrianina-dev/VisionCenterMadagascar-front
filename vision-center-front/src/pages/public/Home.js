@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   FaPalette, FaMobileAlt, FaCreditCard, FaMapMarkerAlt, FaCalendarAlt, 
   FaUsers, FaInfoCircle, FaPhone, FaFacebook, FaEnvelope, 
-  FaVideo, FaCamera, FaMusic, FaGamepad, FaMoneyBillWave, 
+  FaCamera, FaMusic, FaGamepad, FaMoneyBillWave, 
   FaCheckCircle, FaHourglassHalf, FaClipboardList, FaUserTie, FaLink, FaPlane
 } from 'react-icons/fa';
 
@@ -78,8 +78,8 @@ const Home = () => {
     } catch (error) {
       console.error('Erreur chargement méthodes de paiement:', error);
       setMethodesPaiement([
-        { id: 'mobile_money', nom: 'Mobile Money', displayIcon: '📱', types: ['MVola', 'Airtel Money', 'Orange Money'] },
-        { id: 'espece', nom: 'Espèce', displayIcon: '�' }
+        { id: 'mobile_money', nom: 'Mobile Money', displayIcon: <FaMobileAlt />, types: ['MVola', 'Airtel Money', 'Orange Money'] },
+        { id: 'espece', nom: 'Espèce', displayIcon: <FaMoneyBillWave /> }
       ]);
     }
   };
@@ -105,7 +105,7 @@ const Home = () => {
       result.push({
         id: 'mobile_money',
         nom: 'Mobile Money',
-        displayIcon: '�',
+        displayIcon: <FaMobileAlt />,
         types: mobileMoneyMethods
       });
     }
@@ -235,12 +235,12 @@ const Home = () => {
                 return count;
       }
       
-      console.warn('⚠️ Endpoint count non disponible - 0 participant pour', activiteId);
+      console.warn('Endpoint count non disponible - 0 participant pour', activiteId);
       setParticipantsCache(prev => ({ ...prev, [activiteId]: 0 }));
       return 0;
       
     } catch (error) {
-      console.error('❌ Erreur comptage participants dans inscription_activite pour', activiteId, ':', error);
+      console.error('Erreur comptage participants dans inscription_activite pour', activiteId, ':', error);
       setParticipantsCache(prev => ({ ...prev, [activiteId]: 0 }));
       return 0;
     }
@@ -284,7 +284,7 @@ const Home = () => {
         );
         
         setMediaActivities(mediaActivitiesWithStatus);
-              } else {
+      } else {
         console.error('Erreur chargement activités M.E.DI.A:', mediaResponse.status, mediaResponse.statusText);
         setMediaActivities([]);
       }
@@ -356,32 +356,48 @@ const Home = () => {
     { id: 4, name: "Communauté Foi", image: spiritualImages.community }
   ];
 
+  const mediaFallbackImage = "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=900&h=520&fit=crop&auto=format";
+  const normalizeSearchText = (value) =>
+    (value || "")
+      .toString()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
 
+  const normalizedQuery = normalizeSearchText(searchQuery.trim());
 
-  const packages = activitesPopulairesFiltrees.slice(0, 4).map((activite, index) => ({
+  const matchesSearch = (activite) => {
+    if (!normalizedQuery) return true;
 
+    const searchableFields = [
+      activite?.titre_activite,
+      activite?.description,
+      activite?.lieu_activite,
+      activite?.prix,
+      activite?.devise,
+      activite?.prix_formate
+    ];
+
+    return searchableFields.some((field) =>
+      normalizeSearchText(field).includes(normalizedQuery)
+    );
+  };
+
+  const mediaActivitiesFiltered = mediaActivities.filter(matchesSearch);
+  const activitesPopulairesSearchFiltered = activitesPopulairesFiltrees.filter(matchesSearch);
+
+  const packagesFiltered = activitesPopulairesSearchFiltered.slice(0, 4).map((activite) => ({
     id: activite.id_activite,
-
     name: activite.titre_activite,
-
     price: activite.capacite ? `${activite.nombre_participants || 0}/${activite.capacite} places` : "Illimité",
-
-    rating: "⭐⭐⭐⭐⭐",
-
+    rating: "★★★★★",
     reviews: activite.nombre_participants || 0,
-
     discount: "Disponible",
-
     image: activite.image_url || improvedImageBase64,
-
     date: activite.date_heure_activite,
-
     lieu: activite.lieu_activite,
-
     isBase64: true,
-
     isRegistered: activite.isRegistered || false
-
   }));
 
 
@@ -914,7 +930,7 @@ const Home = () => {
         btn.style.borderColor = '';
         btn.style.border = '2px solid #e2e8f0';
         const methodeName = btn.querySelector('span:last-child')?.textContent || '';
-        const methodeIcon = btn.querySelector('span:first-child')?.textContent || '💳';
+        const methodeIcon = btn.querySelector('span:first-child')?.textContent || 'Carte';
         btn.innerHTML = `<span>${methodeIcon}</span><span>${methodeName}</span>`;
       });
       
@@ -923,7 +939,7 @@ const Home = () => {
         selectedBtn.style.background = 'linear-gradient(135deg, var(--cyan-clair) 0%, var(--cyan-fonce) 100%)';
         selectedBtn.style.color = 'var(--blanc)';
         selectedBtn.style.borderColor = 'var(--cyan-fonce)';
-        selectedBtn.innerHTML = `<span>${methode.displayIcon || '💳'}</span><span>${methode.nom} ✓</span>`;
+        selectedBtn.innerHTML = `<span>${methode.displayIcon || 'Carte'}</span><span>${methode.nom} ✓</span>`;
         
       }
     }
@@ -948,7 +964,7 @@ const Home = () => {
       selectedBtn.style.background = 'linear-gradient(135deg, var(--secondary) 0%, var(--text) 100%)';
       selectedBtn.style.color = 'var(--blanc)';
       selectedBtn.style.borderColor = 'var(--text)';
-      selectedBtn.innerHTML = `<span><FaMobileAlt /></span><span>${operator} ✓</span>`;
+      selectedBtn.innerHTML = `<span>MM</span><span>${operator} ✓</span>`;
     }
     
   };
@@ -1046,7 +1062,7 @@ const Home = () => {
         return;
       }
 
-      alert(`Paiement de ${paiementData.montant} ${activite.devise || 'MGA'} et inscription réussis!`);
+      alert(`Paiement de ${paiementData.montant} ${activite.devise || 'MGA'} et inscription réussis !`);
       
       setShowPaymentPopup(false);
       setShowMobileMoneyOptions(false);
@@ -1096,26 +1112,30 @@ const Home = () => {
       {/* Formation M.E.DI.A Section */}
       <section className="packages-section">
         <div className="section-header">
-          <h2 className="section-title-centered"><FaPalette /> Formation M.E.DI.A</h2>
+          <div className="section-title-block">
+            <h2 className="section-title-centered"><FaPalette /> Formation M.E.DI.A</h2>
+            <span className="section-subtitle section-subtitle-plain">Les formations disponibles pour apprendre et progresser</span>
+          </div>
           <div className="header-actions">
-            <span className="section-subtitle">Les formations disponibles pour apprendre et progresser</span>
+            <button className="see-all header-map-btn" onClick={() => navigate('/map')}>
+              Carte
+            </button>
             <a href="#" className="see-all" onClick={(e) => { e.preventDefault(); }}>Voir tout</a>
           </div>
         </div>
 
         <div className="media-activities-grid">
-          {mediaActivities.length > 0 ? (
-            mediaActivities.map((activite) => (
+          {mediaActivitiesFiltered.length > 0 ? (
+            mediaActivitiesFiltered.map((activite) => (
               <div key={activite.id_activite} className="media-activity-card" onClick={() => handleActiviteClick(activite.id_activite)}>
                 <div className="media-activity-image">
-                  {activite.image_url ? (
-                    <img src={activiteService.getImageUrl(activite.image_url)} alt={activite.titre_activite} className="media-activity-img" />
-                  ) : (
-                    <div className="media-activity-fallback"><FaPalette /></div>
-                  )}
+                 
+                    <img src={`../../assets/images/activite/${activite.nom_image}`} alt="Formation M.E.DI.A" className="media-activity-img media-activity-img-fallback" />
+                
                 </div>
                 <div className="media-activity-content">
                   <h3 className="media-activity-title">{activite.titre_activite}</h3>
+                  <div className='description'>{activite.description}</div>
                   <div className="media-activity-price-section">
                     <p className="media-activity-price"><FaMoneyBillWave /> {activite.prix ? `${activite.prix} ${activite.devise || 'MGA'}` : 'Gratuit'}</p>
                     {activite.est_payante && (
@@ -1124,8 +1144,11 @@ const Home = () => {
                   </div>
                   <p className="media-activity-location"><FaMapMarkerAlt /> {activite.lieu_activite}</p>
                   <div className="media-activity-actions">
-                    <button 
-                      className={`media-participer-btn ${activite.isRegistered ? 'registered' : ''}`}
+                  
+                    
+                    <div className="media-secondary-buttons">
+                        <button 
+                      className={`media-secondary-btn ${activite.isRegistered ? 'registered' : ''}`}
                       onClick={(e) => {
                         e.stopPropagation();
                         if (activite.isRegistered) {
@@ -1138,19 +1161,11 @@ const Home = () => {
                     >
                       {submittingId === activite.id_activite ? 'Chargement...' : (activite.isRegistered ? 'Inscrit' : 'Participer')}
                     </button>
-                    
-                    <div className="media-secondary-buttons">
                       <button 
                         className="media-secondary-btn" 
                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleActiviteClick(activite.id_activite); }}
                       >
                         Détails
-                      </button>
-                      <button 
-                        className="media-secondary-btn" 
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
-                      >
-                        Carte
                       </button>
                     </div>
                   </div>
@@ -1159,7 +1174,11 @@ const Home = () => {
             ))
           ) : (
             <div className="no-activities">
-              <p>Aucune activité M.E.DI.A disponible pour le moment.</p>
+              <p>
+                {searchQuery.trim()
+                  ? `Aucune activité M.E.DI.A trouvée pour "${searchQuery.trim()}".`
+                  : "Aucune activité M.E.DI.A disponible pour le moment."}
+              </p>
             </div>
           )}
         </div>
@@ -1184,6 +1203,7 @@ const Home = () => {
               value={selectedTypeFilter}
 
               onChange={handleActivityFilterChange}
+              style={{background:'white', color:'black'}}
 
             >
 
@@ -1217,6 +1237,9 @@ const Home = () => {
 
             )}
 
+            <button className="see-all header-map-btn" onClick={() => navigate('/map')}>
+              Carte
+            </button>
             <a href="#" className="see-all" onClick={(e) => { e.preventDefault(); handleSeeAllActivites(); }}>Voir tout</a>
 
           </div>
@@ -1227,9 +1250,9 @@ const Home = () => {
 
         <div className="media-activities-grid">
 
-          {packages.length > 0 ? (
+          {packagesFiltered.length > 0 ? (
 
-            packages.map(pkg => (
+            packagesFiltered.map(pkg => (
 
               <div key={pkg.id} className="media-activity-card" onClick={() => handleActiviteClick(pkg.id)}>
                 <div className="media-activity-image">
@@ -1240,7 +1263,7 @@ const Home = () => {
                       <img src={activiteService.getImageUrl(pkg.image)} alt={pkg.name} className="media-activity-img" />
                     )
                   ) : (
-                    <div className="media-activity-fallback"><FaVideo /></div>
+                    <img src={mediaFallbackImage} alt={pkg.name} className="media-activity-img media-activity-img-fallback" />
                   )}
                 </div>
                 <div className="media-activity-content">
@@ -1251,8 +1274,17 @@ const Home = () => {
                   </div>
                   <p className="media-activity-location"><FaMapMarkerAlt /> {pkg.lieu}</p>
                   <div className="media-activity-actions">
-                    <button 
-                      className={`media-participer-btn ${pkg.isRegistered ? 'registered' : ''}`}
+                    
+                    
+                    <div className="media-secondary-buttons">
+                      <button 
+                        className="media-secondary-btn" 
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleActiviteClick(pkg.id); }}
+                      >
+                        Détails
+                      </button>
+                      <button 
+                      className={`media-secondary-btn ${pkg.isRegistered ? 'registered' : ''}`}
                       onClick={(e) => {
                         e.stopPropagation();
                         if (pkg.isRegistered) {
@@ -1263,22 +1295,8 @@ const Home = () => {
                       }}
                       disabled={submittingId === pkg.id}
                     >
-                      {submittingId === pkg.id ? 'Chargement...' : (pkg.isRegistered ? 'Inscrit' : 'Participer')}
+                      {submittingId === pkg.id ? 'Chargement...' : (pkg.isRegistered ? 'Inscrit' : 'Participerrr')}
                     </button>
-                    
-                    <div className="media-secondary-buttons">
-                      <button 
-                        className="media-secondary-btn" 
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleActiviteClick(pkg.id); }}
-                      >
-                        Détails
-                      </button>
-                      <button 
-                        className="media-secondary-btn" 
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate('/map'); }}
-                      >
-                        Carte
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -1290,7 +1308,11 @@ const Home = () => {
 
             <div className="no-activities">
 
-              <p>Aucune activité populaire disponible pour le moment.</p>
+              <p>
+                {searchQuery.trim()
+                  ? `Aucune activité populaire trouvée pour "${searchQuery.trim()}".`
+                  : "Aucune activité populaire disponible pour le moment."}
+              </p>
 
             </div>
 
@@ -1312,7 +1334,7 @@ const Home = () => {
 
             <h3>Exigences pour {typesActivites.find(t => t.id === selectedTypeFilter)?.libelle_type}</h3>
 
-            <button className="close-btn" onClick={() => setShowExigences(false)}>✕</button>
+            <button className="close-btn" onClick={() => setShowExigences(false)}>×</button>
 
           </div>
 
@@ -1422,7 +1444,7 @@ const Home = () => {
                   setShowMobileMoneyOptions(false);
                 }}
               >
-                ✕
+                ×
               </button>
             </div>
             
@@ -1518,4 +1540,5 @@ const Home = () => {
 }
 
 export default Home;
+
 

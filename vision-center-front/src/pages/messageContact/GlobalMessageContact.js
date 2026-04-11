@@ -12,6 +12,61 @@ const GlobalMessageContact = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [showFloatingMessage, setShowFloatingMessage] = useState(false);
   const messagesEndRef = useRef(null);
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const hiddenPathPrefixes = [
+    '/login',
+    '/signup',
+    '/admin'
+  ];
+
+  const detectAuth = () => {
+    const hasMember = !!localStorage.getItem('member');
+    const hasNonMember = !!localStorage.getItem('non_membre');
+    const hasUser = !!localStorage.getItem('user');
+    const hasToken = !!localStorage.getItem('token');
+    const hasAuthFlag = localStorage.getItem('auth') === 'true';
+
+    return hasMember || hasNonMember || hasUser || hasToken || hasAuthFlag;
+  };
+
+  const shouldHideWidget = hiddenPathPrefixes.some(
+    (prefix) => currentPath === prefix || currentPath.startsWith(`${prefix}/`)
+  ) || !isAuthenticated;
+
+  useEffect(() => {
+    const updateState = () => {
+      setCurrentPath(window.location.pathname);
+      setIsAuthenticated(detectAuth());
+    };
+
+    const originalPushState = window.history.pushState;
+    const originalReplaceState = window.history.replaceState;
+
+    window.history.pushState = function (...args) {
+      const result = originalPushState.apply(this, args);
+      updateState();
+      return result;
+    };
+
+    window.history.replaceState = function (...args) {
+      const result = originalReplaceState.apply(this, args);
+      updateState();
+      return result;
+    };
+
+    window.addEventListener('popstate', updateState);
+    window.addEventListener('storage', updateState);
+    updateState();
+
+    return () => {
+      window.history.pushState = originalPushState;
+      window.history.replaceState = originalReplaceState;
+      window.removeEventListener('popstate', updateState);
+      window.removeEventListener('storage', updateState);
+    };
+  }, []);
 
   useEffect(() => {
     console.log('=== RECHERCHE ID UTILISATEUR ===');
@@ -161,6 +216,10 @@ const GlobalMessageContact = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  if (shouldHideWidget) {
+    return null;
+  }
 
   return (
     <div className="message-contact simple-ai">

@@ -1312,7 +1312,7 @@ const LocationSalle = () => {
 
                         
 
-                        <div className="step-actions">
+                        <div className="step-actions single-action">
 
                           <button className="btn btn-primary" onClick={handleStep2Submit}>
 
@@ -1472,15 +1472,13 @@ const LocationSalle = () => {
 
                         
 
-                        <div className="step-actions">
+                        <div className="step-actions dual-action">
 
                           <button className="btn btn-secondary" onClick={prevStep}>
 
                             ← Précédent
 
                           </button>
-
-                          <div className="button-spacer"></div>
 
                           <button className="btn btn-success" onClick={handleConfirmReservation}>
 

@@ -21,6 +21,8 @@
   --cyan-darker: #85eadc;
   --cyan-lightest: #c9ffed;
   --cyan-accent: #78e8d6;
+  --blue-medium:#019BFF;
+  --blue-light:#A7DCFF;
 
   /* Nuances de yellow */
   --yellow-light: #f8ff4a;
@@ -132,7 +134,7 @@
 
   /* Texte */
   --text-xs: 10px;
-  --text-sm: 12px;
+  --text-sm: 13px;
   --text-base: 14px;
   --text-lg: 16px;
   --text-xl: 18px;
@@ -389,9 +391,11 @@
 }
 
 .btn-primary {
-  background: var(--bg-gradient-orange);
-  color: var(--black-pure);
+  background: var(--blue-medium);
+  color: var(--white-primary);
   box-shadow: var(--shadow-orange);
+  padding:10px;
+  width: 30%;
 }
 
 .btn-primary:hover {
@@ -401,7 +405,7 @@
 }
 
 .btn-secondary {
-  background: var(--bg-gradient-orange);
+  background: var(--blue-medium);
   color: var(--black-pure);
   box-shadow: var(--shadow-orange);
 }
@@ -409,7 +413,7 @@
 .btn-secondary:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-medium);
-  background: var(--yellow-orange);
+  background: var(--blue-medium);
 }
 
 .btn-outline {

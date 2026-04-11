@@ -563,10 +563,11 @@
 .chat-header {
   display: flex;
   align-items: center;
-  padding: 1.25rem 1.5rem;
+  padding: 0;
   border-bottom: 1px solid #e9ecef;
   background: #f8f9fa;
   flex-shrink: 0;
+  height: 10;
 }
 
 .chat-avatar {
@@ -603,7 +604,7 @@
 
 .chat-messages {
   flex: 1;
-  padding: 1.5rem;
+  padding: 0.1rem;
   overflow-y: auto;
   background: #fafbfc;
   display: flex;

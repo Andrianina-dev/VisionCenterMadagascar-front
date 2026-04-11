@@ -15,7 +15,6 @@ const FloatingMessenger = () => {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [isResponding, setIsResponding] = useState(false);
   const messagesEndRef = useRef(null);
 
   console.log('🤖 FloatingMessenger rendu - messages.length:', messages.length);
@@ -53,31 +52,20 @@ const FloatingMessenger = () => {
       setMessageInput("");
       setIsLoading(true);
       setIsTyping(true);
-      setIsResponding(true);
 
       try {
         const response = await sendMessage(messageInput);
-        
-        // Pause pour l'effet de typing
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
         if (response.success) {
           const aiMessage = {
             id: Date.now() + 1,
             text: response.message,
             sender: "ai",
             timestamp: new Date(),
-            isNew: true
           };
           
           setMessages(prev => [...prev, aiMessage]);
           
           // Marquer le message comme non nouveau après l'animation
-          setTimeout(() => {
-            setMessages(prev => prev.map(msg => 
-              msg.id === aiMessage.id ? { ...msg, isNew: false } : msg
-            ));
-          }, 500);
         } else {
           const errorMessage = {
             id: Date.now() + 1,
@@ -85,16 +73,10 @@ const FloatingMessenger = () => {
             sender: "ai",
             timestamp: new Date(),
             isError: true,
-            isNew: true
           };
           
           setMessages(prev => [...prev, errorMessage]);
           
-          setTimeout(() => {
-            setMessages(prev => prev.map(msg => 
-              msg.id === errorMessage.id ? { ...msg, isNew: false } : msg
-            ));
-          }, 500);
         }
       } catch (error) {
         let errorMessage = "Désolé, une erreur technique est survenue. ";
@@ -119,20 +101,13 @@ const FloatingMessenger = () => {
           sender: "ai",
           timestamp: new Date(),
           isError: true,
-          isNew: true
         };
         
         setMessages(prev => [...prev, errorResponse]);
         
-        setTimeout(() => {
-          setMessages(prev => prev.map(msg => 
-            msg.id === errorResponse.id ? { ...msg, isNew: false } : msg
-          ));
-        }, 500);
       } finally {
         setIsLoading(false);
         setIsTyping(false);
-        setIsResponding(false);
       }
     }
   };
@@ -214,9 +189,9 @@ const FloatingMessenger = () => {
               </div>
             </div>
             
-            <div className="header-actions">
-              <button className="action-btn close-btn" onClick={toggleMessenger} title="Fermer">
-                ×
+            <div className="chat-header-actions">
+              <button className="chat-action-btn chat-close-btn" onClick={toggleMessenger} title="Fermer" aria-label="Fermer la messagerie">
+                &times;
               </button>
             </div>
           </div>
@@ -224,10 +199,10 @@ const FloatingMessenger = () => {
           {/* Messages Area */}
           <div className="chat-messages">
             {messages.map((message) => (
-              <div key={message.id} className={`message-group ${message.sender === "user" ? "sent" : "received"} ${message.isNew ? "message-appearing" : ""}`}>
+              <div key={message.id} className={`message-group ${message.sender === "user" ? "sent" : "received"}`}>
                 {message.sender === "ai" && <div className="avatar-message">AI</div>}
                 <div className="message-content">
-                  <div className={`message-bubble ${message.isError ? "error" : ""} ${message.isNew ? "message-new" : ""}`}>
+                  <div className={`message-bubble ${message.isError ? "error" : ""}`}>
                     <p className="message-text">{message.text}</p>
                     {message.isError && (
                       <button 

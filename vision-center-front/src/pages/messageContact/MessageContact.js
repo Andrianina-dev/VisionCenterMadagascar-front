@@ -1,158 +1,97 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaSearch, FaPaperPlane, FaCheck, FaCheckDouble, FaTimes, FaExpand, FaCompress, FaRobot } from 'react-icons/fa';
-import MessageService from '../../services/MessageService';
 import './MessageContact.css';
 
 const MessageContact = () => {
+  const [selectedChat, setSelectedChat] = useState(null);
   const [message, setMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const [showBubbles, setShowBubbles] = useState(true);
   const [isFloating, setIsFloating] = useState(false);
-  const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
   const messagesEndRef = useRef(null);
-
-  useEffect(() => {
-    console.log('=== RECHERCHE ID UTILISATEUR ===');
-    
-    let foundUserId = null;
-    
-    // Chercher dans toutes les clés localStorage
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      const value = localStorage.getItem(key);
-      
-      console.log(`Vérification localStorage.${key}:`, value);
-      
-      if (value) {
-        try {
-          const parsed = JSON.parse(value);
-          console.log(`  Parsed JSON de ${key}:`, parsed);
-          
-          // Chercher l'ID dans différentes propriétés possibles
-          if (parsed.id || parsed.id_utilisateur || parsed.userId) {
-            foundUserId = parsed.id || parsed.id_utilisateur || parsed.userId;
-            console.log(`✅ ID trouvé dans ${key}:`, foundUserId);
-            console.log(`👤 Utilisateur complet:`, parsed);
-            break;
-          }
-        } catch (e) {
-          // Si ce n'est pas du JSON, vérifier si c'est directement l'ID
-          if (key.includes('user') || key.includes('id')) {
-            foundUserId = value;
-            console.log(`✅ ID direct trouvé dans ${key}:`, foundUserId);
-            break;
-          }
-        }
-      }
-    }
-    
-    // Si rien trouvé dans localStorage, vérifier sessionStorage
-    if (!foundUserId) {
-      for (let i = 0; i < sessionStorage.length; i++) {
-        const key = sessionStorage.key(i);
-        const value = sessionStorage.getItem(key);
-        
-        if (value) {
-          try {
-            const parsed = JSON.parse(value);
-            if (parsed.id || parsed.id_utilisateur || parsed.userId) {
-              foundUserId = parsed.id || parsed.id_utilisateur || parsed.userId;
-              console.log(`✅ ID trouvé dans sessionStorage.${key}:`, foundUserId);
-              break;
-            }
-          } catch (e) {
-            if (key.includes('user') || key.includes('id')) {
-              foundUserId = value;
-              console.log(`✅ ID direct trouvé dans sessionStorage.${key}:`, foundUserId);
-              break;
-            }
-          }
-        }
-      }
-    }
-    
-    console.log('🎯 ID UTILISATEUR FINAL:', foundUserId);
-    
-    if (foundUserId && foundUserId !== 'null' && foundUserId !== 'undefined') {
-      console.log('✅ Utilisateur connecté avec ID:', foundUserId);
-      setCurrentUser(foundUserId);
-      fetchCurrentUserMessages(foundUserId);
-    } else {
-      console.log('❌ Aucun ID utilisateur trouvé');
-      setError('Utilisateur non connecté');
-      setLoading(false);
-    }
-    
-    console.log('=== FIN RECHERCHE ===');
-  }, []);
-
-  const fetchCurrentUserMessages = async (userId) => {
-    try {
-      setLoading(true);
-      const result = await MessageService.getCurrentUserMessages(userId);
-
-      if (result.success) {
-        setMessages(result.data);
-        setError(null);
-      } else {
-        setError(result.error || 'Erreur lors du chargement des messages');
-      }
-    } catch (err) {
-      setError('Erreur réseau: ' + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const sendMessage = async () => {
-    if (!message.trim() || !currentUser) return;
+  useEffect(() => {
+    scrollToBottom();
+  }, [selectedChat?.messages]);
 
-    try {
-      const messageData = {
-        message: message.trim(),
-        id_utilisateur: currentUser
+  // Données de test
+  const chats = [
+    {
+      id: 1,
+      name: 'Sophie Martin',
+      avatar: 'SM',
+      lastMessage: 'Bonjour, comment allez-vous ?',
+      time: '14:30',
+      unread: 2,
+      online: true,
+      messages: [
+        { id: 1, text: 'Bonjour admin', sender: 'user', time: '14:25', read: true },
+        { id: 2, text: 'Bonjour Sophie !', sender: 'admin', time: '14:26', read: true },
+        { id: 3, text: 'Comment allez-vous ?', sender: 'user', time: '14:30', read: false }
+      ]
+    },
+    {
+      id: 2,
+      name: 'Jean Dubois',
+      avatar: 'JD',
+      lastMessage: 'Merci pour votre aide',
+      time: 'Hier',
+      unread: 0,
+      online: false,
+      messages: [
+        { id: 1, text: 'J\'ai besoin d\'aide', sender: 'user', time: '13:00', read: true },
+        { id: 2, text: 'Je suis là pour vous aider', sender: 'admin', time: '13:05', read: true },
+        { id: 3, text: 'Merci pour votre aide', sender: 'user', time: '13:10', read: true }
+      ]
+    },
+    {
+      id: 3,
+      name: 'Alice Bernard',
+      avatar: 'AB',
+      lastMessage: 'Super service !',
+      time: '12:15',
+      unread: 1,
+      online: true,
+      messages: [
+        { id: 1, text: 'Merci pour votre aide', sender: 'user', time: '12:10', read: true },
+        { id: 2, text: 'De rien Alice !', sender: 'admin', time: '12:12', read: true },
+        { id: 3, text: 'Super service !', sender: 'user', time: '12:15', read: false }
+      ]
+    }
+  ];
+
+  const filteredChats = chats.filter(chat =>
+    chat.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const sendMessage = () => {
+    if (message.trim() && selectedChat) {
+      const newMessage = {
+        id: Date.now(),
+        text: message,
+        sender: 'admin',
+        time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+        read: false
       };
-
-      const result = await MessageService.sendMessage(messageData);
       
-      if (result.success) {
-        setMessage('');
-        // Rafraîchir les messages après l'envoi
-        fetchCurrentUserMessages(currentUser);
-        scrollToBottom();
-      } else {
-        setError(result.error || 'Erreur lors de l\'envoi du message');
-      }
-    } catch (err) {
-      setError('Erreur réseau: ' + err.message);
+      selectedChat.messages.push(newMessage);
+      setMessage('');
+      scrollToBottom();
     }
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  // Bulles flottantes pour toute la page (mode chatbot)
+  const FloatingBubbles = () => {
+    if (!showBubbles || !isFloating) return null;
 
-  if (loading) {
-    return <div className="loading">Chargement des messages...</div>;
-  }
-
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
-
-  return (
-    <div className={`message-contact ${isFloating ? 'floating-mode' : ''}`}>
-      {/* Bulles flottantes partout dans la page (mode chatbot) */}
+    return (
       <div className="floating-bubbles chatbot-style">
-        {/* {chats.map((chat, index) => (
+        {chats.map((chat, index) => (
           <div
             key={chat.id}
             className="floating-bubble chatbot-bubble"
@@ -186,8 +125,15 @@ const MessageContact = () => {
               </span>
             </div>
           </div>
-        ))} */}
+        ))}
       </div>
+    );
+  };
+
+  return (
+    <div className={`message-contact ${isFloating ? 'floating-mode' : ''}`}>
+      {/* Bulles flottantes partout dans la page (mode chatbot) */}
+      <FloatingBubbles />
 
       {/* Bouton pour activer/désactiver le mode flottant */}
       <button 
@@ -197,6 +143,16 @@ const MessageContact = () => {
         <FaRobot />
         {isFloating ? 'Fermer' : 'Messages'}
       </button>
+
+      {/* Bouton pour afficher/masquer les bulles */}
+      {isFloating && (
+        <button 
+          className="bubble-toggle-btn"
+          onClick={() => setShowBubbles(!showBubbles)}
+        >
+          {showBubbles ? <FaTimes /> : <FaExpand />}
+        </button>
+      )}
 
       {/* Interface normale (sidebar + chat) */}
       {!isFloating && (
@@ -225,7 +181,7 @@ const MessageContact = () => {
             </div>
 
             <div className="chat-list">
-              {/* {filteredChats.map(chat => (
+              {filteredChats.map(chat => (
                 <div
                   key={chat.id}
                   className={`chat-item ${selectedChat?.id === chat.id ? 'active' : ''}`}
@@ -248,62 +204,32 @@ const MessageContact = () => {
                     </div>
                   </div>
                 </div>
-              ))} */}
+              ))}
             </div>
           </div>
 
-          {/* Zone de chat - AFFICHE LES MESSAGES DE L'UTILISATEUR CONNECTÉ */}
+          {/* Zone de chat */}
           <div className={`chat-area ${isExpanded ? 'expanded' : ''}`}>
-            {currentUser && (
+            {selectedChat ? (
               <>
                 <div className="chat-header">
                   <div className="header-user">
                     <div className="header-avatar">
-                      {currentUser.charAt(0).toUpperCase()}
+                      {selectedChat.avatar}
                     </div>
                     <div className="header-info">
-                      <h3>Messages de {currentUser}</h3>
+                      <h3>{selectedChat.name}</h3>
                       <span className="status">
-                        Utilisateur connecté
+                        {selectedChat.online ? 'En ligne' : 'Hors ligne'}
                       </span>
                     </div>
                   </div>
                 </div>
 
                 <div className="messages">
-                  {messages.map(msg => {
-                    const isUserMessage = !msg.reponse_admin;
-                    const messageClass = isUserMessage ? 'user-message' : 'admin-message';
-                    const bubbleClass = isUserMessage ? 'user-bubble' : 'admin-bubble';
-                    
-                    return (
-                      <div key={msg.id_message} className={`message-wrapper ${messageClass}`}>
-                        <div className={`message-bubble ${bubbleClass}`}>
-                          <div className="message-text">{msg.message}</div>
-                          <div className="message-meta">
-                            <span className="message-time">
-                              {new Date(msg.date_envoi).toLocaleTimeString('fr-FR', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
-                            </span>
-                            <span className="message-date">
-                              {new Date(msg.date_envoi).toLocaleDateString('fr-FR', {
-                                day: 'numeric',
-                                month: 'short',
-                                year: 'numeric'
-                              })}
-                            </span>
-                            {msg.lu && (
-                              <span className="read-status">
-                                <i className={`fas ${msg.lu ? 'fa-check-double' : 'fa-check'} ${isUserMessage ? 'text-primary' : 'text-muted'}`}></i>
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                  {selectedChat.messages.map(msg => (
+                    <MessageBubble key={msg.id} message={msg} />
+                  ))}
                   <div ref={messagesEndRef} />
                 </div>
 
@@ -325,10 +251,36 @@ const MessageContact = () => {
                   </button>
                 </div>
               </>
+            ) : (
+              <div className="empty-state">
+                <h3>Sélectionnez une conversation</h3>
+                <p>Choisissez un utilisateur pour commencer à discuter</p>
+              </div>
             )}
           </div>
         </>
       )}
+    </div>
+  );
+};
+
+// Composant pour la bulle de message
+const MessageBubble = ({ message }) => {
+  const isUser = message.sender === 'user';
+  
+  return (
+    <div className={`message ${isUser ? 'user' : 'admin'}`}>
+      <div className="bubble">
+        <p>{message.text}</p>
+        <div className="bubble-meta">
+          <span className="time">{message.time}</span>
+          {message.sender === 'admin' && (
+            <span className="read-status">
+              {message.read ? <FaCheckDouble /> : <FaCheck />}
+            </span>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import "./Login.css";
 import "../../styles/components/couleur/couleur.css";
-import logoVisionCenter from "../../assets/images/logo/logo vision center.png";
+import logoVisionCenter from "../../assets/images/logo/original_logo_modern_dark.png";
 import CustomInput from "../../components/CustomInput";
 import AuthService from "../../services/auth.service";
 
@@ -95,7 +95,7 @@ const Login = () => {
       {/* PANEL DROIT - Formulaire */}
       <div className="right-panel">
         <div className="form-card">
-          <h1 className="signin-title">Sign in</h1>
+          <h1 className="signin-title">Se connecter</h1>
 
           <form onSubmit={handleLogin}>
             {error && (
@@ -130,7 +130,7 @@ const Login = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Password"
+                  placeholder="Mot de passe"
                 />
                 <button
                   type="button"
@@ -153,7 +153,7 @@ const Login = () => {
             </div>
 
             <div className="forgot-row">
-              <a href="#" className="text-simple">Forgot Password?</a>
+              <a href="#" className="text-simple">Mot de passe oublié?</a>
             </div>
 
             <button 
@@ -164,8 +164,8 @@ const Login = () => {
               {loading ? 'Connexion en cours...' : 'Log In'}
             </button>
           </form>
-
-          <div className="divider text-simple">Or log in with</div>
+                  <div className="social-list">
+                       <div className="divider text-simple">Ou se connecter avec</div>
 
           <div className="social-row">
             <button className="social-circle">
@@ -177,14 +177,17 @@ const Login = () => {
               </svg>
             </button>
           </div>
+                  </div>
+       
 
-          <p className="legal text-simple">
-            Login means you agree our terms & conditions and Privacy Policy of
-            Handeha Voyages
-          </p>
+          
 
           <p className="signup text-simple">
-            Don't have account? <a href="#" onClick={handleSignupClick}>Sign-up!</a>
+            Vous n'avez pas encore de compte? <a  style={{color:'#019BFF', fontWeight:700}} href="#" onClick={handleSignupClick}>S'inscrire!</a>
+          </p>
+          <p className="legal text-simple">
+            Login means you agree our terms & conditions and Privacy Policy of
+            Vision Center Madagascar
           </p>
 
           {/* Bouton retour vers le site vitrine */}
