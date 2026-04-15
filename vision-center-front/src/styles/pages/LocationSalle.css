@@ -10,8 +10,7 @@
 
 .location-salle-content {
   padding: 0;
-  max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 4rem;
 }
 
 /* Grille des salles */
@@ -476,8 +475,7 @@ input:-webkit-autofill:active {
 }
 
 .salle-status.disponible {
-  background: var(--cyan-dark);
-  color: var(--white-primary);
+  background: var(--blue-light);
 }
 
 .salle-status.occupée {
@@ -639,13 +637,12 @@ input:-webkit-autofill:active {
 
 /* Animation et layout détaillé de la salle */
 .salle-detail-container {
-  max-width: 1200px;
   margin: 0 auto;
 }
 
 .salle-detail-animation {
   display: grid;
-  grid-template-columns: 1fr 400px;
+  grid-template-columns: 1.5fr 1fr;
   gap: 2rem;
   animation: slideInUp 0.5s ease;
 }
@@ -740,7 +737,6 @@ input:-webkit-autofill:active {
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid #e2e8f0;
-  width: 150%;
   margin-left: auto;
   margin-right: auto;
   display: block;
@@ -752,6 +748,16 @@ input:-webkit-autofill:active {
   color: #1e293b;
   margin-bottom: 1.5rem;
   text-align: center;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.form-group-flex{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
 }
 
 /* Formulaire de réservation */
@@ -760,8 +766,6 @@ input:-webkit-autofill:active {
 }
 
 .form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
@@ -770,6 +774,7 @@ input:-webkit-autofill:active {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 100%;
 }
 
 .form-group label {
@@ -931,8 +936,6 @@ input:-webkit-autofill:active {
 }
 
 .form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 1rem;
   margin-bottom: 2rem;
 }
@@ -1183,7 +1186,7 @@ input:-webkit-autofill:active {
 .reservation-card {
   border-radius: var(--border-radius-medium);
   border: 1px solid var(--border-light);
-  box-shadow: var(--shadow-light);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .reservation-card h3,

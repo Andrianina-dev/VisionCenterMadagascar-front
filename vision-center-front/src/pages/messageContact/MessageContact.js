@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaSearch, FaPaperPlane, FaCheck, FaCheckDouble, FaTimes, FaExpand, FaCompress, FaRobot } from 'react-icons/fa';
+import { FaSearch, FaPaperPlane, FaCheck, FaCheckDouble, FaTimes, FaExpand, FaCompress, FaEnvelope, FaComments } from 'react-icons/fa';
 import './MessageContact.css';
 
 const MessageContact = () => {
@@ -106,7 +106,7 @@ const MessageContact = () => {
             }}
           >
             <div className="bubble-avatar chatbot-avatar">
-              <FaRobot className="robot-icon" />
+              <FaComments className="robot-icon" />
               {chat.online && <div className="online-dot" />}
             </div>
             <div className="bubble-content">
@@ -140,7 +140,7 @@ const MessageContact = () => {
         className="floating-toggle-btn"
         onClick={() => setIsFloating(!isFloating)}
       >
-        <FaRobot />
+        <FaEnvelope />
         {isFloating ? 'Fermer' : 'Messages'}
       </button>
 

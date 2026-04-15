@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaRobot, FaPaperPlane, FaTimes } from 'react-icons/fa';
+import { FaEnvelope, FaPaperPlane, FaTimes } from 'react-icons/fa';
 import MessageService from '../../services/MessageService';
 import FloatingMessenger from '../../component/FloatingMessenger/FloatingMessenger';
 import './MessageContact.css';
@@ -228,7 +228,7 @@ const GlobalMessageContact = () => {
         className="simple-ai-bubble"
         onClick={() => setIsChatOpen(!isChatOpen)}
       >
-        <FaRobot />
+        <FaEnvelope />
       </button>
       
       {/* Badge à côté du chatbot */}
@@ -238,7 +238,7 @@ const GlobalMessageContact = () => {
         <div className="simple-chat-window">
           <div className="simple-chat-header">
             <div className="simple-header-info">
-              <FaRobot className="simple-robot-icon" />
+              <FaEnvelope className="simple-robot-icon" />
               <span>Contacter l'admin</span>
             </div>
             <button 

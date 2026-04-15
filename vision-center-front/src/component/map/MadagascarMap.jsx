@@ -68,6 +68,7 @@ const MadagascarMap = () => {
           name: activite.titre_activite,
           region: activite.lieu_activite || "Madagascar",
           price: activite.capacite ? `0/${activite.capacite} places` : "Illimite",
+          nom_image: activite.nom_image,
           rating: "4/5",
           reviews: "0",
           image: "ACTIVITE",
@@ -168,24 +169,26 @@ const MadagascarMap = () => {
                 <div className="activity-region">{activity.region}</div>
                 <h3>{activity.name}</h3>
                 <p className="activity-description">{activity.description}</p>
-
-                <div className="activity-meta">
-                  <div className="activity-date">
-                    Date: {activiteService.formatDateShort(activity.date)}
-                  </div>
+                <div className="activity-meta-date">
+                    <div className={`activity-status ${activity.statut.class}`}>
+                      {activity.statut.text}
+                    </div>
+                    
+                   <div className="activity-price">{activity.price}</div>
                 </div>
-                <div className={`activity-status ${activity.statut.class}`}>
-                  {activity.statut.text}
-                </div>
+                
+                      <div className="activity-date">
+                        Date: {activiteService.formatDateShort(activity.date)}
+                      </div>
               </div>
+                
 
-              <div className="activity-footer">
-                <div className="activity-price">{activity.price}</div>
+              {/* <div className="activity-footer">
                 <div className="activity-rating">
                   <span>{activity.rating}</span>
                   <span className="reviews">({activity.reviews})</span>
                 </div>
-              </div>
+              </div> */}
 
               <button className="learn-more-btn">Voir details</button>
 

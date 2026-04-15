@@ -20,16 +20,16 @@
 }
 
 .back-btn {
-  background: var(--blue-medium);
+  background: #F6C100;
   border: none;
   color: var(--white-primary);
-  padding: 10px 16px;
+  padding: 10px;
   border-radius: 3px;
   cursor: pointer;
   font-size: var(--text-sm);
   font-weight: var(--font-weight-bold);
   transition: all 0.3s;
-  width: 30%;
+  width: 20%;
 }
 
 .back-btn:hover {

@@ -414,7 +414,7 @@ const LocationSalle = () => {
 
           prix: `${salle.prix.toLocaleString()} Ar/jour`,
 
-          image: salle.image_url || salle.image || 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop&auto=format',
+          image: salle.image_url || salle.image || '../../assets/images/salle/salle multimedia.jpg',
 
           disponibilite: salle.disponibilite,
 
@@ -944,7 +944,7 @@ const LocationSalle = () => {
 
   return (
 
-    <div className="location-salle-content">
+    <div className="">
 
       {/* Composant de notification */}
 
@@ -1016,7 +1016,7 @@ const LocationSalle = () => {
 
                   <div className="salle-detail-image">
 
-                    <img src={selectedSalle.image} alt={selectedSalle.nom} />
+                    <img src={'../../assets/images/salle/salle multimedia.jpg'} alt={selectedSalle.nom} />
 
                     <div className={`salle-status ${selectedSalle.disponibilite.toLowerCase()}`}>
 
@@ -1164,54 +1164,58 @@ const LocationSalle = () => {
 
                         <div className="form-grid">
 
-                          <div className="form-group">
+                          <div className="form-group-flex">
+                            <div className="form-group">
 
-                            <label>Date de début *</label>
+                              <label>Date de début *</label>
 
-                            <input
+                              <input
 
-                              type="date"
+                                type="date"
 
-                              name="date_debut"
+                                name="date_debut"
 
-                              value={formData.date_debut}
+                                value={formData.date_debut}
 
-                              onChange={handleInputChange}
+                                onChange={handleInputChange}
 
-                              className="form-input"
+                                className="form-input"
 
-                              required
+                                required
 
-                            />
+                              />
+
+                            </div>
+
+                            
+
+                            <div className="form-group">
+
+                              <label>Date de fin *</label>
+
+                              <input
+
+                                type="date"
+
+                                name="date_fin"
+
+                                value={formData.date_fin}
+
+                                onChange={handleInputChange}
+
+                                className="form-input"
+
+                                required
+
+                              />
+
+                            </div>
 
                           </div>
 
                           
-
-                          <div className="form-group">
-
-                            <label>Date de fin *</label>
-
-                            <input
-
-                              type="date"
-
-                              name="date_fin"
-
-                              value={formData.date_fin}
-
-                              onChange={handleInputChange}
-
-                              className="form-input"
-
-                              required
-
-                            />
-
-                          </div>
-
                           
-
+<div className="form-group-flex">
                           <div className="form-group">
 
                             <label>Heure de début *</label>
@@ -1257,7 +1261,7 @@ const LocationSalle = () => {
                             />
 
                           </div>
-
+</div>
                           
 
                           <div className="form-group">

@@ -1878,7 +1878,7 @@
   color: var(--text-light);
   font-size: 0.9rem;
   line-height: 1.5;
-  margin: 0 0 1rem 0;
+  /* margin: 0 0 1rem 0; */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -2172,6 +2172,7 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  margin-top: 12px;
 }
 
 .activity-card:hover {
@@ -2224,7 +2225,7 @@
 .activity-price {
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--primary);
+  color: #F6C100;
   margin: 0;
 }
 
