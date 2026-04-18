@@ -4,7 +4,7 @@ import "./map.css";
 import L from "leaflet";
 import { useState, useEffect } from "react";
 import activiteService from "../../services/activite.service";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const createDefaultIcon = () => {
   return L.icon({
@@ -54,16 +54,43 @@ const MadagascarMap = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedActivity, setSelectedActivity] = useState(null);
+  const [typesActivites, setTypesActivites] = useState([]);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const filterType = searchParams.get('type');
 
   useEffect(() => {
     const loadActivities = async () => {
       try {
         setLoading(true);
 
-        const ouvertesResponse = await activiteService.getActivitesOuvertes();
+        const [ouvertesResponse, typesResponse] = await Promise.all([
+          activiteService.getActivitesOuvertes(),
+          fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/public/types-activites`)
+        ]);
 
-        const allOpenActivities = ouvertesResponse.map((activite) => ({
+        // Charger les types
+        let typesData = [];
+        if (typesResponse.ok) {
+          typesData = await typesResponse.json();
+          setTypesActivites(typesData);
+        }
+
+        // Filtrer par catégorie si paramètre présent
+        let filteredResponse = ouvertesResponse;
+        if (filterType === "MEDIA") {
+          // Récupérer tous les types qui ont categorie_activite = "M.E.DI.A"
+          const mediaTypes = typesData.filter(type => 
+            type.categorie_activite === "M.E.DI.A"
+          ).map(type => type.id);
+          
+          // Filtrer par tous ces IDs
+          filteredResponse = ouvertesResponse.filter(activite => 
+            mediaTypes.includes(activite.id_type)
+          );
+        }
+
+        const allOpenActivities = filteredResponse.map((activite) => ({
           id: activite.id_activite,
           name: activite.titre_activite,
           region: activite.lieu_activite || "Madagascar",
@@ -82,7 +109,7 @@ const MadagascarMap = () => {
           hasCoords: !!(activite.latitude_activite && activite.longitude_activite),
         }));
 
-        const activitiesWithCoords = ouvertesResponse.filter(
+        const activitiesWithCoords = filteredResponse.filter(
           (activite) => activite.latitude_activite && activite.longitude_activite
         );
 
@@ -160,13 +187,30 @@ const MadagascarMap = () => {
             <div
               key={activity.id}
               className="activity-card"
-              onClick={() => handleActivityClick(activity.id)}
+              // 
             >
               <div className="activity-image"><img src={`../../assets/images/activite/${activity.nom_image}`} alt="Formation M.E.DI.A" className="media-activity-img media-activity-img-fallback" />
                 </div>
 
               <div className="activity-content">
-                <div className="activity-region">{activity.region}</div>
+                <div 
+  className="activity-region clickable-region"
+  style={{ 
+    cursor: 'pointer', 
+    color: '#0066cc',
+    textDecoration: 'none'
+  }}
+  onClick={(e) => {
+    e.stopPropagation();
+    // Trouver l'activité correspondante dans mapActivities et la sélectionner
+    const mapActivity = mapActivities.find(mapAct => mapAct.id === activity.id);
+    if (mapActivity) {
+      setSelectedActivity(mapActivity);
+    }
+  }}
+>
+  {activity.region}
+</div>
                 <h3>{activity.name}</h3>
                 <p className="activity-description">{activity.description}</p>
                 <div className="activity-meta-date">
@@ -183,14 +227,7 @@ const MadagascarMap = () => {
               </div>
                 
 
-              {/* <div className="activity-footer">
-                <div className="activity-rating">
-                  <span>{activity.rating}</span>
-                  <span className="reviews">({activity.reviews})</span>
-                </div>
-              </div> */}
-
-              <button className="learn-more-btn">Voir details</button>
+              <button className="learn-more-btn" onClick={() => handleActivityClick(activity.id)}>Voir details</button>
 
               {!activity.hasCoords && (
                 <div className="no-coords-indicator">Coordonnees GPS non disponibles</div>
@@ -223,7 +260,22 @@ const MadagascarMap = () => {
                   <div className="marker-popup">
                     <h4>{activity.name}</h4>
                     <p>
-                      <strong>Lieu:</strong> {activity.lieu}
+                      <strong>Lieu:</strong> 
+                      <span 
+                        className="clickable-lieu"
+                        style={{ 
+                          cursor: 'pointer', 
+                          color: '#0066cc',
+                          textDecoration: 'none'
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Centrer et zoomer sur ce lieu
+                          setSelectedActivity(activity);
+                        }}
+                      >
+                        {activity.lieu}
+                      </span>
                     </p>
                     <p>
                       <strong>Date:</strong> {activiteService.formatDate(activity.date)}
