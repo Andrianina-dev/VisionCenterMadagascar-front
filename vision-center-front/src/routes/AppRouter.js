@@ -1,9 +1,8 @@
-import React from "react";
+import React, { lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import SignUp from "../pages/auth/SignUp";
 import MemberLogin from "../pages/auth/MemberLogin";
-import CodeVerification from "../pages/auth/CodeVerification";
 import Home from "../pages/public/Home";
 import Inscription from "../pages/public/Inscription";
 import Galerie from "../layouts/vitrine/Galerie";
@@ -12,6 +11,7 @@ import ActiviteDetails from "../pages/public/ActiviteDetails";
 import Messages from "../pages/member/Messages";
 import ProfileMembre from "../pages/member/profileMembre";
 import LocationSalle from "../pages/member/LocationSalle";
+import MesActivites from "../pages/member/MesActivites";
 import ReservationValidation from "../pages/ReservationValidation";
 import ReservationSuccess from "../pages/ReservationSuccess";
 import FloatingMessenger from "../component/FloatingMessenger/FloatingMessenger";
@@ -32,6 +32,10 @@ import AuthLayout from "../layouts/AuthLayout";
 import MainLayout from "../layouts/MainLayout";
 import MemberLayout from "../layouts/MemberLayout";
 import ProtectedRoute from "../component/ProtectedRoute";
+
+// Lazy loading des composants pour optimiser les performances
+const LazyMemberActivities = lazy(() => import("../pages/public/Home"));
+const LazyMesActivites = lazy(() => import("../pages/member/MesActivites"));
 
 const AppRouterContent = () => {
   const { showMessenger } = useMessenger();
@@ -166,6 +170,22 @@ const AppRouterContent = () => {
             <MemberLayout activeNav="messages">
               <Messages />
             </MemberLayout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/member/activites" element={
+          <ProtectedRoute>
+            <React.Suspense fallback={<div>Chargement...</div>}>
+              <LazyMemberActivities />
+            </React.Suspense>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/member/mes-activites" element={
+          <ProtectedRoute>
+            <React.Suspense fallback={<div>Chargement...</div>}>
+              <LazyMesActivites />
+            </React.Suspense>
           </ProtectedRoute>
         } />
 

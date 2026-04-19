@@ -12,7 +12,6 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
   const [activeSection, setActiveSection] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
 
   // Vérifier si un utilisateur est connecté
   useEffect(() => {
@@ -137,27 +136,7 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
     ];
   };
 
-  // État pour la langue sélectionnée
-  const [selectedLanguage, setSelectedLanguage] = useState('mg');
-
-  // Obtenir les informations de la langue sélectionnée
-  const getLanguageInfo = (lang) => {
-    const languages = {
-      'mg': { flag: '🇲🇬', code: 'MG', name: 'Malagasy' },
-      'en': { flag: '🇺🇸', code: 'EN', name: 'English' },
-      'fr': { flag: '🇫🇷', code: 'FR', name: 'Français' }
-    };
-    return languages[lang] || languages['mg'];
-  };
-
   const navLinks = getNavLinks();
-
-  const handleLanguageChange = (lang) => {
-    setIsLangDropdownOpen(false);
-    setSelectedLanguage(lang);
-    console.log('Langue changée vers:', lang);
-    localStorage.setItem('language', lang);
-  };
 
   const handleNavigation = (path) => {
     setIsMobileMenuOpen(false);
@@ -221,8 +200,9 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
               </li>
             ))}
             
-            {/* Profil utilisateur (si connecté) */}
+            {/* Profil utilisateur (si connecté) — <li> pour HTML valide et rendu cohérent */}
             {user ? (
+              <li className="nav-item-profile">
               <div 
                 className="user-profile" 
                 onMouseEnter={() => setIsDropdownOpen(true)}
@@ -270,35 +250,10 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
                   </button>
                 </div>
               </div>
+              </li>
             ) : null}
           </ul>
           
-          {/* Sélecteur de langue - à gauche du bouton Se connecter */}
-              <li>
-                <div className="language-selector">
-                  <div className="current-language" onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}>
-                    <span className="flag-icon">{getLanguageInfo(selectedLanguage).flag}</span>
-                    <span className="lang-code">{getLanguageInfo(selectedLanguage).code}</span>
-                    <span className="arrow">▼</span>
-                  </div>
-                  {isLangDropdownOpen && (
-                    <div className="language-dropdown show">
-                      <div className={`language-option ${selectedLanguage === 'mg' ? 'active' : ''}`} onClick={() => handleLanguageChange('mg')}>
-                        <span className="flag-icon">🇲🇬</span>
-                        <span className="lang-name">Malagasy</span>
-                      </div>
-                      <div className={`language-option ${selectedLanguage === 'en' ? 'active' : ''}`} onClick={() => handleLanguageChange('en')}>
-                        <span className="flag-icon">🇺🇸</span>
-                        <span className="lang-name">English</span>
-                      </div>
-                      <div className={`language-option ${selectedLanguage === 'fr' ? 'active' : ''}`} onClick={() => handleLanguageChange('fr')}>
-                        <span className="flag-icon">🇫🇷</span>
-                        <span className="lang-name">Français</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </li>
             {/* Bouton Se connecter séparé */}
           {!user && (
             <Button 
