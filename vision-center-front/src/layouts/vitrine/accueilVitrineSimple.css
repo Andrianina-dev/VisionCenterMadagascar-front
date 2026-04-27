@@ -11,7 +11,7 @@
   --ve-white: #ffffff;
   --ve-text: #2f3d4f;
   --ve-border: #d7e7f5;
-  --ve-radius: 5px;
+  --ve-radius: 8px;
   --ve-radius-btn: 3px;
   --ve-shadow: 0 8px 30px rgba(13, 27, 42, 0.1);
   --ve-trans: all 0.3s ease;
@@ -152,7 +152,7 @@
   background: var(--ve-gold);
   color: var(--ve-dark);
   padding: 14px 32px;
-  border-radius: var(--ve-radius-btn);
+  border-radius:8px;
   font-weight: 700;
   font-size: 15px;
   text-decoration: none;
@@ -171,7 +171,7 @@
   border: 2px solid rgba(255, 255, 255, 0.25);
   color: #fff;
   padding: 12px 30px;
-  border-radius: var(--ve-radius-btn);
+  border-radius: 8px;
   font-weight: 600;
   font-size: 15px;
   text-decoration: none;

@@ -76,7 +76,7 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-text-fill-color: var(--yellow-orange) !important;
+  -webkit-text-fill-color: var(--black-pure) !important;
 }
 
 /* File Input Styles */
@@ -1068,7 +1068,7 @@ input:-webkit-autofill:active {
   background: var(--blue-medium);
   color: var(--white);
   box-shadow: var(--shadow-orange);
-  padding:10px;
+  padding: 8px 16px;
   font-size: var(--font-size-bold);
 }
 
@@ -1361,7 +1361,7 @@ input:-webkit-autofill:active {
 .btn-reserve.primary {
   background: var(--blue-medium);
   color: var(--white-primary);
-  border-radius: 3px;
+  border-radius: 8px;
 }
 
 .back-btn:hover,
@@ -1371,6 +1371,43 @@ input:-webkit-autofill:active {
   color: var(--white-primary);
   transform: translateY(-2px);
   box-shadow: var(--shadow-medium);
+}
+
+/* Styles pour les erreurs de validation */
+.form-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.form-input.error {
+  border-color: #dc2626 !important;
+  background: #fef2f2 !important;
+  box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.3) !important;
+}
+
+.location-error-message {
+  color: #dc2626 !important;
+  font-size: 0.65rem;
+  font-weight: 300;
+  margin: 0;
+  display: block;
+  opacity: 10;
+  animation: fadeIn 0.15s ease-in;
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-1px);
+  }
+  to {
+    opacity: 0.6;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 768px) {

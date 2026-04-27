@@ -72,9 +72,10 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
     return () => window.removeEventListener('scroll', handleScroll);
   }, [sections, location.pathname]);
 
-  // Fermer le menu mobile lors du changement de route
+  // Fermer le menu mobile et le dropdown profil lors du changement de route
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    setIsDropdownOpen(false);
   }, [location.pathname]);
 
   const handleNavClick = (e, sectionId) => {
@@ -128,7 +129,6 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
       { label: "Accueil", path: "/accueil" },
       { label: "À propos", path: "/a-propos" },
       { label: "Valeurs", path: "/site-vitrine" },
-      { label: "Programmes & Activités", path: "/programmes-activites" },
       { label: "Galerie", path: "/galerie" },
       { label: "Location", path: "/location-salle" },
       { label: "Espace Membre", path: "/espace-membre" },
@@ -200,56 +200,55 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
               </li>
             ))}
             
-            {/* Profil utilisateur (si connecté) — <li> pour HTML valide et rendu cohérent */}
+            {/* Profil utilisateur (si connecté) */}
             {user ? (
               <li className="nav-item-profile">
-              <div 
-                className="user-profile" 
-                onMouseEnter={() => setIsDropdownOpen(true)}
-                onMouseLeave={() => setIsDropdownOpen(false)}
-              >
-                <div className="profile-avatar">
-                  <img 
-                    src={`https://ui-avatars.com/api/?name=${getUserInitials()}&background=019BFF&color=fff&size=34&bold=true&length=2`} 
-                    alt="Profile" 
-                  />
-                  <div className="profile-status-dot"></div>
-                </div>
-                <div className="profile-info">
-                  <span className="profile-name">{getUserFullName()}</span>
-                  <span className="profile-role">{getUserRoleLabel()}</span>
-                </div>
-                <div className={`profile-dropdown ${isDropdownOpen ? 'show' : ''}`}>
-                  <div className="dropdown-header">
-                    <div className="dropdown-avatar">
-                      <img 
-                        src={`https://ui-avatars.com/api/?name=${getUserInitials()}&background=019BFF&color=fff&size=48&bold=true&length=2`} 
-                        alt="Profile" 
-                      />
-                    </div>
-                    <div className="dropdown-info">
-                      <div className="dropdown-name">{getUserFullName()}</div>
-                      <div className="dropdown-email">{user?.email || 'membre@visioncenter.mg'}</div>
-                    </div>
+                <div 
+                  className="user-profile" 
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                >
+                  <div className="profile-avatar">
+                    <img 
+                      src={`https://ui-avatars.com/api/?name=${getUserInitials()}&background=019BFF&color=fff&size=34&bold=true&length=2`} 
+                      alt="Profile" 
+                    />
+                    <div className="profile-status-dot"></div>
                   </div>
-                  <div className="dropdown-divider"></div>
-                  <button onClick={() => handleNavigation('/profile')} className="dropdown-item">
-                    Mon profil
-                  </button>
-                  <button onClick={() => handleNavigation('/settings')} className="dropdown-item">
-                    Paramètres
-                  </button>
-                  {user.role === 'membre' && (
-                    <button onClick={() => handleNavigation('/espace-membre')} className="dropdown-item">
-                      Espace membre
+                  <div className="profile-info">
+                    <span className="profile-name">{getUserFullName()}</span>
+                    <span className="profile-role">{getUserRoleLabel()}</span>
+                  </div>
+                  <div className={`profile-dropdown ${isDropdownOpen ? 'show' : ''}`}>
+                    <div className="dropdown-header">
+                      <div className="dropdown-avatar">
+                        <img 
+                          src={`https://ui-avatars.com/api/?name=${getUserInitials()}&background=019BFF&color=fff&size=48&bold=true&length=2`} 
+                          alt="Profile" 
+                        />
+                      </div>
+                      <div className="dropdown-info">
+                        <div className="dropdown-name">{getUserFullName()}</div>
+                        <div className="dropdown-email">{user?.email || 'membre@visioncenter.mg'}</div>
+                      </div>
+                    </div>
+                    <div className="dropdown-divider"></div>
+                    <button onClick={() => handleNavigation('/profile')} className="dropdown-item">
+                      Mon profil
                     </button>
-                  )}
-                  <div className="dropdown-divider"></div>
-                  <button onClick={handleLogout} className="dropdown-item logout-item">
-                    Déconnexion
-                  </button>
+                    <button onClick={() => handleNavigation('/settings')} className="dropdown-item">
+                      Paramètres
+                    </button>
+                    {user.role === 'membre' && (
+                      <button onClick={() => handleNavigation('/espace-membre')} className="dropdown-item">
+                        Espace membre
+                      </button>
+                    )}
+                    <div className="dropdown-divider"></div>
+                    <button onClick={handleLogout} className="dropdown-item logout-item">
+                      Déconnexion
+                    </button>
+                  </div>
                 </div>
-              </div>
               </li>
             ) : null}
           </ul>
@@ -312,19 +311,7 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
               Valeurs
             </a>
           </li>
-          <li>
-            <a 
-              href="/programmes-activites" 
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation('/programmes-activites');
-              }} 
-              className={isLinkActive('/programmes-activites') ? 'active' : ''}
-            >
-              Programmes & Activités
-            </a>
-          </li>
-          <li>
+                    <li>
             <a 
               href="/galerie" 
               onClick={(e) => {
@@ -391,25 +378,36 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
             </li>
           )}
           {user ? (
-            <>
-              <li>
-                <div className="user-profile" style={{ padding: '12px 0', marginTop: '8px', justifyContent: 'center' }}>
-                  <div className="profile-avatar">
-                    <img 
-                      src={`https://ui-avatars.com/api/?name=${getUserInitials()}&background=019BFF&color=fff&size=34&bold=true&length=2`} 
-                      alt="Profile" 
-                    />
-                  </div>
-                  <div className="profile-info">
-                    <span className="profile-name">{getUserFullName()}</span>
-                    <span className="profile-role">{getUserRoleLabel()}</span>
-                  </div>
+            <li>
+              <div 
+                className="user-profile" 
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <div className="profile-avatar">
+                  <img 
+                    src={`https://ui-avatars.com/api/?name=${getUserInitials()}&background=019BFF&color=fff&size=34&bold=true&length=2`} 
+                    alt="Profile" 
+                  />
+                  <div className="profile-status-dot"></div>
                 </div>
-          
-
-              </li>
-              <li>
-                <div className="profile-dropdown show" style={{ position: 'relative', width: '100%', marginTop: '8px' }}>
+                <div className="profile-info">
+                  <span className="profile-name">{getUserFullName()}</span>
+                  <span className="profile-role">{getUserRoleLabel()}</span>
+                </div>
+                <div className={`profile-dropdown ${isDropdownOpen ? 'show' : ''}`}>
+                  <div className="dropdown-header">
+                    <div className="dropdown-avatar">
+                      <img 
+                        src={`https://ui-avatars.com/api/?name=${getUserInitials()}&background=019BFF&color=fff&size=48&bold=true&length=2`} 
+                        alt="Profile" 
+                      />
+                    </div>
+                    <div className="dropdown-info">
+                      <div className="dropdown-name">{getUserFullName()}</div>
+                      <div className="dropdown-email">{user?.email || 'membre@visioncenter.mg'}</div>
+                    </div>
+                  </div>
+                  <div className="dropdown-divider"></div>
                   <button onClick={() => handleNavigation('/profile')} className="dropdown-item">
                     Mon profil
                   </button>
@@ -426,8 +424,8 @@ const NavigationSiteVitrine = ({ scrollToSection, sections = ['hero', 'features'
                     Déconnexion
                   </button>
                 </div>
-              </li>
-            </>
+              </div>
+            </li>
           ) : (
             <li>
               <Button 

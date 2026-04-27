@@ -134,6 +134,10 @@ const LocationSalle = () => {
 
   });
 
+  // État pour les erreurs de validation
+
+  const [validationErrors, setValidationErrors] = useState({});
+
 
 
   // État pour les infos du non-membre
@@ -522,13 +526,110 @@ const LocationSalle = () => {
 
     const { name, value } = e.target;
 
-    setFormData(prev => ({
+    const updatedFormData = { ...formData, [name]: value };
 
-      ...prev,
+    setFormData(updatedFormData);
 
-      [name]: value
+    // Valider les dates et heures immédiatement lors du changement
 
-    }));
+    if (name === 'date_debut' || name === 'date_fin' || name === 'heure_debut' || name === 'heure_fin') {
+
+      validateDates(updatedFormData);
+
+    }
+
+  };
+
+  // Validation des dates
+
+  const validateDates = (data = formData) => {
+
+    const errors = {};
+
+    const now = new Date();
+
+    now.setHours(0, 0, 0, 0); // Début de la journée actuelle
+
+    // Validation date début
+
+    if (data.date_debut) {
+
+      const dateDebut = new Date(data.date_debut);
+
+      // Vérifier si la date est invalide
+      if (isNaN(dateDebut.getTime())) {
+
+        errors.date_debut = 'votre date est incorrecte';
+
+      } else {
+        // Vérifier si l'année est invalide (trop ancienne ou trop lointaine)
+        const year = dateDebut.getFullYear();
+        if (year < 1900 || year > 2100) {
+          errors.date_debut = 'votre date est incorrecte';
+        } else if (dateDebut < now) {
+          errors.date_debut = 'Veuillez choisir une date à venir';
+        }
+      }
+
+    }
+
+    // Validation date fin
+
+    if (data.date_fin) {
+
+      const dateFin = new Date(data.date_fin);
+
+      // Vérifier si la date est invalide
+      if (isNaN(dateFin.getTime())) {
+
+        errors.date_fin = 'votre date est incorrecte';
+
+      } else {
+        // Vérifier si l'année est invalide (trop ancienne ou trop lointaine)
+        const year = dateFin.getFullYear();
+        if (year < 1900 || year > 2100) {
+          errors.date_fin = 'votre date est incorrecte';
+        } else if (dateFin < now) {
+          errors.date_fin = 'Veuillez choisir une date à venir';
+        }
+      }
+
+      // Validation date fin après date début
+
+      if (data.date_debut) {
+
+        const dateDebut = new Date(data.date_debut);
+
+        if (dateFin < dateDebut) {
+
+          errors.date_fin = 'Oups, la fin de réservation doit être après le début';
+
+        }
+
+      }
+
+    }
+
+    // Validation des heures si les dates sont identiques
+    if (data.date_debut && data.date_fin && data.date_debut === data.date_fin) {
+      if (data.heure_debut && data.heure_fin) {
+        const heureDebut = data.heure_debut.split(':');
+        const heureFin = data.heure_fin.split(':');
+        
+        const debutMinutes = parseInt(heureDebut[0]) * 60 + parseInt(heureDebut[1]);
+        const finMinutes = parseInt(heureFin[0]) * 60 + parseInt(heureFin[1]);
+        
+        if (finMinutes <= debutMinutes) {
+          errors.heure_fin = 'L\'heure de fin doit être après le début';
+        }
+      }
+    }
+
+    // Mettre à jour les erreurs (efface celles qui sont corrigées)
+
+    setValidationErrors(errors);
+
+    return Object.keys(errors).length === 0;
 
   };
 
@@ -721,6 +822,16 @@ const LocationSalle = () => {
     if (!formData.date_debut || !formData.date_fin || !formData.capacite_requise) {
 
       alert('Veuillez remplir tous les champs de réservation');
+
+      return;
+
+    }
+
+    // Valider les dates avant de passer à l'étape 2
+
+    if (!validateDates()) {
+
+      alert('Veuillez corriger les erreurs avant de continuer');
 
       return;
 
@@ -1179,11 +1290,17 @@ const LocationSalle = () => {
 
                                 onChange={handleInputChange}
 
-                                className="form-input"
+                                className={`form-input ${validationErrors.date_debut ? 'error' : ''}`}
 
                                 required
 
                               />
+
+                              {validationErrors.date_debut && (
+
+                                <span className="location-error-message">{validationErrors.date_debut}</span>
+
+                              )}
 
                             </div>
 
@@ -1203,11 +1320,17 @@ const LocationSalle = () => {
 
                                 onChange={handleInputChange}
 
-                                className="form-input"
+                                className={`form-input ${validationErrors.date_fin ? 'error' : ''}`}
 
                                 required
 
                               />
+
+                              {validationErrors.date_fin && (
+
+                                <span className="location-error-message">{validationErrors.date_fin}</span>
+
+                              )}
 
                             </div>
 
@@ -1254,11 +1377,17 @@ const LocationSalle = () => {
 
                               onChange={handleInputChange}
 
-                              className="form-input"
+                              className={`form-input ${validationErrors.heure_fin ? 'error' : ''}`}
 
                               required
 
                             />
+
+                            {validationErrors.heure_fin && (
+
+                              <span className="location-error-message">{validationErrors.heure_fin}</span>
+
+                            )}
 
                           </div>
 </div>

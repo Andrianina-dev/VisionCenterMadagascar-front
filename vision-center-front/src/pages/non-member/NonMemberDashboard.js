@@ -504,22 +504,6 @@ const NonMemberDashboard = () => {
             </div>
           )}
         </section>
-
-        {/* Section devenir membre */}
-        <section className="upgrade-section">
-          <div className="upgrade-card">
-            <div className="upgrade-content">
-              <h3>Devenez membre</h3>
-              <p>Accédez à des tarifs exclusifs et des avantages premium</p>
-              <ul className="benefits">
-                <li>Jusqu'à 30% de réduction</li>
-                <li>Locations prioritaires</li>
-                <li>Services exclusifs</li>
-              </ul>
-              <button className="btn-upgrade">S'abonner maintenant</button>
-            </div>
-          </div>
-        </section>
       </div>
     </div>
   );

@@ -151,16 +151,6 @@ const MadagascarMap = () => {
     navigate(`/activite/${activityId}`);
   };
 
-  if (loading) {
-    return (
-      <div className="madagascar-map-wrapper">
-        <div className="loading-container">
-          <div className="loading-spinner">Chargement de la carte...</div>
-        </div>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className="madagascar-map-wrapper">
@@ -227,7 +217,7 @@ const MadagascarMap = () => {
               </div>
                 
 
-              <button className="learn-more-btn" onClick={() => handleActivityClick(activity.id)}>Voir details</button>
+              <button className="learn-more-btn" onClick={() => handleActivityClick(activity.id)}>Participer</button>
 
               {!activity.hasCoords && (
                 <div className="no-coords-indicator">Coordonnees GPS non disponibles</div>

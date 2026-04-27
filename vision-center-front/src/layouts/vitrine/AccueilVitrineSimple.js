@@ -19,6 +19,7 @@ import {
 } from 'react-icons/fa';
 import './accueilVitrineSimple.css';
 import heroRightImage from '../../assets/accueil/fond-image-accueil.jpg';
+import FloatingMessenger from '../../component/FloatingMessenger/FloatingMessenger';
 
 const HERO_MAIN_IMG = heroRightImage;
 const HERO_ACCENT_IMG =
@@ -45,7 +46,7 @@ function AccueilVitrineSimple() {
     titreHighlight: 'Madagascar',
     badge: "Communauté à Antananarivo · Une église qui transforme des vies",
     description:
-      "Au cœur de Madagascar, Vision Center est un sanctuaire spirituel unique. Une communauté vibrante où la foi rencontre l'excellence, où chaque âme trouve sa place et où l'amour divin transforme les destins.",
+      "Vision Center Madagascar, appuyé par One Seed Madagascar, est un centre de jeunes chrétiens engagés dans l'élévation morale, le développement personnel et la formation spirituelle. Il accompagne les étudiants universitaires et les jeunes afin qu'ils découvrent, développent et réalisent leurs visions, tout en contribuant positivement au développement de Madagascar.\n\nNous sommes l'espoir de Madagascar.\nL'avenir de Madagascar dépend de toi et moi.",
     statistiques: STATISTIQUES_VITRINE,
     valeurs: [
       {
@@ -575,6 +576,8 @@ function AccueilVitrineSimple() {
           </div>
         </section>
       </main>
+      {/* Chatbot IA pour les utilisateurs non connectés */}
+      <FloatingMessenger />
     </div>
   );
 }

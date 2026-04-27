@@ -6,6 +6,9 @@
   min-height: 100vh;
   font-family: var(--font-family-primary);
 }
+.text-simple{
+  font-size: 10px;
+}
 
 /* Panel gauche - Branding avec fond image */
 .left-panel {

@@ -183,7 +183,7 @@ const Login = () => {
           
 
           <p className="signup text-simple">
-            Vous n'avez pas encore de compte? <a  style={{color:'#019BFF', fontWeight:700}} href="#" onClick={handleSignupClick}>S'inscrire!</a>
+            Vous n'avez pas encore de compte? <a  style={{color:'#019BFF', fontWeight:700,fontSize:'12px'}} href="#" onClick={handleSignupClick}>S'inscrire!</a>
           </p>
           <p className="legal text-simple">
             Login means you agree our terms & conditions and Privacy Policy of

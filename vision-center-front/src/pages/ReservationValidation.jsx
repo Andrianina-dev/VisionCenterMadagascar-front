@@ -9,6 +9,7 @@ const ReservationValidation = () => {
   const [reservationData, setReservationData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [validationErrors, setValidationErrors] = useState({});
 
   useEffect(() => {
     // Récupérer les données de réservation depuis le state ou localStorage
@@ -23,7 +24,67 @@ const ReservationValidation = () => {
     setLoading(false);
   }, [location.state]);
 
+  // Validation des dates
+  const validateDates = () => {
+    const errors = {};
+    const now = new Date();
+    now.setHours(0, 0, 0, 0); // Début de la journée actuelle
+
+    if (reservationData?.reservation) {
+      const dateDebut = new Date(reservationData.reservation.date_debut);
+      const dateFin = new Date(reservationData.reservation.date_fin);
+
+      // Validation date début
+      if (dateDebut < now) {
+        errors.date_debut = 'Veuillez choisir une date à venir';
+      }
+
+      // Validation date fin
+      if (dateFin < now) {
+        errors.date_fin = 'Veuillez choisir une date à venir';
+      }
+
+      // Validation date fin après date début
+      if (dateFin < dateDebut) {
+        errors.date_fin = 'La date de fin doit être après la date de début';
+      }
+
+      // Si la date fin est correcte mais qu'il y avait une erreur de date fin, on la retire
+      if (dateFin >= now && dateFin >= dateDebut && errors.date_fin === 'Veuillez choisir une date à venir') {
+        delete errors.date_fin;
+      }
+
+      // Si la date début est correcte mais qu'il y avait une erreur de date début, on la retire
+      if (dateDebut >= now && errors.date_debut === 'Veuillez choisir une date à venir') {
+        delete errors.date_debut;
+      }
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Valider au chargement et à chaque modification
+  useEffect(() => {
+    if (reservationData) {
+      validateDates();
+    }
+  }, [reservationData]);
+
+  // Effacer l'erreur générale quand il n'y a plus d'erreurs de validation
+  useEffect(() => {
+    if (Object.keys(validationErrors).length === 0 && error === 'Veuillez corriger les erreurs avant de confirmer') {
+      setError(null);
+    }
+  }, [validationErrors, error]);
+
   const handleConfirm = async () => {
+    // Valider les dates avant confirmation
+    if (!validateDates()) {
+      setError('Veuillez corriger les erreurs avant de confirmer');
+      return;
+    }
+
     try {
       setLoading(true);
       
@@ -128,8 +189,18 @@ const ReservationValidation = () => {
           <div className="summary-section">
             <h3>Période de réservation</h3>
             <div className="period-info">
-              <p><strong>Date début:</strong> {new Date(reservation.date_debut).toLocaleDateString('fr-FR')}</p>
-              <p><strong>Date fin:</strong> {new Date(reservation.date_fin).toLocaleDateString('fr-FR')}</p>
+              <div className={`date-field ${validationErrors.date_debut ? 'has-error' : ''}`}>
+                <p><strong>Date début:</strong> {new Date(reservation.date_debut).toLocaleDateString('fr-FR')}</p>
+                {validationErrors.date_debut && (
+                  <p className="error-message">{validationErrors.date_debut}</p>
+                )}
+              </div>
+              <div className={`date-field ${validationErrors.date_fin ? 'has-error' : ''}`}>
+                <p><strong>Date fin:</strong> {new Date(reservation.date_fin).toLocaleDateString('fr-FR')}</p>
+                {validationErrors.date_fin && (
+                  <p className="error-message">{validationErrors.date_fin}</p>
+                )}
+              </div>
               <p><strong>Heure début:</strong> {reservation.heure_debut}</p>
               <p><strong>Heure fin:</strong> {reservation.heure_fin}</p>
             </div>
